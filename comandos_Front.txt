@@ -1,0 +1,9 @@
+ng serve  //segundo
+npm install  //primero
+npm install -g @angular/cli
+Get-ExecutionPolicy -list
+Set-ExecutionPolicy -Scope LocalMachine unrestricted
+
+http://localhost:4200/plataforma-electronica/auth/intro
+
+ng build -> para compilar el front
