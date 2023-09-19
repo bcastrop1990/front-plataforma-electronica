@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Verificar Apellido</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Apellido Paterno</mat-label>
+    <input matInput [(ngModel)]="apellidoPaterno">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button (click)="verificar()">Verificar</button>
+</mat-dialog-actions>
