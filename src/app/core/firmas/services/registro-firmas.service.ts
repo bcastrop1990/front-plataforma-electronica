@@ -12,7 +12,7 @@ export class RegistroFirmasService {
 
   private urlService = environment.API_MASTER;
   url = `${this.urlService}/registro-firmas`;
-
+  url2= `${this.urlService}/registrar-baja`;
   constructor(private http: HttpClient) { }
 
   validarDatos(request: ValidarDatosIn) {
@@ -27,7 +27,17 @@ export class RegistroFirmasService {
     return this.http.post<RegistroFirmaOut>(`${this.url}`, request);
   }
 
+  registroFirma2(request: RegistroFirmaIn) {
+    return this.http.post<RegistroFirmaOut>(`${this.url2}`, request);
+  }
+
   consultarPersona(dni: string) {
     return this.http.get<PersonaOut>(`${this.url}/consultar-personas?dni=${dni}`);
   }
+  consultarPersona2(dni: string,pat: string) {
+    return this.http.get<PersonaOut>(`${this.url}/consultar-por-datos-ruipin?dni=${dni}&apellidopat=${pat}`);
+  }
+  /*consultarPersona2(dni: string,pat: string) {
+    return this.http.get<PersonaOut>(`${this.url}/consultar-por-datos-ruipin?dni=${dni}&apellidopat=${pat}`);
+  }*/
 }

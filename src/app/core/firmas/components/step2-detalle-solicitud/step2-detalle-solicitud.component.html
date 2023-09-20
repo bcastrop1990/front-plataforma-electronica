@@ -4,7 +4,25 @@
     <form [formGroup]="form">
 
       <div class="row">
-
+        <ng-template #dniApellidoModal>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Validación DNI</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Por favor, ingrese el apellido paterno asociado al DNI para continuar:</p>
+      <mat-form-field appearance="outline">
+        <mat-label>Apellido paterno</mat-label>
+        <input matInput formControlName="primerApellido" placeholder="Apellido paterno">
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="onNoClick()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="validateDNI()">Validar</button>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>
         <div class="col-sm-12 col-md-2">
           <label>Tipo Solicitud</label>
           <mat-form-field appearance="outline" class="w-100">
@@ -22,9 +40,9 @@
           <label>DNI Registrador</label>
           <mat-form-field appearance="outline" class="w-100">
             <input matInput formControlName="numeroDocumento" placeholder="Ingresar" autocomplete="off"  pattern="[0-9]{8}" maxlength="8" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">
-<!--            <button type="button" mat-icon-button matSuffix (click)="getPersona()">-->
-<!--              <mat-icon fontSet="fas" fontIcon="fa-search"></mat-icon>-->
-<!--            </button>-->
+            <button type="button" mat-icon-button matSuffix (click)="openDNIValidationModal()">
+              <mat-icon fontSet="fas" fontIcon="fa-search"></mat-icon>
+            </button>
             <mat-error *ngIf="form.get('numeroDocumento')?.invalid">{{utilService.getErrorMessage(form,'numeroDocumento', 8, 8, true)}}</mat-error>
           </mat-form-field>
 
@@ -61,7 +79,7 @@
         <div class="col-sm-12 col-md-3">
           <label>Apellido Paterno</label>
           <mat-form-field appearance="outline" class="w-100">
-            <input matInput formControlName="primerApellido" (blur)="validateDNI()" placeholder="Ingresar" autocomplete="off">
+            <input matInput formControlName="primerApellido" placeholder="Ingresar" autocomplete="off">
             <mat-error *ngIf="form.get('primerApellido')?.invalid">{{utilService.getErrorMessage(form,'primerApellido', 1, 40)}}</mat-error>
           </mat-form-field>
         </div>
@@ -95,3 +113,7 @@
 
   </mat-card-content>
 </mat-card>
+
+<!-- Contenido existente... -->
+
+<!-- Template del Modal para ingresar el apellido -->

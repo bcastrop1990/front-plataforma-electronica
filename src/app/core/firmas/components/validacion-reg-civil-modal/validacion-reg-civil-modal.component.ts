@@ -1,4 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject,NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -6,6 +7,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './validacion-reg-civil-modal.component.html',
   styleUrls: ['./validacion-reg-civil-modal.component.scss']
 })
+
+
 export class ValidacionRegCivilModalComponent {
 public apellidoPaterno: string = '';
   constructor(

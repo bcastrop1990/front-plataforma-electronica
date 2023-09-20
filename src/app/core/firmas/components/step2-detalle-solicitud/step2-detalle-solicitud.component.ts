@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, TemplateRef} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { environment } from 'src/environments/environment';
 import {UtilService} from "../../../../shared/services/util.service";
@@ -9,6 +9,7 @@ import {Archivo, ArchivoDetalle, DetalleSolicitud} from "../../models/firmas.mod
 import {RegistroFirmasService} from "../../services/registro-firmas.service";
 import {Persona, PersonaOut} from "../../models/persona.model";
 import { ValidacionRegCivilModalComponent } from '../validacion-reg-civil-modal/validacion-reg-civil-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-step2-detalle-solicitud',
@@ -37,10 +38,13 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
   @ViewChild('filesTipoSolicitud') uploadFileTipoSolicitud!: UploadFileComponent;
+  @ViewChild('dniApellidoModal') dniApellidoModal!: TemplateRef<any>;
+
 
   constructor(private formBuilder: FormBuilder,
               public utilService: UtilService,
-              private registroFirmasService: RegistroFirmasService) { }
+              private registroFirmasService: RegistroFirmasService,
+             private dialog: MatDialog) { }
 
 
   ngOnInit(): void {
@@ -152,10 +156,17 @@ export class Step2DetalleSolicitudComponent implements OnInit {
       });
     }
   }
+  openDialogAfterDNITyped(): void {
+    const dialogRef = this.dialog.open(ValidacionRegCivilModalComponent);
 
-  validateDNI(): void {
+    dialogRef.afterClosed().subscribe(apellido => {
+      if (apellido) {
+        this.validateDNIandApellido(apellido);
+      }
+    });
+  }
+  validateDNIandApellido(apellidoPaternoIngresado: string): void {
   const dni = this.form.controls['numeroDocumento'].value;
-  const apellidoPaternoIngresado = this.form.controls['primerApellido'].value;
 
   if (dni && apellidoPaternoIngresado) {
     this.registroFirmasService.consultarPersona(dni).subscribe((data: PersonaOut) => {
@@ -176,6 +187,54 @@ export class Step2DetalleSolicitudComponent implements OnInit {
       }
     });
   }
+}
+
+validateDNI(): void {
+  const dialogRef = this.dialog.open(this.dniApellidoModal);
+  const dni = this.form.controls['numeroDocumento'].value;
+  const apellidoPaternoIngresado = this.form.controls['primerApellido'].value;
+
+  if (dni && apellidoPaternoIngresado) {
+
+    this.registroFirmasService.consultarPersona(dni).subscribe((data: PersonaOut) => {
+  //this.registroFirmasService.consultarPersona2(dni,apellidoPaternoIngresado).subscribe((data: PersonaOut) => {
+      if (data.code !== this.environment.CODE_000) {
+        this.utilService.getAlert('Aviso', data.message);
+        return;
+      }
+
+      let persona = data.data;
+
+      // Convertir ambos apellidos a mayúsculas antes de comparar
+      if (persona.primerApellido.toUpperCase() === apellidoPaternoIngresado.toUpperCase()) {
+        this.form.controls['preNombres'].setValue(persona.preNombre);
+        this.form.controls['segundoApellido'].setValue(persona.segundoApellido);
+        this.form.controls['primerApellido'].setValue(persona.primerApellido);
+          this.dialog.closeAll();
+      } else {
+        this.utilService.getAlert('Aviso', 'El apellido paterno introducido no coincide con el registrado para ese DNI.');
+        this.form.controls['preNombres'].setValue("");
+        this.form.controls['segundoApellido'].setValue("");
+        this.form.controls['primerApellido'].setValue("");
+      }
+    });
+    dialogRef.close();
+  }
+}
+
+openDNIValidationModal(): void {
+  const dialogRef = this.dialog.open(this.dniApellidoModal);
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.validateDNIandApellido(result);
+
+    }
+  });
+}
+
+onNoClick(): void {
+  this.dialog.closeAll();
 }
 
 
