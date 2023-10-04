@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
 
   API_AUTH: 'https://servicesdemo.reniec.gob.pe',
   // API_MASTER: 'http://10.48.60.13:7010/api-plataforma-electronica',
@@ -46,7 +46,7 @@ export const environment = {
 
   // TIPO DE SOLICITUD DE FIRMA
   TIPO_SOLICITUD_ALTA: 1,
-  TIPO_SOLICITUD_BAJA: 2,
+  TIPO_SOLICITUD_: 2,
   TIPO_SOLICITUD_ACTUALIZAR: 3,
 
   // ESTADO SOLICITUD
