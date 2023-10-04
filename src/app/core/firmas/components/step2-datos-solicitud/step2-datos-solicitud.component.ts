@@ -8,7 +8,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren
-} from '@angular/core';
+} from '@angular/core';   
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatStepper} from "@angular/material/stepper";
 import {UtilService} from "../../../../shared/services/util.service";
@@ -135,6 +135,9 @@ export class Step2DatosSolicitudComponent implements OnInit {
       nombreDepartamento: [''],
       nombreDistrito: [''],
       nombreProvincia: [''],
+      //Implementado por BC
+      comunidadNativa : [''],
+      unidadOrganica : [''],
     });
 
     this.formDetalle.disable();

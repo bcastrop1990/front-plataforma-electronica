@@ -14,12 +14,12 @@
           <input matInput formControlName="nombreDepartamento" placeholder="Ingrese" autocomplete="off">
         </mat-form-field>
       </div>
-      <div class="col-sm-12 col-md-4 mb-2">
-        <label>Provincia</label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="nombreProvincia" placeholder="Ingrese" autocomplete="off">
-        </mat-form-field>
-      </div>
+        <div class="col-sm-12 col-md-4 mb-2">
+          <label>Provincia</label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput formControlName="nombreProvincia" placeholder="Ingrese" autocomplete="off">
+          </mat-form-field>
+        </div>
       <div class="col-sm-12 col-md-4 mb-2">
         <label>Distrito</label>
         <mat-form-field appearance="outline" class="w-100">
@@ -39,6 +39,21 @@
         <label>Oficina Autorizada</label>
         <mat-form-field appearance="outline" class="w-100">
           <input matInput formControlName="descripcionLocalLarga" placeholder="Ingrese" autocomplete="off">
+        </mat-form-field>
+      </div>
+    </div>
+    <!--Implementado por BC-->
+    <div class="row">
+      <div class="col-sm-12 col-md-4 mb-2">
+        <label>Comunidad Nativa</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="comunidadNativa" placeholder="Ingrese" autocomplete="off">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12 col-md-4 mb-2">
+        <label>Unidad Orgnaica</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="unidadOrganica" placeholder="Ingrese" autocomplete="off">
         </mat-form-field>
       </div>
     </div>
@@ -85,7 +100,7 @@
                    [addLabel]="'Agregar archivo'"
                    [textHelp]="'Peso máximo de archivo 1 mb - Formatos: ' + typesAllowed.toString()"
                    [minRequired]="1"
-                   [maxPermitted]="2"
+                   [maxPermitted]="3"
                    [fileMaxSize]="1050000"
                    [fileTypeAllowed]="typesAllowed"
                    [textRequired]="'Debe adjuntar mínimo 1 archivo'"
