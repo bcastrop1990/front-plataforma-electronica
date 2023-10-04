@@ -18,5 +18,4 @@ export class OptionsComponent implements OnInit {
   ngOnInit(): void {
     this.environment = environment;
   }
-
 }
