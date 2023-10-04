@@ -34,19 +34,39 @@
               <mat-error *ngIf="form.get('fechaEmision')?.invalid">{{utilService.getErrorMessage(form,'fechaEmision')}}</mat-error>
             </mat-form-field>
           </div>
-        </div>
 
-        <ng-container *ngIf="paraSeguimiento">
-          <div class="row">
-            <div class="col-sm-12 col-md-4 mb-2">
-              <label>Número de Solicitud: <span>(*)</span></label>
-              <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="numeroSolicitud" placeholder="Ingresar" autocomplete="off">
-                <mat-error *ngIf="form.get('numeroSolicitud')?.invalid">{{utilService.getErrorMessage(form,'numeroSolicitud', 12, 12, true)}}</mat-error>
-              </mat-form-field>
+          <ng-container *ngIf="paraSeguimiento">
+            <div class="row">
+              <div class="col-sm-12 col-md-4 mb-2">
+                <label>Número de Solicitud: <span>(*)</span></label>
+                <mat-form-field appearance="outline" class="w-100">
+                  <!-- CAMBIOS DE BC -->
+                  <input matInput formControlName="numeroSolicitud" placeholder="Ingresar" autocomplete="off"
+                  (input)="solicitudActivado = !form.get('numeroSolicitud')?.value">
+                  <mat-error *ngIf="form.get('numeroSolicitud')?.invalid">{{utilService.getErrorMessage(form,'numeroSolicitud', 12, 12, true)}}</mat-error>
+                </mat-form-field>
+              </div>
+              <!-- IMPLEMENTACION POR BC -->
+              <div class="col-sm-12 col-md-4 mb-2">
+                <label>Rango  de fecha: </label>
+                <mat-form-field appearance="outline" class="w-100">
+                  <!-- CAMBIOS DE BC -->
+                  <mat-date-range-input formControlName="rangoFecha" [rangePicker]="picker" readonly [max]
+                  ="dateNow" [disabled]="solicitudActivado ? !solicitudActivado : solicitudActivado  ">
+                    <input matStartDate placeholder="Inicio" autocomplete="off">
+                    <input matEndDate placeholder="Final" autocomplete="off">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker">
+                    <mat-icon matDatepickerToggleIcon fontSet="fas" fontIcon="fa-calendar-day" class="clean-button"></mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                  <mat-error *ngIf="form.get('rangoFecha')?.invalid">{{utilService.getErrorMessage(form,'rangoFecha')}}</mat-error>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
-        </ng-container>
+          </ng-container>
+
+        </div>
 
         <div class="row">
           <div class="col-12">

@@ -17,6 +17,9 @@ export class ValidacionDatosComponent implements OnInit {
 
   dateNow = new Date();
 
+  solicitudActivado = false;
+  
+
   @Input() paraSeguimiento: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
@@ -33,7 +36,14 @@ export class ValidacionDatosComponent implements OnInit {
       digito: ['', [Validators.required]],
       fechaEmision: ['', [Validators.required]],
       numeroSolicitud: ['', this.paraSeguimiento ? [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern('^[0-9]*$')] : []],
+      rangoFecha: [''],
     });
+
+      this.numeroSolicitudValueChanged()
   }
 
+  numeroSolicitudValueChanged() {
+    return this.solicitudActivado = !!this.form.get('numeroSolicitud')?.value;
+  }
+  
 }

@@ -14,6 +14,8 @@ import { AgenciaComponent } from './components/agencia/agencia.component';
 import { OficinaAutorizadaComponent } from './components/oficina-autorizada/oficina-autorizada.component';
 import { TipoSolicitudComponent } from './components/tipo-solicitud/tipo-solicitud.component';
 import { OptionsComponent } from './components/options/options.component';
+import { ComunidadNativaComponent } from './components/comunidad-nativa/comunidad-nativa.component';
+import { UnidadOrganicaComponent } from './components/unidad-organica/unidad-organica.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { OptionsComponent } from './components/options/options.component';
     AgenciaComponent,
     OficinaAutorizadaComponent,
     TipoSolicitudComponent,
-    OptionsComponent
+    OptionsComponent,
+    ComunidadNativaComponent,
+    UnidadOrganicaComponent
   ],
   imports: [
     CommonModule,
