@@ -25,6 +25,7 @@
         <ngx-mat-file-input formControlName="file" [valuePlaceholder]="addLabel" (click)="resetFile($event)" (change)="attach(form.controls['file'].value)"></ngx-mat-file-input>
         <span matPrefix><mat-icon fontSet="fas" fontIcon="fa-plus-circle" class="custom-plus-button"></mat-icon></span>
         <mat-hint>{{textHelp}}</mat-hint>
+        <!-- CONDICIONES -->
         <mat-error *ngIf="form.get('file')!.hasError('required')">
           {{textRequired ? textRequired : 'El archivo es requerido.'}}
         </mat-error>
