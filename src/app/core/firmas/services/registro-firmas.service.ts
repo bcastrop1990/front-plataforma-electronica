@@ -3,7 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {RegistroFirmaIn, RegistroFirmaOut, ValidarDatosIn, ValidarDatosOut} from "../models/firmas.model";
 import {TipoSolicitudOut} from "../models/tipo-solicitud.model";
-import {PersonaOut} from "../models/persona.model";
+import {PersonaOut,Persona,Persona2} from "../models/persona.model";
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +34,8 @@ export class RegistroFirmasService {
   consultarPersona(dni: string) {
     return this.http.get<PersonaOut>(`${this.url}/consultar-personas?dni=${dni}`);
   }
-  consultarPersona2(dni: string,pat: string) {
-    return this.http.get<PersonaOut>(`${this.url}/consultar-por-datos-ruipin?dni=${dni}&apellidopat=${pat}`);
+  consultarPersona2(request: Persona2) {
+    return this.http.post<PersonaOut>(`${this.url}/consultar-por-datos-ruipin?`, request);
   }
   /*consultarPersona2(dni: string,pat: string) {
     return this.http.get<PersonaOut>(`${this.url}/consultar-por-datos-ruipin?dni=${dni}&apellidopat=${pat}`);

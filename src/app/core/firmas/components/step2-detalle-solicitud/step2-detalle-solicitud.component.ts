@@ -6,8 +6,9 @@ import {List, UploadFileComponent} from "../../../../shared/components/upload-fi
 import {TipoSolicitud} from "../../models/tipo-solicitud.model";
 import {TipoArchivo} from "../../../../masters/models/maestro.model";
 import {Archivo, ArchivoDetalle, DetalleSolicitud} from "../../models/firmas.model";
+import {SeguridadService} from "../../../../shared/services/seguridad.service";
 import {RegistroFirmasService} from "../../services/registro-firmas.service";
-import {Persona, PersonaOut} from "../../models/persona.model";
+import {Persona, PersonaOut,Persona2} from "../../models/persona.model";
 import { ValidacionRegCivilModalComponent } from '../validacion-reg-civil-modal/validacion-reg-civil-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -17,7 +18,9 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./step2-detalle-solicitud.component.scss']
 })
 export class Step2DetalleSolicitudComponent implements OnInit {
-
+  personaIn!: Persona;
+  personaIn2!: Persona2;
+  personaOut!: PersonaOut;
   environment: any;
   form!: FormGroup;
 
@@ -44,7 +47,8 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               public utilService: UtilService,
               private registroFirmasService: RegistroFirmasService,
-             private dialog: MatDialog) { }
+             private dialog: MatDialog,
+           private seguridadService: SeguridadService) { }
 
 
   ngOnInit(): void {
@@ -190,13 +194,51 @@ export class Step2DetalleSolicitudComponent implements OnInit {
 }
 
 validateDNI(): void {
-  const dialogRef = this.dialog.open(this.dniApellidoModal);
+
   const dni = this.form.controls['numeroDocumento'].value;
   const apellidoPaternoIngresado = this.form.controls['primerApellido'].value;
 
-  if (dni && apellidoPaternoIngresado) {
 
-    this.registroFirmasService.consultarPersona(dni).subscribe((data: PersonaOut) => {
+  if (dni && apellidoPaternoIngresado) {
+        this.personaIn2 = new Persona2();
+      this.personaIn2.dni = this.form.controls['numeroDocumento'].value;
+      this.personaIn2.primerApellido = apellidoPaternoIngresado;
+
+    this.registroFirmasService.consultarPersona2(this.personaIn2).subscribe((data: PersonaOut) => {
+      this.personaOut = data;
+
+    }, error => {
+
+    }, () => {
+
+      if (this.personaOut.code !== this.environment.CODE_000) {
+
+        this.utilService.getAlert(`Aviso:`, `${this.personaOut.message}`);
+        return;
+      }
+
+      this.seguridadService.setToken(this.environment.VAR_TOKEN_EXTERNAL, this.personaOut.data2);
+
+      let persona = this.personaIn;
+
+      // Convertir ambos apellidos a mayúsculas antes de comparar
+      if (persona.primerApellido.toUpperCase() === apellidoPaternoIngresado.toUpperCase()) {
+        this.form.controls['preNombres'].setValue(persona.preNombre);
+        this.form.controls['segundoApellido'].setValue(persona.segundoApellido);
+        this.form.controls['primerApellido'].setValue(persona.primerApellido);
+          this.dialog.closeAll();
+
+      } else {
+        this.utilService.getAlert('Aviso', 'El apellido paterno introducido no coincide con el registrado para ese DNI.');
+        this.form.controls['preNombres'].setValue("");
+        this.form.controls['segundoApellido'].setValue("");
+        this.form.controls['primerApellido'].setValue("");
+      }
+
+    });
+
+
+/*    this.registroFirmasService.consultarPersona(dni).subscribe((data: PersonaOut) => {
   //this.registroFirmasService.consultarPersona2(dni,apellidoPaternoIngresado).subscribe((data: PersonaOut) => {
       if (data.code !== this.environment.CODE_000) {
         this.utilService.getAlert('Aviso', data.message);
@@ -215,22 +257,22 @@ validateDNI(): void {
         this.utilService.getAlert('Aviso', 'El apellido paterno introducido no coincide con el registrado para ese DNI.');
         this.form.controls['preNombres'].setValue("");
         this.form.controls['segundoApellido'].setValue("");
-        this.form.controls['primerApellido'].setValue("");
+        this.form.controls['primerApellido'].setValue("");*
       }
-    });
-    dialogRef.close();
+    });*/
+
   }
 }
 
 openDNIValidationModal(): void {
   const dialogRef = this.dialog.open(this.dniApellidoModal);
 
-  dialogRef.afterClosed().subscribe(result => {
+/*  dialogRef.afterClosed().subscribe(result => {
     if (result) {
       this.validateDNIandApellido(result);
-
+//this.validateDNI();
     }
-  });
+  });*/
 }
 
 onNoClick(): void {
