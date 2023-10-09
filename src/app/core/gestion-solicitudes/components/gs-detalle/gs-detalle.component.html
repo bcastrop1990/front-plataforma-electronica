@@ -46,6 +46,7 @@
           <div class="col-sm-12 col-md-2">Correo Electrónico</div>
           <div class="col-sm-12 col-md-1">Formatos</div>
         </div>
+        <!-- TABLA MUESTRA FORMATOS -->
         <ng-container *ngFor="let item of dataDialog.detalle.detalleSolicitudFirma">
           <div class="row mt-2">
             <div class="col-sm-12 col-md-2"><div class="custom-cell">{{item.idTipoSolicitud === environment.TIPO_SOLICITUD_ALTA.toString() ? 'ALTA' : item.idTipoSolicitud === environment.TIPO_SOLICITUD_BAJA.toString() ? 'BAJA' : 'ACTUALIZAR'}}</div></div>

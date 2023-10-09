@@ -1,4 +1,4 @@
-import {Result} from "../../../masters/models/result.model";
+import { Result } from '../../../masters/models/result.model';
 
 export class ValidarDatosIn {
   datosOficina: DatosOficina;
@@ -97,4 +97,17 @@ export class DetalleSolicitud {
   }
 }
 
+export class ConsultarRuipinIn {
+  dni: string;
+  constructor() {
+    this.dni = '';
+  }
+}
 
+export class ConsultarRuipinOut extends Result {
+  data: string;
+  constructor() {
+    super();
+    this.data = '';
+  }
+}
