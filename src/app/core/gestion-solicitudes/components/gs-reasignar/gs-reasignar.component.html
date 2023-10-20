@@ -1,0 +1,38 @@
+<mat-card>
+  <mat-card-title>
+    {{ dataDialog.title }}
+  </mat-card-title>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="content">
+      <!-- ESTADO -->
+      <div class="row">
+        <div class="col-sm-12 col-md-12">Estado Solicitud</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12">
+          <div class="custom-cell">REASIGNADO</div>
+        </div>
+      </div>
+      <!-- NUEVO ANALISTA -->
+      <div class="row">
+        <div class="col-sm-12 col-md-12">
+          <app-options
+            #cboAnalista
+            [label]="'Analista Asignado'"
+            [options]="analistas"
+            [optionSelect]="!esAnalista()"
+            [select]="esAnalista() ? user!.dni : ''"
+            (selected)="setAnalista($event)"
+          ></app-options>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <button tabindex="-1" mat-flat-button color="accent" (click)="cancel()">
+      Aceptar
+    </button>
+  </mat-card-actions>
+</mat-card>

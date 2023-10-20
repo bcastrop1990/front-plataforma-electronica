@@ -1,4 +1,4 @@
-import {Result} from "../../../masters/models/result.model";
+import { Result } from '../../../masters/models/result.model';
 
 export class RecepcionarIn {
   solicitudes: string[];
@@ -72,6 +72,13 @@ export class Detalle {
   }
 }
 
+export class Detalle2 {
+  archivoSustento: ArchivoSustento;
+  constructor() {
+    this.archivoSustento = new ArchivoSustento();
+  }
+}
+
 export class DetalleLibro extends Detalle {
   detalleSolicitudLibro: DetalleSolicitudLibro[];
   constructor() {
@@ -93,7 +100,7 @@ export class DetalleSolicitudLibro {
   }
 }
 
-export class DetalleFirma extends Detalle {
+export class DetalleFirma extends Detalle2 {
   detalleSolicitudLibro: DetalleSolicitudFirma[];
   constructor() {
     super();

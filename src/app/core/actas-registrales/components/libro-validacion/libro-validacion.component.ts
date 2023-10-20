@@ -14,6 +14,7 @@ import { SeguridadService } from '../../../../shared/services/seguridad.service'
 import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { RegistroLibroService } from '../../services/registro-libro.service';
+import { SessionService } from '../../services/sesion.service';
 
 @Component({
   selector: 'app-libro-validacion',
@@ -41,7 +42,8 @@ export class LibroValidacionComponent implements OnInit {
   constructor(
     public utilService: UtilService,
     private registroLibroService: RegistroLibroService,
-    private seguridadService: SeguridadService
+    private seguridadService: SeguridadService,
+    private sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -116,59 +118,45 @@ export class LibroValidacionComponent implements OnInit {
           this.environment.VAR_TOKEN_EXTERNAL,
           this.validarDatosOut.data
         );
+
+        this.sessionService.setToken(this.validarDatosOut.data);
+
         this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
       }
     );
-    // this.token = this.seguridadService.getToken();
-
-    //VALIDANDO RUIPIN
-    // this.registroLibroService
-    //   .consultarPorDatosRuipin(this.consultarRuipinIn)
-    //   .subscribe(
-    //     (data: ConsultarRuipinOut) => {
-    //       this.consultarRuipinOut = data;
-    //     },
-    //     (error) => {},
-    //     () => {
-    //       if (this.consultarRuipinOut.code !== this.environment.CODE_000) {
-    //         this.utilService.getAlert(
-    //           `Aviso:`,
-    //           `Firma inhabilitada comunicarse con el 315-4000 anexo 1876`
-    //         );
-    //         return;
-    //       }
-    //       this.seguridadService.setToken(
-    //         this.environment.VAR_TOKEN_EXTERNAL,
-    //         this.consultarRuipinOut.data
-    //       );
-    //     }
-    //   );
   }
 
   validarRuipin(): void {
-    this.registroLibroService
-      .consultarPorDatosRuipin2(this.consultarRuipinIn)
-      .subscribe(
-        (data: ConsultarRuipinOut) => {
-          this.consultarRuipinOut = data;
-        },
-        (error) => {},
-        () => {
-          if (this.consultarRuipinOut.code !== this.environment.CODE_000) {
-            this.utilService.getAlert(
-              `Aviso:`,
-              `¡Firma inhabilitada!,Comuníquese con nuestro canal de atencion 315-4000 anexo 1876`
-            );
-            return;
-          }
+    const dni: string = this.datosPersona.dni;
+    if (dni) {
+      this.consultarRuipinIn = new ConsultarRuipinIn();
+      this.consultarRuipinIn.dni = dni;
+      var token22 = this.sessionService.getToken();
 
-          this.seguridadService.setToken(
-            this.environment.VAR_TOKEN_EXTERNAL,
-            this.consultarRuipinOut.data
-          );
-          this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
-        }
-      );
+      this.registroLibroService
+        .consultarRuipin(this.consultarRuipinIn, token22)
+        .subscribe({
+          next: (data: ConsultarRuipinOut) => {
+            this.consultarRuipinOut = data;
+            console.log(this.consultarRuipinOut.data);
+          },
+          error: (error: any) => {
+            console.log('ERROR 403: FALLOOOOO FALLOOOOOOO');
+          },
+          complete: () => {
+            if (this.consultarRuipinOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(`Aviso:`, `DNI NO VERIFICADO`);
+              return;
+            }
+
+            this.seguridadService.setToken(
+              this.environment.VAR_TOKEN_EXTERNAL,
+              this.consultarRuipinOut.data
+            );
+            console.log(this.consultarRuipinOut.data);
+          },
+        });
+    }
   }
 
   back(): void {

@@ -47,22 +47,27 @@ export class RegistroLibroService {
     return this.http.post<RegistroLibroOut>(`${this.url}`, request);
   }
 
-  consultarPorDatosRuipin(request: ConsultarRuipinIn) {
+  consultarPorDatosRuipin2(request: ConsultarRuipinIn, token: any) {
+    //this.token = tokenExists;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
     return this.http.post<ConsultarRuipinOut>(
       `${this.url}/consultar-por-datos-ruipin?`,
-      request
+      request,
+      { headers }
     );
   }
 
-  consultarPorDatosRuipin2(
-    request: ConsultarRuipinIn
-  ): Observable<ConsultarRuipinOut> {
-    const tokenExists =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0NzYwMjk1NSIsImV4cCI6MTY5Njg4ODc1MSwiaWF0IjoxNjk2ODcwNzUxLCJwZXJzb25hSW5mbyI6eyJkbmkiOiI0NzYwMjk1NSIsInByaW1lckFwZWxsaWRvIjoiQVJPU0VNRU5BIiwic2VndW5kb0FwZWxsaWRvIjoiR1JBTkFET1MiLCJwcmVOb21icmUiOiJKVUFOIENBUkxPUyIsImNvZGlnb09yZWMiOiI1MDA3MTciLCJwZXJtaXNvcyI6bnVsbCwicGVyZmlsIjpudWxsLCJncnVwbyI6bnVsbH19.pajfENGiPgC1b3ZHExm3MNnFU-jfmaTSFfRXaIsN_8NPsSX2Xra7MuSBKi_mwfEm-TKU4Fs6B-pzXyT7P5OreQ';
-    //this.token = tokenExists;
+  consultarRuipin(request: ConsultarRuipinIn, token: any) {
+    // if skip = true, not clone with token
+    console.log('token en servio::: ' + token);
+
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${tokenExists}`,
+      Authorization: `Bearer ${token}`,
     });
+
     return this.http.post<ConsultarRuipinOut>(
       `${this.url}/consultar-por-datos-ruipin`,
       request,

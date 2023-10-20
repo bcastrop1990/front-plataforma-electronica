@@ -83,6 +83,7 @@ export class SeguridadService {
     return internal ? internal : external;
   }
 
+  //UTILIZA EL TOKEN
   getUserInternal() {
     return this.utilService.getLocalStorage(environment.VAR_TOKEN);
   }

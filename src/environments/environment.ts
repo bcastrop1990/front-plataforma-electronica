@@ -56,6 +56,7 @@ export const environment = {
   TIPO_RECEPCIONADO: 'RECEPCIONADO',
   TIPO_ASIGNADO: 'ASIGNADO',
   TIPO_ATENDIDO: 'ATENDIDO',
+  TIPO_REGISTRADO: 'REGISTRADO',
 
   // TIPO DE TRÁMITE
   TIPO_REGISTRO_LIBRO_ID: '1',
@@ -78,7 +79,7 @@ export const environment = {
   URL_MOD_SEGUIMIENTO_BUSQUEDA: '/seguimiento/busqueda',
   URL_MOD_GESTION_SOLICITUDES: '/gestion-solicitudes',
   URL_MOD_REPORTES: '/reportes',
-  URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes/reportes-excel',
+  URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes-excel',
   URL_MOD_GESTION_SOLICITUDES_ATENCION: '/gestion-solicitudes/atencion',
 };
 

@@ -10,6 +10,10 @@ import {
   DocumentosRespuesta,
   DocumentosRespuestaOut,
 } from '../../models/busqueda.model';
+import {
+  DetalleFirma,
+  ObtenerDetalleFirmaOut,
+} from 'src/app/core/gestion-solicitudes/models/gestion.model';
 import { UtilService } from '../../../../shared/services/util.service';
 import { SeguimientoService } from '../../services/seguimiento.service';
 import { environment } from 'src/environments/environment';
@@ -27,6 +31,8 @@ import {
 } from '@angular/material/dialog';
 import { ModalDocumentosComponent } from '../modal-documentos/modal-documentos.component';
 import { GsDetalleFilesComponent } from 'src/app/core/gestion-solicitudes/components/gs-detalle-files/gs-detalle-files.component';
+import { GestionService } from 'src/app/core/gestion-solicitudes/services/gestion.service';
+import { GsDetalleComponent } from 'src/app/core/gestion-solicitudes/components/gs-detalle/gs-detalle.component';
 
 @Component({
   selector: 'app-seguimiento-busqueda',
@@ -60,6 +66,9 @@ export class SeguimientoBusquedaComponent implements OnInit {
   documentosRespuestaOut!: DocumentosRespuestaOut;
   documentosRespuesta!: DocumentosRespuesta[];
 
+  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
+  detalleFirma!: DetalleFirma;
+
   lista!: BusquedaData[];
 
   fecIni = new Date();
@@ -73,7 +82,10 @@ export class SeguimientoBusquedaComponent implements OnInit {
     private seguimientoService: SeguimientoService,
     private uploadService: UploadFileService,
     private spinner: NgxSpinnerService,
-    public dialog: MatDialog // @Inject(MAT_DIALOG_DATA) public dataDialog: MatDialog
+    public dialog: MatDialogRef<GsDetalleComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataDialog: any,
+    public dialogOpen: MatDialog,
+    private gestionService: GestionService
   ) {}
 
   ngOnInit(): void {
@@ -190,6 +202,7 @@ export class SeguimientoBusquedaComponent implements OnInit {
     }, 100);
   }
 
+  //Permite ver el nombre del archivo
   btnVerArchivosRespuesta(numeroSolicitud: string): void {
     if (!numeroSolicitud) {
       this.utilService.getAlert(
@@ -199,6 +212,41 @@ export class SeguimientoBusquedaComponent implements OnInit {
       return;
     }
 
+    this.spinner.show();
+    this.gestionService.getDetailFirma(numeroSolicitud).subscribe(
+      (data: ObtenerDetalleFirmaOut) => {
+        this.spinner.hide();
+        this.obtenerDetalleFirmaOut = data;
+      },
+      (error) => {
+        console.log('ERROR ERROR');
+        this.spinner.hide();
+      },
+      () => {
+        this.spinner.hide();
+        if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.documentosRespuestaOut.message}`
+          );
+          return;
+        }
+        this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+        // ENVIAR RESPONSE A MODAL DETALLE
+        this.getDetalle2('Sustento', this.detalleFirma, numeroSolicitud);
+      }
+    );
+  }
+
+  //Permite ver datos del archivos
+  btnVerArchivos(numeroSolicitud: string): void {
+    if (!numeroSolicitud) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se ha obtenido el número de solicitud.'
+      );
+      return;
+    }
     this.spinner.show();
     this.seguimientoService.getDocumentosRespuesta(numeroSolicitud).subscribe(
       (data: DocumentosRespuestaOut) => {
@@ -224,41 +272,7 @@ export class SeguimientoBusquedaComponent implements OnInit {
     );
   }
 
-  // PERMITE VER LOS ARCHIVOS CARGADOS
-  // btnVerArchivos(numeroSolicitud: string): void {
-  //   if (!numeroSolicitud) {
-  //     this.utilService.getAlert(
-  //       'Aviso',
-  //       'No se ha obtenido el número de solicitud.'
-  //     );
-  //     return;
-  //   }
-
-  //   this.spinner.show();
-  //   this.seguimientoService.getDocumentosRespuesta(numeroSolicitud).subscribe(
-  //     (data: DocumentosRespuestaOut) => {
-  //       this.spinner.hide();
-  //       this.documentosRespuestaOut = data;
-  //     },
-  //     (error) => {
-  //       this.spinner.hide();
-  //     },
-  //     () => {
-  //       this.spinner.hide();
-  //       if (this.documentosRespuestaOut.code !== this.environment.CODE_000) {
-  //         this.utilService.getAlert(
-  //           `Aviso:`,
-  //           `${this.documentosRespuestaOut.message}`
-  //         );
-  //         return;
-  //       }
-  //       this.documentosRespuesta = this.documentosRespuestaOut.data;
-  //       // ENVIAR RESPONSE A MODAL DETALLE
-  //       this.getDetalle('Documentos de Respuesta', this.documentosRespuesta);
-  //     }
-  //   );
-  // }
-
+  //Prbando - buscars files.
   btnViewFiles(files: any[]): void {
     if (files.length <= 0) {
       this.utilService.getAlert('Aviso', 'No hay formatos asociados.');
@@ -268,16 +282,24 @@ export class SeguimientoBusquedaComponent implements OnInit {
   }
 
   getDetalleFiles(title: string, files: any[]) {
-    return this.dialog.open(GsDetalleFilesComponent, {
+    return this.dialogOpen.open(GsDetalleFilesComponent, {
       width: '850px',
       data: { title: title, files: files },
     });
   }
 
+  //No Opcion
   getDetalle(title: string, detalle: any) {
-    return this.dialog.open(ModalDocumentosComponent, {
+    return this.dialogOpen.open(ModalDocumentosComponent, {
       width: '1100px',
       data: { title: title, files: detalle },
+    });
+  }
+
+  getDetalle2(title: string, detalle: any, tipo: string) {
+    return this.dialogOpen.open(GsDetalleComponent, {
+      width: '850px',
+      data: { title: title, detalle: detalle, tipo: tipo },
     });
   }
 }
