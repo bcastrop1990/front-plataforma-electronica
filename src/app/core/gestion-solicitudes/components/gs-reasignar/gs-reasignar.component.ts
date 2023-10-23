@@ -1,3 +1,4 @@
+//Todo: Componente nuevo
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -97,4 +98,7 @@ export class GsReasignarComponent implements OnInit {
     console.log(id);
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
   }
+
+  //TODO: IMPLEMENTAR FUNCION PARA REASIGNAR ANALISTA
+  //todo: crear servicio para reasignar analista -> se manda dni del analista
 }

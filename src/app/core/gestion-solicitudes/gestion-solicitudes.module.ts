@@ -15,6 +15,7 @@ import { GsDetalleFilesComponent } from './components/gs-detalle-files/gs-detall
 import { GsAtencionComponent } from './components/gs-atencion/gs-atencion.component';
 import {ActasRegistralesModule} from "../actas-registrales/actas-registrales.module";
 import { GsReasignarComponent } from './components/gs-reasignar/gs-reasignar.component';
+import { GsModificarComponent } from './components/gs-modificar/gs-modificar.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { GsReasignarComponent } from './components/gs-reasignar/gs-reasignar.com
     GsDetalleFilesComponent,
     GsAtencionComponent,
     GsReasignarComponent,
+    GsModificarComponent,
   ],
   imports: [
     CommonModule,

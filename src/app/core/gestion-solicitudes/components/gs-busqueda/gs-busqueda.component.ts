@@ -35,6 +35,7 @@ import { User } from '../../../../auth/models/user.model';
 import { Subscription } from 'rxjs';
 import { SeguridadService } from '../../../../shared/services/seguridad.service';
 import { GsReasignarComponent } from '../gs-reasignar/gs-reasignar.component';
+import { GsModificarComponent } from '../gs-modificar/gs-modificar.component';
 
 @Component({
   selector: 'app-gs-busqueda',
@@ -46,6 +47,7 @@ export class GsBusquedaComponent implements OnInit {
   title!: string;
   //ESTADO INICIAL DEL ICONO
   asingado = false;
+  registrado = false;
   form!: FormGroup;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -239,11 +241,18 @@ export class GsBusquedaComponent implements OnInit {
         }
       }
     );
+
     //MUESTRA SI ESTA EN ASIGNAR
     if (this.busquedaIn.codigoEstado === '3') {
       this.asingado = true;
     } else {
       this.asingado = false;
+    }
+    //MUESTRA SI ESTA EN ASIGNAR
+    if (this.busquedaIn.codigoEstado === '1') {
+      this.registrado = true;
+    } else {
+      this.registrado = false;
     }
   }
 
@@ -272,6 +281,86 @@ export class GsBusquedaComponent implements OnInit {
     this.dialog.open(GsReasignarComponent, {
       width: '800px',
       data: { title: title },
+    });
+  }
+
+  //INGRESANDO PARAMETROS PARA MODIFICAR
+  btnModificar(row: BusquedaData): void {
+    if (!row.tipoRegistro) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se puede modificar el tipo de registro'
+      );
+      return;
+    }
+    // USO LIBRO
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
+      this.spinner.show();
+      this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleLibroOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleLibroOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleLibroOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleLibroOut.message}`
+            );
+            return;
+          }
+          this.detalleLibro = this.obtenerDetalleLibroOut.data;
+          // ENVIAR RESPONSE A MODAL DETALLE
+          this.modificar(
+            'Detalle de Solicitud',
+            this.detalleLibro,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+    // USO FIRMA
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
+      console.log('row.tipoRegistro: ' + row.tipoRegistro);
+      this.spinner.show();
+      this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleFirmaOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleFirmaOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleFirmaOut.message}`
+            );
+            return;
+          }
+          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+          // ENVIAR RESPONSE A MODAL DETALLE
+          this.modificar(
+            'Detalle de Solicitud',
+            this.detalleFirma,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+  }
+
+  // FUNCION PARA MODIFICAR
+  modificar(title: string, detalle: any, tipo: any) {
+    this.dialog.open(GsModificarComponent, {
+      width: '1100px',
+      data: { title: title, detalle: detalle, tipo: tipo },
     });
   }
 
@@ -318,6 +407,7 @@ export class GsBusquedaComponent implements OnInit {
 
     // FIRMA - Muestra fomatos - FORMATO A SEGUIR
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
+      console.log('row.tipoRegistro: ' + row.tipoRegistro);
       this.spinner.show();
       this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
         (data: ObtenerDetalleFirmaOut) => {
