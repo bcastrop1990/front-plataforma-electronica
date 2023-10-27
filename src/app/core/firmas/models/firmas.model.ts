@@ -17,6 +17,15 @@ export class ValidarDatosOut extends Result {
   }
 }
 
+export class ConsultarData {
+  estadoRegistrador: string;
+  descripcionOrec: string;
+  constructor() {
+    this.descripcionOrec = '';
+    this.estadoRegistrador = '';
+  }
+}
+
 export class DatosOficina {
   codigoOrec: string;
   constructor() {

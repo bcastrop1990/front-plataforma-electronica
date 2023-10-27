@@ -1,1 +1,140 @@
-<p>rp-reporte works!</p>
+<app-heading [title]="title"></app-heading>
+
+<div class="row mt-3 custom-padding-bottom">
+  <div class="col-12">
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-12">
+            <h3>Parámetros</h3>
+          </div>
+        </div>
+
+        <form [formGroup]="form">
+          <div class="row">
+            <div class="col-sm-12 col-md-3">
+              <app-options
+                #cboEstadoSolicitud
+                [label]="'Estado Solicitud'"
+                [options]="estadoSolicitud"
+                [select]="codigoEstado"
+                [optionSelect]="false"
+                (selected)="setEstadoSolicitud($event)"
+              ></app-options>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <mat-label>Rango de fecha de búsqueda</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-date-range-input [rangePicker]="picker">
+                  <input
+                    matStartDate
+                    formControlName="fechaIni"
+                    placeholder="Desde"
+                  />
+                  <input
+                    matEndDate
+                    formControlName="fechaFin"
+                    placeholder="Hasta"
+                  />
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker">
+                  <mat-icon
+                    matDatepickerToggleIcon
+                    fontSet="fas"
+                    fontIcon="fa-calendar-day"
+                  ></mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker-toggle
+                  matSuffix
+                  (click)="clearDate(['fechaIni', 'fechaFin'])"
+                  *ngIf="
+                    form.controls['fechaIni']?.value ||
+                    form.controls['fechaFin']?.value
+                  "
+                >
+                  <mat-icon
+                    matDatepickerToggleIcon
+                    fontSet="fas"
+                    fontIcon="fa-times"
+                  ></mat-icon>
+                </mat-datepicker-toggle>
+                <mat-date-range-picker
+                  #picker
+                  color="accent"
+                ></mat-date-range-picker>
+
+                <mat-error *ngIf="form.get('fechaIni')?.invalid">{{
+                  utilService.getErrorMessage(form, "fechaIni")
+                }}</mat-error>
+                <mat-error *ngIf="form.get('fechaFin')?.invalid">{{
+                  utilService.getErrorMessage(form, "fechaFin")
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-12 col-md-3">
+              <app-options
+                #cboTipoRegistro
+                [label]="'Tipo de Registro'"
+                [options]="tipoRegistro"
+                [optionSelect]="!esAnalista()"
+                [select]="
+                  esAnalista() ? environment.TIPO_REGISTRO_LIBRO_ID : ''
+                "
+                (selected)="setTipoRegistro($event)"
+              ></app-options>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- <div class="col-sm-12 col-md-5">
+              <app-oficina-autorizada
+                #cboOficinaAutorizada
+                [idDepartamento]="form.controls['codigoDepartamento'].value"
+                [idProvincia]="form.controls['codigoProvincia'].value"
+                [idDistrito]="form.controls['codigoDistrito'].value"
+                (oficinaOrecSelected)="getOficinaAutorizada($event)"
+              ></app-oficina-autorizada>
+            </div> -->
+
+            <div class="col-sm-12 col-md-5">
+              <app-options
+                #cboAnalista
+                [label]="'Analista Asignado'"
+                [options]="analistas"
+                [optionSelect]="!esAnalista()"
+                [select]="esAnalista() ? user!.dni : ''"
+                (selected)="setAnalista($event)"
+              ></app-options>
+            </div>
+          </div>
+        </form>
+
+        <div class="row">
+          <div class="col-12">
+            <h3>Resultado</h3>
+          </div>
+        </div>
+
+        <ng-container *ngIf="length <= 0">
+          <div class="row">
+            <div class="col-12 text-center">
+              <strong>{{ message }}</strong>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="length >= 0">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 mt-3 d-flex justify-content-end">
+              <button mat-flat-button color="accent">Generar Reporte</button>
+              <button mat-flat-button color="accent" class="ml-2">
+                Exportar a Excel
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -7,19 +7,17 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { AppMaterialModule } from 'src/app/app-material.module';
 import { MastersModule } from 'src/app/masters/masters.module';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ActasRegistralesModule } from '../actas-registrales/actas-registrales.module';
-import { GestionSolicitudesRoutingModule } from '../gestion-solicitudes/gestion-solicitudes-routing.module';
+import { ReportesExcelRoutingModule } from './reportes-excel-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    GestionSolicitudesRoutingModule,
     ReactiveFormsModule,
     AppMaterialModule,
     NgxSpinnerModule,
     SharedModule,
     MastersModule,
-    ActasRegistralesModule,
+    ReportesExcelRoutingModule,
   ],
   exports: [],
   declarations: [RpDashboardComponent, RpReporteComponent],

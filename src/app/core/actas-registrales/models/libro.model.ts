@@ -89,17 +89,25 @@ export class DetalleSolicitudLibro {
   }
 }
 
-export class ConsultarRuipinIn {
-  dni: string;
+//Creando modelo para nuevo servicio
+
+export class ConsultarPorDniOut extends Result {
+  data: Persona;
   constructor() {
-    this.dni = '';
+    super();
+    this.data = new Persona();
   }
 }
 
-export class ConsultarRuipinOut extends Result {
-  data: string;
+export class Persona {
+  codigoOrec: string;
+  descripcionOrec: string;
+  estadoRegistrador: string;
   constructor() {
-    super();
-    this.data = '';
+    this.codigoOrec = '';
+    this.descripcionOrec = '';
+    this.estadoRegistrador = '';
   }
 }
+
+//Fin de la creacion

@@ -15,6 +15,7 @@ import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { RegistroLibroService } from '../../services/registro-libro.service';
 import { SessionService } from '../../services/sesion.service';
+import { Persona, ConsultarPorDniOut } from '../../models/libro.model';
 
 @Component({
   selector: 'app-libro-validacion',
@@ -23,13 +24,17 @@ import { SessionService } from '../../services/sesion.service';
 })
 export class LibroValidacionComponent implements OnInit {
   environment: any;
-  token!: string;
+  verificacionRealizada: boolean = false;
+  clickCount: number = 0;
 
   datosPersona!: DatosPersona;
   datosOficina!: DatosOficina;
 
   validarDatosIn!: ValidarDatosIn;
   validarDatosOut!: ValidarDatosOut;
+
+  //Nuevas implementaciones - libroValidacion
+  consultarPorDniOut!: ConsultarPorDniOut;
 
   consultarRuipinIn!: ConsultarRuipinIn;
   consultarRuipinOut!: ConsultarRuipinOut;
@@ -48,6 +53,14 @@ export class LibroValidacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
+  }
+
+  //crear el token y luego evalua
+  verificar() {
+    this.start();
+    setTimeout(() => {
+      this.consultarPorReg();
+    }, 1000);
   }
 
   start(): void {
@@ -95,6 +108,7 @@ export class LibroValidacionComponent implements OnInit {
     this.validarDatosIn.datosOficina = this.datosOficina;
 
     // CALL SERVICE
+    this.consultarPorReg();
     this.registroLibroService.validarDatos(this.validarDatosIn).subscribe(
       (data: ValidarDatosOut) => {
         this.validarDatosOut = data;
@@ -120,43 +134,37 @@ export class LibroValidacionComponent implements OnInit {
         );
 
         this.sessionService.setToken(this.validarDatosOut.data);
-
-        this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
+        this.verificacionRealizada = true;
       }
     );
   }
 
-  validarRuipin(): void {
-    const dni: string = this.datosPersona.dni;
-    if (dni) {
-      this.consultarRuipinIn = new ConsultarRuipinIn();
-      this.consultarRuipinIn.dni = dni;
-      var token22 = this.sessionService.getToken();
+  //todo: Corregir la entrada del token
 
-      this.registroLibroService
-        .consultarRuipin(this.consultarRuipinIn, token22)
-        .subscribe({
-          next: (data: ConsultarRuipinOut) => {
-            this.consultarRuipinOut = data;
-            console.log(this.consultarRuipinOut.data);
-          },
-          error: (error: any) => {
-            console.log('ERROR 403: FALLOOOOO FALLOOOOOOO');
-          },
-          complete: () => {
-            if (this.consultarRuipinOut.code !== this.environment.CODE_000) {
-              this.utilService.getAlert(`Aviso:`, `DNI NO VERIFICADO`);
-              return;
-            }
-
-            this.seguridadService.setToken(
-              this.environment.VAR_TOKEN_EXTERNAL,
-              this.consultarRuipinOut.data
-            );
-            console.log(this.consultarRuipinOut.data);
-          },
-        });
-    }
+  consultarPorReg() {
+    //VALIDAR REGISTRADOR
+    const dni = this.datosPersona.dni;
+    this.registroLibroService
+      .consultarRegCivil(dni)
+      .subscribe((data: ConsultarPorDniOut) => {
+        if (data.code == this.environment.CODE_999) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `¡Firma
+          inhabilitada!,\nComunicarse con el 315-4000 anexo 1876`
+          );
+          return;
+        }
+        let persona = new Persona();
+        persona = data.data;
+        if (persona.estadoRegistrador == '1') {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `Oficina Autorizada ${persona.descripcionOrec}`
+          );
+          this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
+        }
+      });
   }
 
   back(): void {

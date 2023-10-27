@@ -77,9 +77,9 @@ export const environment = {
   URL_MOD_SEGUIMIENTO: '/seguimiento',
   URL_MOD_SEGUIMIENTO_VALIDACION: '/seguimiento/validacion',
   URL_MOD_SEGUIMIENTO_BUSQUEDA: '/seguimiento/busqueda',
+  URL_MOD_REPORTES_EXCEL: '/reportesExcel',
   URL_MOD_GESTION_SOLICITUDES: '/gestion-solicitudes',
   URL_MOD_REPORTES: '/reportes',
-  URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes-excel',
   URL_MOD_GESTION_SOLICITUDES_ATENCION: '/gestion-solicitudes/atencion',
 };
 

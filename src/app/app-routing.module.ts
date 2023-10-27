@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './shared/components/main/main.component';
-import { GuardianUserGuard } from './shared/guards/guardian-user.guard';
-import { ReportesExcelModule } from './core/reportes-excel/reportes-excel.module';
 
 const routes: Routes = [
   {
@@ -43,17 +41,17 @@ const routes: Routes = [
       import('./core/reportes/reportes.module').then((x) => x.ReportesModule),
   },
   {
+    path: 'reportesExcel',
+    loadChildren: () =>
+      import('./core/reportes-excel/reportes-excel.module').then(
+        (x) => x.ReportesExcelModule
+      ),
+  },
+  {
     path: 'gestion-solicitudes',
     loadChildren: () =>
       import('./core/gestion-solicitudes/gestion-solicitudes.module').then(
         (x) => x.GestionSolicitudesModule
-      ),
-  },
-  {
-    path: 'reportes-excel',
-    loadChildren: () =>
-      import('./core/reportes-excel/reportes-excel.module').then(
-        (x) => x.ReportesExcelModule
       ),
   },
 ];
