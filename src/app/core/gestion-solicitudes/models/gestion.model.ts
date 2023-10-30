@@ -1,4 +1,5 @@
 import { Result } from '../../../masters/models/result.model';
+import { TipoSolicitudOut } from '../../firmas/models/tipo-solicitud.model';
 
 export class RecepcionarIn {
   solicitudes: string[];
@@ -25,6 +26,23 @@ export class AsignarIn {
 }
 
 export class AsignarOut extends Result {
+  data: string;
+  constructor() {
+    super();
+    this.data = '';
+  }
+}
+
+export class ReasignarIn {
+  codigoAnalista: string;
+  solicitudes: string[];
+  constructor() {
+    this.codigoAnalista = '';
+    this.solicitudes = new Array<string>();
+  }
+}
+
+export class ReasignarOut extends Result {
   data: string;
   constructor() {
     super();

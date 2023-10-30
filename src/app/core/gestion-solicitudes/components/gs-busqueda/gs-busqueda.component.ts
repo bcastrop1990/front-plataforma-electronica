@@ -486,6 +486,7 @@ export class GsBusquedaComponent implements OnInit {
     });
   }
 
+  //todo: consumo guia
   btnAsignar(): void {
     const array: string[] = this.selection.selected.map(
       (value) => value.numeroSolicitud
@@ -501,6 +502,9 @@ export class GsBusquedaComponent implements OnInit {
       if (result.sw) {
         this.asignarIn = new AsignarIn();
         this.asignarIn.codigoAnalista = result.id;
+        console.log(
+          'this.asignarIn.codigoAnalista: ' + this.asignarIn.codigoAnalista
+        );
         this.asignarIn.solicitudes = array;
 
         this.gestionService.asignar(this.asignarIn).subscribe(

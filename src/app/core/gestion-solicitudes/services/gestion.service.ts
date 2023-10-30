@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BusquedaIn, BusquedaOut } from '../models/busqueda.model';
+import { RequestPaso1 } from '../../actas-registrales/components/step1-libro-solicitante/step1-libro-solicitante.component';
 import {
   AsignarIn,
   AsignarOut,
   ObtenerDetalleFirmaOut,
   ObtenerDetalleLibroOut,
+  ReasignarIn,
+  ReasignarOut,
   RecepcionarIn,
   RecepcionarOut,
 } from '../models/gestion.model';
@@ -35,6 +38,14 @@ export class GestionService {
   recepcionar(request: RecepcionarIn) {
     return this.http.post<RecepcionarOut>(
       `${this.url}/solicitudes/recepcionar`,
+      request
+    );
+  }
+
+  // NUEVO SERVICIO PARA REASINGAR
+  reasignar(request: ReasignarIn) {
+    return this.http.post<ReasignarOut>(
+      `${this.url}/solicitudes/reasignar`,
       request
     );
   }

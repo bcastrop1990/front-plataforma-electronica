@@ -99,6 +99,8 @@ export class GsReasignarComponent implements OnInit {
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
   }
 
+  // reasignar()
+
   //TODO: IMPLEMENTAR FUNCION PARA REASIGNAR ANALISTA
   //todo: crear servicio para reasignar analista -> se manda dni del analista
 }
