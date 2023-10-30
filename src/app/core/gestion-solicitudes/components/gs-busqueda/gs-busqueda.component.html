@@ -267,7 +267,7 @@
                 </ng-container>
 
                 <!-- Checkbox Column -->
-                <ng-container  matColumnDef="select">
+                <ng-container matColumnDef="select">
                   <mat-header-cell *matHeaderCellDef>
                     <!--                    <mat-checkbox (change)="$event ? toggleAllRows() : null"-->
                     <!--                                  [checked]="selection.hasValue() && isAllSelected()"-->
@@ -324,7 +324,7 @@
                       tabindex="-1"
                       mat-icon-button
                       color="accent"
-                      title="Editar"
+                      title="Reasignar"
                       *ngIf="asingado"
                       (click)="btnReasignar(element)"
                     >
@@ -333,17 +333,17 @@
                     </button>
                     <!-- MODIFICAR FORMATOS -->
                     <!-- IMPLEMENTACION DEL NUEVO ICONO -->
-                    <button
+                    <!-- <button
                       tabindex="-1"
                       mat-icon-button
                       color="accent"
-                      title="Editar"
+                      title="Modificar"
                       *ngIf="registrado"
                       (click)="btnModificar(element)"
                     >
                       <mat-icon>edit</mat-icon>
                       <span class="text-button-table">Modificar</span>
-                    </button>
+                    </button> -->
                   </mat-cell>
                 </ng-container>
 

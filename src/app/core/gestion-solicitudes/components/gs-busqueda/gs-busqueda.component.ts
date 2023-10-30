@@ -273,14 +273,14 @@ export class GsBusquedaComponent implements OnInit {
 
   // INGRESANDO PARAMETROS DE ASIGNAR REASIGNAR
   btnReasignar(row: BusquedaData) {
-    this.reasignar('Reasignar Analista');
+    this.reasignar('Reasignar Analista', row);
   }
 
   // FUNCION PARA REASIGNAR
-  reasignar(title: string) {
+  reasignar(title: string, analista: BusquedaData) {
     this.dialog.open(GsReasignarComponent, {
       width: '800px',
-      data: { title: title },
+      data: { title: title, analista: analista },
     });
   }
 
