@@ -24,6 +24,8 @@ import {
   DetalleLibro,
   ObtenerDetalleFirmaOut,
   ObtenerDetalleLibroOut,
+  ReasignarIn,
+  ReasignarOut,
   RecepcionarIn,
   RecepcionarOut,
 } from '../../models/gestion.model';
@@ -78,6 +80,9 @@ export class GsBusquedaComponent implements OnInit {
 
   asignarIn!: AsignarIn;
   asignarOut!: AsignarOut;
+
+  reAsignarIn!: ReasignarIn;
+  reAsignarOut!: ReasignarOut;
 
   listaEstadoSolicitud!: BusquedaData[];
 
@@ -231,6 +236,7 @@ export class GsBusquedaComponent implements OnInit {
         // CLEAR SELECTION
         this.selection.clear();
         this.listaEstadoSolicitud = this.busquedaOut.data;
+        this.listaEstadoSolicitud.forEach((item) => {});
         this.dataResult = new MatTableDataSource<BusquedaData>(
           this.listaEstadoSolicitud
         );
@@ -269,19 +275,6 @@ export class GsBusquedaComponent implements OnInit {
       this.environment.URL_MOD_GESTION_SOLICITUDES_ATENCION,
       row.numeroSolicitud
     );
-  }
-
-  // INGRESANDO PARAMETROS DE ASIGNAR REASIGNAR
-  btnReasignar(row: BusquedaData) {
-    this.reasignar('Reasignar Analista', row);
-  }
-
-  // FUNCION PARA REASIGNAR
-  reasignar(title: string, analista: BusquedaData) {
-    this.dialog.open(GsReasignarComponent, {
-      width: '800px',
-      data: { title: title, analista: analista },
-    });
   }
 
   //INGRESANDO PARAMETROS PARA MODIFICAR
@@ -407,7 +400,6 @@ export class GsBusquedaComponent implements OnInit {
 
     // FIRMA - Muestra fomatos - FORMATO A SEGUIR
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
-      console.log('row.tipoRegistro: ' + row.tipoRegistro);
       this.spinner.show();
       this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
         (data: ObtenerDetalleFirmaOut) => {
@@ -498,6 +490,7 @@ export class GsBusquedaComponent implements OnInit {
     }
 
     const modalAsignacion = this.getAnalista('Asignación', this.analistas);
+
     modalAsignacion.afterClosed().subscribe((result) => {
       if (result.sw) {
         this.asignarIn = new AsignarIn();
@@ -529,6 +522,14 @@ export class GsBusquedaComponent implements OnInit {
   getAnalista(title: string, options: Options[]) {
     return this.dialog.open(GsAnalistaComponent, {
       width: '450px',
+      data: { title: title, options: options },
+    });
+  }
+
+  // FUNCION PARA REASIGNAR
+  getReasignar(title: string, options: Options[]) {
+    return this.dialog.open(GsReasignarComponent, {
+      width: '600px',
       data: { title: title, options: options },
     });
   }
@@ -588,6 +589,7 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   setAnalista(id: any) {
+    console.log(id);
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
   }
 
@@ -643,5 +645,44 @@ export class GsBusquedaComponent implements OnInit {
 
   setTipoRegistro(id: any) {
     this.form.controls['codigoTipoRegistro'].setValue(id);
+  }
+
+  btnReasignar(): void {
+    const array: string[] = this.selection.selected.map(
+      (value) => value.numeroSolicitud
+    );
+
+    if (array.length <= 0) {
+      this.utilService.getAlert('Aviso', 'Debe seleccionar a un analista.');
+      return;
+    }
+
+    const modalAsignacion = this.getReasignar('Reasignar', this.analistas);
+    modalAsignacion.afterClosed().subscribe((result) => {
+      if (result.sw) {
+        this.reAsignarIn = new ReasignarIn();
+        this.reAsignarIn.codigoAnalista = result.id;
+        this.reAsignarIn.solicitudes = array;
+
+        this.gestionService.reasignar(this.reAsignarIn).subscribe(
+          (data: ReasignarOut) => {
+            this.reAsignarOut = data;
+          },
+          (error) => {},
+          () => {
+            if (this.reAsignarOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.reAsignarOut.message}`
+              );
+              return;
+            }
+            this.utilService.getAlert(`Aviso:`, `${this.reAsignarOut.data}`);
+            this.getListaBusqueda();
+            this.selection.clear();
+          }
+        );
+      }
+    });
   }
 }

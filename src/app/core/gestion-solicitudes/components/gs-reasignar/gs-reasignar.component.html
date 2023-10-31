@@ -15,27 +15,21 @@
         </div>
       </div>
       <!-- ANALISTA ACTUAL -->
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-sm-12 col-md-12">Analista Asignado</div>
       </div>
       <div class="row mb-2">
         <div class="col-sm-12 col-md-12">
-          <div class="custom-cell">
-            {{ dataDialog.analista.analistaAsignado }}
-          </div>
+          <div class="custom-cell"></div>
         </div>
-      </div>
-      <!-- NUEVO ANALISTA -->
+      </div> -->
       <div class="row">
         <div class="col-sm-12 col-md-12">Nuevo Analista</div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-12">
           <app-options
-            #cboAnalista
-            [options]="analistas"
-            [optionSelect]="!esAnalista()"
-            [select]="esAnalista() ? user!.dni : ''"
+            [options]="dataDialog.options"
             (selected)="setAnalista($event)"
           ></app-options>
         </div>
@@ -44,8 +38,11 @@
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions>
-    <button tabindex="-1" mat-flat-button color="accent" (click)="cancel()">
-      Aceptar
+    <button tabindex="-1" mat-stroked-button color="accent" (click)="cancel()">
+      Cancelar
+    </button>
+    <button tabindex="-1" mat-flat-button color="accent" (click)="confirm()">
+      Reasingar
     </button>
   </mat-card-actions>
 </mat-card>

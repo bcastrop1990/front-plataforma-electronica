@@ -279,8 +279,7 @@
                       (click)="$event.stopPropagation()"
                       (change)="$event ? selection.toggle(row) : null"
                       [disabled]="
-                        row.estadoSolicitud === environment.TIPO_ASIGNADO ||
-                        row.estadoSolicitud === environment.TIPO_ATENDIDO
+                        row.estadoSolicitud === environment.TIPO_REASIGNADO
                       "
                       [checked]="selection.isSelected(row)"
                     >
@@ -318,32 +317,6 @@
                       <mat-icon fontSet="fas" fontIcon="fa-eye"></mat-icon>
                       <span class="text-button-table">Ver Detalle</span>
                     </button>
-                    <!-- REASINGAR ANALISTA -->
-                    <!-- IMPLEMENTACION DEL NUEVO ICONO -->
-                    <button
-                      tabindex="-1"
-                      mat-icon-button
-                      color="accent"
-                      title="Reasignar"
-                      *ngIf="asingado"
-                      (click)="btnReasignar(element)"
-                    >
-                      <mat-icon>account_circle</mat-icon>
-                      <span class="text-button-table">Reasignar</span>
-                    </button>
-                    <!-- MODIFICAR FORMATOS -->
-                    <!-- IMPLEMENTACION DEL NUEVO ICONO -->
-                    <!-- <button
-                      tabindex="-1"
-                      mat-icon-button
-                      color="accent"
-                      title="Modificar"
-                      *ngIf="registrado"
-                      (click)="btnModificar(element)"
-                    >
-                      <mat-icon>edit</mat-icon>
-                      <span class="text-button-table">Modificar</span>
-                    </button> -->
                   </mat-cell>
                 </ng-container>
 
@@ -386,6 +359,15 @@
                 (click)="btnAsignar()"
               >
                 Asignar
+              </button>
+              <button
+                mat-flat-button
+                color="accent"
+                [disabled]="form.controls['codigoEstado'].value !== '3'"
+                class="mx-1"
+                (click)="btnReasignar()"
+              >
+                Reasignar
               </button>
             </div>
           </div>
