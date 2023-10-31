@@ -50,6 +50,8 @@ export class GsBusquedaComponent implements OnInit {
   //ESTADO INICIAL DEL ICONO
   asingado = false;
   registrado = false;
+  //VALIDAR SI ES COORDINADOR
+  coordinador = true;
   form!: FormGroup;
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -157,6 +159,9 @@ export class GsBusquedaComponent implements OnInit {
   ngOnInit(): void {
     this.environment = environment;
     this.title = 'Gestión de Solicitudes';
+    this.analistas.forEach((a) => {
+      console.log(a.descripcion);
+    });
 
     this.form = this.formBuilder.group({
       numeroSolicitud: [''],
@@ -177,9 +182,20 @@ export class GsBusquedaComponent implements OnInit {
     this.getEstadosSolicitud();
     this.getTipoRegistro();
     this.getListaBusqueda();
+    this.validarCoordinador();
   }
 
+  validarCoordinador() {
+    this.analistas.forEach((a) => {
+      console.log(a.descripcion);
+    });
+  }
+
+  //CONDICION PARA BOTON REASIGNAR
   esAnalista(): boolean {
+    if (this.user?.perfil.codigo === this.environment.PERFIL_ANALISTA) {
+      this.coordinador = false;
+    }
     return this.user?.perfil.codigo === this.environment.PERFIL_ANALISTA;
   }
 
@@ -589,7 +605,12 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   setAnalista(id: any) {
-    console.log(id);
+    if (id) {
+      console.log(id);
+    } else {
+      console.log('error');
+    }
+
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
   }
 

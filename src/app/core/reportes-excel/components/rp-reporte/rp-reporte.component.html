@@ -12,7 +12,7 @@
 
         <form [formGroup]="form">
           <div class="row">
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-4">
               <app-options
                 #cboEstadoSolicitud
                 [label]="'Estado Solicitud'"
@@ -72,7 +72,7 @@
               </mat-form-field>
             </div>
 
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-4">
               <app-options
                 #cboTipoRegistro
                 [label]="'Tipo de Solicitud'"
@@ -87,7 +87,7 @@
           </div>
 
           <div class="row">
-            <div class="col-sm-12 col-md-5">
+            <div class="col-sm-12 col-md-6">
               <!-- CAMBIAR POR OFICINAS -->
               <app-options
                 #cboAnalista
@@ -99,7 +99,7 @@
               ></app-options>
             </div>
 
-            <div class="col-sm-12 col-md-5">
+            <div class="col-sm-12 col-md-6">
               <app-options
                 #cboAnalista
                 [label]="'Analista Asignado'"
@@ -108,6 +108,42 @@
                 [select]="esAnalista() ? user!.dni : ''"
                 (selected)="setAnalista($event)"
               ></app-options>
+            </div>
+          </div>
+          <!-- Datos del solicitante -->
+          <div class="row">
+            <div class="col-sm-12 col-md-4">
+              <label>DNI Solicitante</label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input
+                  matInput
+                  formControlName="dniSolicitante"
+                  placeholder="Ingrese"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Ape.Paterno Solicitante</label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input
+                  matInput
+                  formControlName="apellidoPaterno"
+                  placeholder="Ingrese"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Ape.Materno Solicitante</label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input
+                  matInput
+                  formControlName="apellidoMaterno"
+                  placeholder="Ingrese"
+                  autocomplete="off"
+                />
+              </mat-form-field>
             </div>
           </div>
         </form>
@@ -133,11 +169,28 @@
             </div>
           </div>
         </ng-container>
-        <ng-container>
-          <div class="row">
-            <div class="col-12"></div>
-          </div>
-        </ng-container>
+        <!-- Creando un tabla a mostrar -->
+        <!-- TODO: ESPERAR A CREACION DE SERVICIO -->
+        <!-- <ng-container>
+            <div class="row">
+              <div class="col-12">
+                <mat-table>
+                  <ng-container>
+                    <mat-header-cell> N° Solicitud </mat-header-cell>
+                    <mat-cell> 10000 </mat-cell>
+                  </ng-container>
+                  <ng-container>
+                    <mat-header-cell> Fecha Registro </mat-header-cell>
+                    <mat-cell> 10000 </mat-cell>
+                  </ng-container>
+                  <ng-container>
+                    <mat-header-cell> Tipo Solicitud </mat-header-cell>
+                    <mat-cell> 10000 </mat-cell>
+                  </ng-container>
+                </mat-table>
+              </div>
+            </div>
+          </ng-container> -->
       </mat-card-content>
     </mat-card>
   </div>

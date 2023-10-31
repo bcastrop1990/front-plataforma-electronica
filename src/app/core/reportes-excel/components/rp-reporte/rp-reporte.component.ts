@@ -20,7 +20,7 @@ import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 })
 export class RpReporteComponent implements OnInit {
   environment: any;
-  message!: string;
+  message: string = 'SIN NADA QUE MOSTRAR';
 
   //ADAPTAR PARA LA PAGINA
   dataResult!: MatTableDataSource<BusquedaData>;
@@ -83,6 +83,9 @@ export class RpReporteComponent implements OnInit {
     this.title = 'Generar Reporte';
     this.environment = environment;
     this.form = this.formBuilder.group({
+      dniSolicitante: [''],
+      apellidoPaterno: [''],
+      apellidoMaterno: [''],
       codigoEstado: [this.codigoEstado],
       fechaIni: [''],
       fechaFin: [''],
