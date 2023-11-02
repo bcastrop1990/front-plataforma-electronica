@@ -404,6 +404,18 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
+          console.log(
+            'this.obtenerDetalleLibroOut.data.archivoSustento.nombreOriginal: ' +
+              this.obtenerDetalleLibroOut.data.archivoSustento.nombreOriginal
+          );
+          console.log(
+            'this.obtenerDetalleLibroOut.data.archivoSustento.tipoArchivo: ' +
+              this.obtenerDetalleLibroOut.data.archivoSustento.tipoArchivo
+          );
+          console.log(
+            'this.obtenerDetalleLibroOut.data.archivoSustento.codigo: ' +
+              this.obtenerDetalleLibroOut.data.archivoSustento.codigo
+          );
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
@@ -435,6 +447,18 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+          console.log(
+            'this.obtenerDetalleLibroOut.data.archivoSustento.nombreOriginal: ' +
+              this.obtenerDetalleFirmaOut.data.archivoSustento.nombreOriginal
+          );
+          console.log(
+            'this.obtenerDetalleLibroOut.data.archivoSustento.tipoArchivo: ' +
+              this.obtenerDetalleFirmaOut.data.archivoSustento.tipoArchivo
+          );
+          console.log(
+            'this.obtenerDetalleLibroOut.data.archivoSustento.codigo: ' +
+              this.obtenerDetalleFirmaOut.data.archivoSustento.codigo
+          );
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
