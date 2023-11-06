@@ -256,6 +256,9 @@ export class GsBusquedaComponent implements OnInit {
         this.dataResult = new MatTableDataSource<BusquedaData>(
           this.listaEstadoSolicitud
         );
+
+        console.log(this.dataResult);
+
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
         if (!length || length <= 0) {
@@ -629,12 +632,6 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   setAnalista(id: any) {
-    if (id) {
-      console.log(id);
-    } else {
-      console.log('error');
-    }
-
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
   }
 

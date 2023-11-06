@@ -150,8 +150,19 @@
         <ng-container *ngIf="length >= 0">
           <div class="row">
             <div class="col-sm-12 col-md-12 mt-3 d-flex justify-content-end">
-              <button mat-flat-button color="accent">Generar Reporte</button>
-              <button mat-flat-button color="accent" class="ml-2">
+              <button
+                mat-flat-button
+                color="accent"
+                class="button-custom-search"
+                (click)="btnSearch()"
+              >
+                Generar Reporte
+              </button>
+              <button
+                mat-flat-button
+                color="accent"
+                class="button-custom-search ml-2"
+              >
                 Exportar a Excel
               </button>
             </div>
@@ -171,26 +182,128 @@
         </ng-container>
         <!-- Creando un tabla a mostrar -->
         <!-- TODO: ESPERAR A CREACION DE SERVICIO -->
-        <!-- <ng-container>
-            <div class="row">
-              <div class="col-12">
-                <mat-table>
-                  <ng-container>
-                    <mat-header-cell> N° Solicitud </mat-header-cell>
-                    <mat-cell> 10000 </mat-cell>
-                  </ng-container>
-                  <ng-container>
-                    <mat-header-cell> Fecha Registro </mat-header-cell>
-                    <mat-cell> 10000 </mat-cell>
-                  </ng-container>
-                  <ng-container>
-                    <mat-header-cell> Tipo Solicitud </mat-header-cell>
-                    <mat-cell> 10000 </mat-cell>
-                  </ng-container>
-                </mat-table>
-              </div>
+        <ng-container *ngIf="length >= 1">
+          <div class="row">
+            <div class="col-12">
+              <mat-table [dataSource]="dataResult">
+                <ng-container
+                  matColumnDef="nroSolicitud"
+                  class="col-sm-2 col-md-3 col-lg-4"
+                >
+                  <mat-header-cell *matHeaderCellDef>
+                    N° Solicitud
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.numeroSolicitud }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fechaRegistro">
+                  <mat-header-cell *matHeaderCellDef>
+                    Fecha Trámite
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.fechaSolicitud }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container
+                  matColumnDef="tipoRegistro"
+                  class="col-sm-2 col-md-2 col-lg-2"
+                >
+                  <mat-header-cell *matHeaderCellDef>
+                    Tipo <br />Solicitud
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.tipoRegistro }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="detalleSolicitud">
+                  <mat-header-cell *matHeaderCellDef>
+                    Detalle Solicitud
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> DetallePrueba </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="oficinaAutorizada">
+                  <mat-header-cell *matHeaderCellDef>
+                    Oficina Autorizada
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.oficinaAutorizada }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="solicitante">
+                  <mat-header-cell *matHeaderCellDef>
+                    Solicitante
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    SolicitantePrueba
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fechaRecepcion">
+                  <mat-header-cell *matHeaderCellDef>
+                    Fecha Recepción
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.fechaRecepcion }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fechaAsignacion">
+                  <mat-header-cell *matHeaderCellDef>
+                    Fecha Asignación
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.fechaAsignacion }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fechaAtencion">
+                  <mat-header-cell *matHeaderCellDef>
+                    Fecha Atención
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.fechaAtencion }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="analistaAsignado">
+                  <mat-header-cell *matHeaderCellDef>
+                    Analista Asignado
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.analistaAsignado }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="docAtencion">
+                  <mat-header-cell *matHeaderCellDef>
+                    Doc.Atención
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    DocAtencionPrueba
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="estado">
+                  <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.estadoSolicitud }}
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns; let odd = odd"
+                  [ngClass]="{ gray: odd }"
+                ></mat-row>
+              </mat-table>
+              <mat-paginator
+                [pageSizeOptions]="[10, 20]"
+                [length]="busquedaOut.totalElements"
+                [pageSize]="busquedaIn.size"
+                [pageIndex]="busquedaOut.page"
+                (page)="getListaBusqueda($event)"
+                showFirstLastButtons
+              >
+              </mat-paginator>
             </div>
-          </ng-container> -->
+          </div>
+        </ng-container>
       </mat-card-content>
     </mat-card>
   </div>
