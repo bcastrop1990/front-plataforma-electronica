@@ -193,7 +193,7 @@ export class RpReporteComponent implements OnInit {
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
 
-    this.gestionService.listReportesSolicitudes(this.busquedaIn).subscribe(
+    this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: ReporteOut) => {
         this.busquedaOut = data;
       },

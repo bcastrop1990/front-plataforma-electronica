@@ -28,7 +28,7 @@ export class GestionService {
 
   constructor(private http: HttpClient) {}
 
-  listSolicitudes(request: BusquedaIn) {
+  listSolicitudes(request: BusquedaIn | ReportesIn) {
     return this.http.post<BusquedaOut>(
       `${this.url}/solicitudes/consultar?page=${request.page}&size=${request.size}`,
       request
