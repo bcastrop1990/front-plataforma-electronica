@@ -49,6 +49,7 @@ export class ReporteOut extends Result {
 }
 
 export class ReporteData {
+  dniSolicitante?: string;
   analistaAsignado: string;
   estadoSolicitud: string;
   fechaAsignacion: string;
@@ -56,7 +57,7 @@ export class ReporteData {
   fechaSolicitud: string;
   numeroSolicitud: string;
   oficinaAutorizada: string;
-  codigoOrec: string;
+  codigoOrec?: string;
   tipoRegistro: string;
   constructor() {
     this.analistaAsignado = '';
@@ -68,5 +69,6 @@ export class ReporteData {
     this.oficinaAutorizada = '';
     this.codigoOrec = '';
     this.tipoRegistro = '';
+    this.dniSolicitante = '';
   }
 }

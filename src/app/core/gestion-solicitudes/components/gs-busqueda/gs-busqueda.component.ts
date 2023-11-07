@@ -257,8 +257,6 @@ export class GsBusquedaComponent implements OnInit {
           this.listaEstadoSolicitud
         );
 
-        console.log(this.dataResult);
-
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
         if (!length || length <= 0) {
@@ -408,16 +406,7 @@ export class GsBusquedaComponent implements OnInit {
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
           console.log(
-            'this.obtenerDetalleLibroOut.data.archivoSustento.nombreOriginal: ' +
-              this.obtenerDetalleLibroOut.data.archivoSustento.nombreOriginal
-          );
-          console.log(
-            'this.obtenerDetalleLibroOut.data.archivoSustento.tipoArchivo: ' +
-              this.obtenerDetalleLibroOut.data.archivoSustento.tipoArchivo
-          );
-          console.log(
-            'this.obtenerDetalleLibroOut.data.archivoSustento.codigo: ' +
-              this.obtenerDetalleLibroOut.data.archivoSustento.codigo
+            'ARCHIVOS: ' + this.detalleLibro.archivoSustento.nombreOriginal
           );
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
@@ -450,18 +439,6 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-          console.log(
-            'this.obtenerDetalleLibroOut.data.archivoSustento.nombreOriginal: ' +
-              this.obtenerDetalleFirmaOut.data.archivoSustento.nombreOriginal
-          );
-          console.log(
-            'this.obtenerDetalleLibroOut.data.archivoSustento.tipoArchivo: ' +
-              this.obtenerDetalleFirmaOut.data.archivoSustento.tipoArchivo
-          );
-          console.log(
-            'this.obtenerDetalleLibroOut.data.archivoSustento.codigo: ' +
-              this.obtenerDetalleFirmaOut.data.archivoSustento.codigo
-          );
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',

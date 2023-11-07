@@ -8,6 +8,8 @@ import { AppMaterialModule } from 'src/app/app-material.module';
 import { MastersModule } from 'src/app/masters/masters.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ReportesExcelRoutingModule } from './reportes-excel-routing.module';
+import { RpDetalleComponent } from './components/rp-detalle/rp-detalle.component';
+import { RpDetalleFilesComponent } from './components/rp-detalle-files/rp-detalle-files.component';
 
 @NgModule({
   imports: [
@@ -20,6 +22,6 @@ import { ReportesExcelRoutingModule } from './reportes-excel-routing.module';
     ReportesExcelRoutingModule,
   ],
   exports: [],
-  declarations: [RpDashboardComponent, RpReporteComponent],
+  declarations: [RpDashboardComponent, RpReporteComponent, RpDetalleComponent, RpDetalleFilesComponent],
 })
 export class ReportesExcelModule {}

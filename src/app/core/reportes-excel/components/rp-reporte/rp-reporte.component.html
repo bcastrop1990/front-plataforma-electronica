@@ -12,7 +12,7 @@
 
         <form [formGroup]="form">
           <div class="row">
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
               <app-options
                 #cboEstadoSolicitud
                 [label]="'Estado Solicitud'"
@@ -22,7 +22,7 @@
                 (selected)="setEstadoSolicitud($event)"
               ></app-options>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
               <mat-label>Rango de fecha de búsqueda</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-date-range-input [rangePicker]="picker">
@@ -72,7 +72,7 @@
               </mat-form-field>
             </div>
 
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-3">
               <app-options
                 #cboTipoRegistro
                 [label]="'Tipo de Solicitud'"
@@ -84,22 +84,7 @@
                 (selected)="setTipoRegistro($event)"
               ></app-options>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <!-- CAMBIAR POR OFICINAS -->
-              <app-options
-                #cboAnalista
-                [label]="'Oficinas Autorizadas'"
-                [options]="analistas"
-                [optionSelect]="!esAnalista()"
-                [select]="esAnalista() ? user!.dni : ''"
-                (selected)="setAnalista($event)"
-              ></app-options>
-            </div>
-
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-3">
               <app-options
                 #cboAnalista
                 [label]="'Analista Asignado'"
@@ -108,6 +93,40 @@
                 [select]="esAnalista() ? user!.dni : ''"
                 (selected)="setAnalista($event)"
               ></app-options>
+            </div>
+          </div>
+          <!-- SELECION DE OFICINA -->
+          <div class="row">
+            <div class="col-sm-12 col-md-3">
+              <app-ubigeo
+                [type]="'DEP'"
+                [reset]="resetDep"
+                (ubigeoSelected)="getDep($event)"
+              ></app-ubigeo>
+            </div>
+            <div class="col-sm-12 col-md-3">
+              <app-ubigeo
+                [type]="'PRO'"
+                [idDepartamento]="form.controls['codigoDepartamento'].value"
+                (ubigeoSelected)="getPro($event)"
+              ></app-ubigeo>
+            </div>
+            <div class="col-sm-12 col-md-3">
+              <app-ubigeo
+                [type]="'DIS'"
+                [idDepartamento]="form.controls['codigoDepartamento'].value"
+                [idProvincia]="form.controls['codigoProvincia'].value"
+                (ubigeoSelected)="getDis($event)"
+              ></app-ubigeo>
+            </div>
+            <div class="col-sm-12 col-md-3">
+              <app-oficina-autorizada
+                #cboOficinaAutorizada
+                [idDepartamento]="form.controls['codigoDepartamento'].value"
+                [idProvincia]="form.controls['codigoProvincia'].value"
+                [idDistrito]="form.controls['codigoDistrito'].value"
+                (oficinaOrecSelected)="getOficinaAutorizada($event)"
+              ></app-oficina-autorizada>
             </div>
           </div>
           <!-- Datos del solicitante -->
@@ -216,12 +235,6 @@
                     {{ element?.tipoRegistro }}
                   </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="detalleSolicitud">
-                  <mat-header-cell *matHeaderCellDef>
-                    Detalle Solicitud
-                  </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> DetallePrueba </mat-cell>
-                </ng-container>
                 <ng-container matColumnDef="oficinaAutorizada">
                   <mat-header-cell *matHeaderCellDef>
                     Oficina Autorizada
@@ -235,7 +248,7 @@
                     Solicitante
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">
-                    SolicitantePrueba
+                    {{ solicitante }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="fechaRecepcion">
@@ -282,6 +295,23 @@
                   <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
                   <mat-cell *matCellDef="let element">
                     {{ element?.estadoSolicitud }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="detalleSolicitud">
+                  <mat-header-cell *matHeaderCellDef>
+                    Detalle Solicitud
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <button
+                      tabindex="-1"
+                      mat-icon-button
+                      color="accent"
+                      title="Ver Detalle"
+                      (click)="btnView(element)"
+                    >
+                      <mat-icon fontSet="fas" fontIcon="fa-eye"></mat-icon>
+                      <span class="text-button-table">Ver Detalle</span>
+                    </button>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row

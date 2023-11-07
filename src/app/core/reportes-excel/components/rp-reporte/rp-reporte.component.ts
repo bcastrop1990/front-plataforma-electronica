@@ -20,6 +20,14 @@ import {
   ReportesIn,
   ReporteData,
 } from 'src/app/core/gestion-solicitudes/models/busquedaReporte.model';
+import { NgxSpinnerService } from 'ngx-spinner';
+import {
+  DetalleFirma,
+  DetalleLibro,
+  ObtenerDetalleFirmaOut,
+  ObtenerDetalleLibroOut,
+} from 'src/app/core/gestion-solicitudes/models/gestion.model';
+import { RpDetalleComponent } from '../rp-detalle/rp-detalle.component';
 
 @Component({
   selector: 'app-rp-reporte',
@@ -31,6 +39,7 @@ export class RpReporteComponent implements OnInit {
   message!: string;
   limit!: any;
   length = 0;
+  solicitante: string = '';
 
   //VARIABLES CENTRALES PARA LA TABLA
   dataResult!: MatTableDataSource<ReporteData>;
@@ -55,6 +64,13 @@ export class RpReporteComponent implements OnInit {
   analistasOut!: OptionsOut;
   analistas: Options[] = [];
 
+  //Model Views
+  obtenerDetalleLibroOut!: ObtenerDetalleLibroOut;
+  detalleLibro!: DetalleLibro;
+
+  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
+  detalleFirma!: DetalleFirma;
+
   listaEstadoSolicitud!: ReporteData[];
 
   fecIni = new Date(
@@ -71,11 +87,11 @@ export class RpReporteComponent implements OnInit {
   //ESTRUCTURANDO VALORES DE LA TABLA
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
+  resetDep: boolean = false;
   displayedColumns: string[] = [
     'nroSolicitud',
     'fechaRegistro',
     'tipoRegistro',
-    'detalleSolicitud',
     'oficinaAutorizada',
     'solicitante',
     'fechaRecepcion',
@@ -84,11 +100,12 @@ export class RpReporteComponent implements OnInit {
     'analistaAsignado',
     'docAtencion',
     'estado',
+    'detalleSolicitud',
   ];
 
   /*
     DATOS FALTANTES
-    'detalleSolicitud',
+    'solicitante'
     'oficinaAutorizada',
     'docAtencion',
   */
@@ -116,7 +133,8 @@ export class RpReporteComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private seguridadService: SeguridadService,
-    private gestionService: GestionService
+    private gestionService: GestionService,
+    private spinner: NgxSpinnerService
   ) {
     this.subUser = this.seguridadService
       .getObsUser()
@@ -135,6 +153,10 @@ export class RpReporteComponent implements OnInit {
       codigoEstado: [this.codigoEstado],
       fechaIni: [''],
       fechaFin: [''],
+      codigoDepartamento: [''],
+      codigoProvincia: [''],
+      codigoDistrito: [''],
+      codigoOrec: [''],
       codigoTipoRegistro: [
         this.esAnalista() ? this.environment.TIPO_REGISTRO_LIBRO_ID : '',
       ],
@@ -164,7 +186,7 @@ export class RpReporteComponent implements OnInit {
     this.busquedaIn = new ReportesIn();
     this.busquedaIn = this.form.getRawValue();
 
-    console.log('getListaBusqueda - Reportes: ' + this.busquedaIn.codigoEstado);
+    this.solicitante = this.busquedaIn.dniSolicitante; // PROV
 
     this.busquedaIn.fechaIni = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
@@ -189,8 +211,6 @@ export class RpReporteComponent implements OnInit {
         this.dataResult = new MatTableDataSource<ReporteData>(
           this.listaEstadoSolicitud
         );
-
-        console.log(this.dataResult);
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
@@ -291,4 +311,109 @@ export class RpReporteComponent implements OnInit {
   //Todo: Implementar todas las oficinas autorizadas
   //Todo: Implementar a el solicitante
   //Todo: Consultar sobre la tabla
+
+  btnView(row: ReporteData): void {
+    if (!row.tipoRegistro) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se ha obtenido el tipo de registro.'
+      );
+      return;
+    }
+
+    // LIBRO
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
+      this.spinner.show();
+      this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleLibroOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleLibroOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleLibroOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleLibroOut.message}`
+            );
+            return;
+          }
+          this.detalleLibro = this.obtenerDetalleLibroOut.data;
+          // ENVIAR RESPONSE A MODAL DETALLE
+          this.getDetalle(
+            'Detalle de Solicitud',
+            this.detalleLibro,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+
+    // FIRMA - Muestra fomatos - FORMATO A SEGUIR
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
+      this.spinner.show();
+      this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleFirmaOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleFirmaOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleFirmaOut.message}`
+            );
+            return;
+          }
+          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+          // ENVIAR RESPONSE A MODAL DETALLE
+          this.getDetalle(
+            'Detalle de Solicitud',
+            this.detalleFirma,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+  }
+
+  getDetalle(title: string, detalle: any, tipo: string) {
+    return this.dialog.open(RpDetalleComponent, {
+      width: '1100px',
+      data: { title: title, detalle: detalle, tipo: tipo },
+    });
+  }
+
+  getDep(ubigeo: string) {
+    this.resetDep = false;
+    this.form.controls['codigoDepartamento'].setValue(ubigeo);
+
+    this.form.controls['codigoProvincia'].setValue('');
+    this.form.controls['codigoDistrito'].setValue('');
+    this.form.controls['codigoOrec'].setValue('');
+  }
+
+  getPro(ubigeo: string) {
+    this.form.controls['codigoProvincia'].setValue(ubigeo);
+
+    this.form.controls['codigoDistrito'].setValue('');
+    this.form.controls['codigoOrec'].setValue('');
+  }
+
+  getDis(ubigeo: string) {
+    this.form.controls['codigoDistrito'].setValue(ubigeo);
+
+    this.form.controls['codigoOrec'].setValue('');
+  }
+
+  getOficinaAutorizada(idOficinaOrec: string) {
+    this.form.controls['codigoOrec'].setValue(idOficinaOrec);
+  }
 }
