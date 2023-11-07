@@ -28,6 +28,10 @@ export class MaestrosService {
     return this.http.get<LenguaOut>(`${this.url}/lenguas`);
   }
 
+  listLenguasOficina(codigoOrec: string) {
+    return this.http.get<LenguaOut>(`${this.url}/lenguas-por-oficina/${codigoOrec}`);
+  }
+
   listArticulos() {
     return this.http.get<ArticuloOut>(`${this.url}/articulos`);
   }

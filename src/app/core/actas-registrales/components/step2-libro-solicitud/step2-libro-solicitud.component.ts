@@ -33,6 +33,7 @@ export class Step2LibroSolicitudComponent implements OnInit {
   environment: any;
   form!: FormGroup;
   formDetalle!: FormGroup;
+  codigoLenguas!: string ;
 
   arrayDetalle: number[] = [];
 
@@ -119,6 +120,8 @@ export class Step2LibroSolicitudComponent implements OnInit {
         return;
       }
       this.oficinaDetalle = this.oficinaDetalleOut.data;
+      this.codigoLenguas = this.oficinaDetalleOut.data.codigoOrec
+      console.log("req: "+this.codigoLenguas)
       this.formDetalle.patchValue(this.oficinaDetalle);
       this.formDetalle.controls['ubigeo'].setValue(`${this.oficinaDetalle.nombreDepartamento} / ${this.oficinaDetalle.nombreProvincia} / ${this.oficinaDetalle.nombreDistrito} ${this.oficinaDetalle?.descripcionCentroPoblado.trim() ? '/ (CENTRO POBLADO)' : ''} ${this.oficinaDetalle.descripcionCentroPoblado}`);
     })
@@ -211,8 +214,10 @@ export class Step2LibroSolicitudComponent implements OnInit {
   }
 
   listarLenguas(): void {
-    this.maestroService.listLenguas().subscribe((data: LenguaOut) => {
+    this.maestroService.listLenguasOficina(this.codigoLenguas).subscribe((data: LenguaOut) => {
       this.lenguaOut = data;
+      console.log("lenguaOut: "+this.lenguaOut.data)
+      console.log("COdigo: "+this.codigoLenguas)
     }, error => {
     }, () => {
       if (this.lenguaOut.code !== this.environment.CODE_000) {
@@ -220,6 +225,7 @@ export class Step2LibroSolicitudComponent implements OnInit {
         return;
       }
       this.lengua = this.lenguaOut.data;
+      console.log("LENGUAS: "+this.lengua)
       this.lengua.sort((a, b) => (a.codigo > b.codigo) ? 1 : -1);
     });
   }
