@@ -365,6 +365,7 @@
                 color="accent"
                 [disabled]="form.controls['codigoEstado'].value !== '3'"
                 class="mx-1"
+                *ngIf="coordinador"
                 (click)="btnReasignar()"
               >
                 Reasignar

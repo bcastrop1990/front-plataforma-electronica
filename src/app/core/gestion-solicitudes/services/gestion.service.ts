@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BusquedaIn, BusquedaOut } from '../models/busqueda.model';
-import { RequestPaso1 } from '../../actas-registrales/components/step1-libro-solicitante/step1-libro-solicitante.component';
 import {
   AsignarIn,
   AsignarOut,
@@ -18,6 +17,7 @@ import {
   RegistroAtencionIn,
   RegistroAtencionOut,
 } from '../models/atencion.model';
+import { ReporteOut, ReportesIn } from '../models/busquedaReporte.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +31,13 @@ export class GestionService {
   listSolicitudes(request: BusquedaIn) {
     return this.http.post<BusquedaOut>(
       `${this.url}/solicitudes/consultar?page=${request.page}&size=${request.size}`,
+      request
+    );
+  }
+
+  listReportesSolicitudes(request: ReportesIn) {
+    return this.http.post<ReporteOut>(
+      `${this.url}/solicitudes/consultaReporte?page=${request.page}&size=${request.size}`,
       request
     );
   }
