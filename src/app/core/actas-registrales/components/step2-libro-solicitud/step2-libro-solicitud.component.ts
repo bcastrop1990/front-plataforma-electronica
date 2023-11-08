@@ -61,7 +61,8 @@ export class Step2LibroSolicitudComponent implements OnInit {
   environment: any;
   form!: FormGroup;
   formDetalle!: FormGroup;
-  codigoLenguas!: string ;
+
+  codigoLenguas!: string;
 
   arrayDetalle: number[] = [];
 
@@ -138,24 +139,56 @@ export class Step2LibroSolicitudComponent implements OnInit {
     this.formDetalle.disable();
 
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
-    this.listarLenguas();
     this.listarArticulos();
     this.listarOficinaDetalle();
   }
 
   listarOficinaDetalle(): void {
-    this.oficinaService.listOficinaDetalle().subscribe((data: OficinaDetalleOut) => {
-      this.oficinaDetalleOut = data;
-    }, error => {
-    }, () => {
-      if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.oficinaDetalleOut.message}`);
-        return;
+    this.oficinaService.listOficinaDetalle().subscribe(
+      (data: OficinaDetalleOut) => {
+        this.oficinaDetalleOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.oficinaDetalleOut.message}`
+          );
+          return;
+        }
+        this.oficinaDetalle = this.oficinaDetalleOut.data;
+        this.listarLenguas(this.oficinaDetalle.codigoOrec);
+        this.formDetalle.patchValue(this.oficinaDetalle);
+        this.formDetalle.controls['ubigeo'].setValue(
+          `${this.oficinaDetalle.nombreDepartamento} / ${
+            this.oficinaDetalle.nombreProvincia
+          } / ${this.oficinaDetalle.nombreDistrito} ${
+            this.oficinaDetalle?.descripcionCentroPoblado.trim()
+              ? '/ (CENTRO POBLADO)'
+              : ''
+          } ${this.oficinaDetalle.descripcionCentroPoblado}`
+        );
       }
-      this.oficinaDetalle = this.oficinaDetalleOut.data;
-      this.formDetalle.patchValue(this.oficinaDetalle);
-      this.formDetalle.controls['ubigeo'].setValue(`${this.oficinaDetalle.nombreDepartamento} / ${this.oficinaDetalle.nombreProvincia} / ${this.oficinaDetalle.nombreDistrito} ${this.oficinaDetalle?.descripcionCentroPoblado.trim() ? '/ (CENTRO POBLADO)' : ''} ${this.oficinaDetalle.descripcionCentroPoblado}`);
-    })
+    );
+  }
+
+  listarLenguas(codigo: string): void {
+    this.maestroService.listLenguasOficina(codigo).subscribe(
+      (data: LenguaOut) => {
+        console.log('LISTA: ' + this.codigoLenguas);
+        this.lenguaOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.lenguaOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.lenguaOut.message}`);
+          return;
+        }
+        this.lengua = this.lenguaOut.data;
+        this.lengua.sort((a, b) => (a.codigo > b.codigo ? 1 : -1));
+      }
+    );
   }
 
   btnNext(stepper: MatStepper) {
@@ -260,20 +293,6 @@ export class Step2LibroSolicitudComponent implements OnInit {
 
   getFilesArray(arr: List[]): void {
     this.arrayFilesSustento = arr;
-  }
-
-  listarLenguas(): void {
-    this.maestroService.listLenguas().subscribe((data: LenguaOut) => {
-      this.lenguaOut = data;
-    }, error => {
-    }, () => {
-      if (this.lenguaOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.lenguaOut.message}`);
-        return;
-      }
-      this.lengua = this.lenguaOut.data;
-      this.lengua.sort((a, b) => (a.codigo > b.codigo) ? 1 : -1);
-    });
   }
 
   listarArticulos(): void {

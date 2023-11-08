@@ -248,7 +248,7 @@
                     Solicitante
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">
-                    {{ solicitante }}
+                    {{ element?.dniSolicitante }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="fechaRecepcion">
