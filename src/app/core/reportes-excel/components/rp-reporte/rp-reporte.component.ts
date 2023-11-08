@@ -28,6 +28,7 @@ import {
   ObtenerDetalleLibroOut,
 } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 import { RpDetalleComponent } from '../rp-detalle/rp-detalle.component';
+import { RpDocumentoComponent } from '../rp-documento/rp-documento.component';
 
 @Component({
   selector: 'app-rp-reporte',
@@ -98,9 +99,9 @@ export class RpReporteComponent implements OnInit {
     'fechaAsignacion',
     'fechaAtencion',
     'analistaAsignado',
-    'docAtencion',
     'estado',
     'detalleSolicitud',
+    'docAtencion',
   ];
 
   /*
@@ -415,5 +416,80 @@ export class RpReporteComponent implements OnInit {
 
   getOficinaAutorizada(idOficinaOrec: string) {
     this.form.controls['codigoOrec'].setValue(idOficinaOrec);
+  }
+
+  btnDoc(row: ReporteData) {
+    if (!row.tipoRegistro) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se ha obtenido el tipo de registro.'
+      );
+      return;
+    }
+
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
+      this.spinner.show();
+      this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleLibroOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleLibroOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleLibroOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleLibroOut.message}`
+            );
+            return;
+          }
+          this.detalleLibro = this.obtenerDetalleLibroOut.data;
+          this.getDetalleDocumento(
+            'Documentos de Atención',
+            this.detalleLibro,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
+      this.spinner.show();
+      this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleFirmaOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleFirmaOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleFirmaOut.message}`
+            );
+            return;
+          }
+          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+          this.getDetalleDocumento(
+            'Documentos de Atención',
+            this.detalleFirma,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+  }
+
+  getDetalleDocumento(title: string, detalle: any, tipo: string) {
+    return this.dialog.open(RpDocumentoComponent, {
+      width: '1100px',
+      data: { title: title, detalle: detalle, tipo: tipo },
+    });
   }
 }
