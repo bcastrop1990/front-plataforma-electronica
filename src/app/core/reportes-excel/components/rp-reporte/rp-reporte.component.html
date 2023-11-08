@@ -224,10 +224,7 @@
                     {{ element?.fechaSolicitud }}
                   </mat-cell>
                 </ng-container>
-                <ng-container
-                  matColumnDef="tipoRegistro"
-                  class="col-sm-2 col-md-2 col-lg-2"
-                >
+                <ng-container matColumnDef="tipoRegistro">
                   <mat-header-cell *matHeaderCellDef>
                     Tipo <br />Solicitud
                   </mat-header-cell>
@@ -292,7 +289,9 @@
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="estado">
-                  <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef class="mat-column-estado">
+                    Estado
+                  </mat-header-cell>
                   <mat-cell *matCellDef="let element">
                     {{ element?.estadoSolicitud }}
                   </mat-cell>
