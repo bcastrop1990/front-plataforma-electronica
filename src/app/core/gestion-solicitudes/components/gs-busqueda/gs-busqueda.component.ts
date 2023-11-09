@@ -159,7 +159,6 @@ export class GsBusquedaComponent implements OnInit {
   ngOnInit(): void {
     this.environment = environment;
     this.title = 'Gestión de Solicitudes';
-    this.analistas.forEach((a) => {});
 
     this.form = this.formBuilder.group({
       numeroSolicitud: [''],
@@ -507,6 +506,7 @@ export class GsBusquedaComponent implements OnInit {
       if (result.sw) {
         this.asignarIn = new AsignarIn();
         this.asignarIn.codigoAnalista = result.id;
+        this.asignarIn.dniCoordinador = String(this.user?.dni)
         this.asignarIn.solicitudes = array;
 
         this.gestionService.asignar(this.asignarIn).subscribe(
@@ -671,6 +671,7 @@ export class GsBusquedaComponent implements OnInit {
         this.reAsignarIn = new ReasignarIn();
         this.reAsignarIn.codigoAnalista = result.id;
         this.reAsignarIn.solicitudes = array;
+        this.reAsignarIn.dniCoordinador = String(this.user?.dni)
 
         this.gestionService.reasignar(this.reAsignarIn).subscribe(
           (data: ReasignarOut) => {
