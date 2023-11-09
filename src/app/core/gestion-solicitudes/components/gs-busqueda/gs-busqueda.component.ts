@@ -159,9 +159,7 @@ export class GsBusquedaComponent implements OnInit {
   ngOnInit(): void {
     this.environment = environment;
     this.title = 'Gestión de Solicitudes';
-    this.analistas.forEach((a) => {
-      console.log(a.descripcion);
-    });
+    this.analistas.forEach((a) => {});
 
     this.form = this.formBuilder.group({
       numeroSolicitud: [''],
@@ -186,9 +184,7 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   validarCoordinador() {
-    this.analistas.forEach((a) => {
-      console.log(a.descripcion);
-    });
+    this.analistas.forEach((a) => {});
   }
 
   //CONDICION PARA BOTON REASIGNAR
@@ -335,7 +331,6 @@ export class GsBusquedaComponent implements OnInit {
     }
     // USO FIRMA
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
-      console.log('row.tipoRegistro: ' + row.tipoRegistro);
       this.spinner.show();
       this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
         (data: ObtenerDetalleFirmaOut) => {
@@ -405,9 +400,6 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
-          console.log(
-            'ARCHIVOS: ' + this.detalleLibro.archivoSustento.nombreOriginal
-          );
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
@@ -515,9 +507,6 @@ export class GsBusquedaComponent implements OnInit {
       if (result.sw) {
         this.asignarIn = new AsignarIn();
         this.asignarIn.codigoAnalista = result.id;
-        console.log(
-          'this.asignarIn.codigoAnalista: ' + this.asignarIn.codigoAnalista
-        );
         this.asignarIn.solicitudes = array;
 
         this.gestionService.asignar(this.asignarIn).subscribe(

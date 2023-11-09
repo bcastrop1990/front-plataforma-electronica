@@ -29,6 +29,7 @@ import {
 } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 import { RpDetalleComponent } from '../rp-detalle/rp-detalle.component';
 import { RpDocumentoComponent } from '../rp-documento/rp-documento.component';
+import { ExcelExportService } from '../../services/reportes.service';
 
 @Component({
   selector: 'app-rp-reporte',
@@ -135,7 +136,8 @@ export class RpReporteComponent implements OnInit {
     public dialog: MatDialog,
     private seguridadService: SeguridadService,
     private gestionService: GestionService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private excelService: ExcelExportService
   ) {
     this.subUser = this.seguridadService
       .getObsUser()
@@ -208,7 +210,22 @@ export class RpReporteComponent implements OnInit {
         this.selection.clear();
         //ASIGNAR VALORES
         this.listaEstadoSolicitud = this.busquedaOut.data;
-        this.listaEstadoSolicitud.forEach((item) => {});
+        //Validando Plazos
+        this.listaEstadoSolicitud.forEach((item) => {
+          const dateRecp = item.fechaRecepcion.slice(0, 2);
+          const dateAsig = item.fechaAsignacion.slice(0, 2);
+          const fechaRep = Number(dateRecp);
+          const fechaAsig = Number(dateAsig);
+
+          // Obtiene el día de la fecha
+          // const dayNumber = dateObject.getDate();
+
+          if (fechaAsig - fechaRep > 3) {
+            item.plazo = 'FUERA DEL PLAZO';
+          } else {
+            item.plazo = 'DENTRO DEL PLAZO';
+          }
+        });
         this.dataResult = new MatTableDataSource<ReporteData>(
           this.listaEstadoSolicitud
         );
@@ -220,6 +237,10 @@ export class RpReporteComponent implements OnInit {
         }
       }
     );
+  }
+
+  exportarXlsx() {
+    this.excelService.exportToExcel(this.dataResult, 'Myexport');
   }
 
   getEstadosSolicitud(): void {
@@ -307,11 +328,6 @@ export class RpReporteComponent implements OnInit {
   setAnalista(id: any) {
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
   }
-
-  //Todo: Crear servicio que reciba tipo de solicitud, fecha,estadoS
-  //Todo: Implementar todas las oficinas autorizadas
-  //Todo: Implementar a el solicitante
-  //Todo: Consultar sobre la tabla
 
   btnView(row: ReporteData): void {
     if (!row.tipoRegistro) {

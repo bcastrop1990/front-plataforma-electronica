@@ -41,11 +41,6 @@ export class GsDetalleComponent implements OnInit {
   }
 
   btnViewFiles(files: any[]): void {
-    for (const file of files) {
-      console.log('Tipo de archivo:', file);
-    }
-    console.log('dataDialog:', this.dataDialog);
-
     if (files.length <= 0) {
       this.utilService.getAlert('Aviso', 'No hay formatos asociados.');
       return;
