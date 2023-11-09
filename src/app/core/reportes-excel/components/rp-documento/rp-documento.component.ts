@@ -1,35 +1,28 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { environment } from 'src/environments/environment';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   GetFileData,
   GetFileOut,
-} from '../../../../shared/models/upload-file.model';
-import { UploadFileService } from '../../../../shared/services/upload-file.service';
-import { UtilService } from '../../../../shared/services/util.service';
-import { GsDetalleFilesComponent } from '../gs-detalle-files/gs-detalle-files.component';
+} from 'src/app/shared/models/upload-file.model';
+import { UploadFileService } from 'src/app/shared/services/upload-file.service';
+import { UtilService } from 'src/app/shared/services/util.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-gs-detalle',
-  templateUrl: './gs-detalle.component.html',
-  styleUrls: ['./gs-detalle.component.scss'],
+  selector: 'app-rp-documento',
+  templateUrl: './rp-documento.component.html',
+  styleUrls: ['./rp-documento.component.scss'],
 })
-export class GsDetalleComponent implements OnInit {
+export class RpDocumentoComponent implements OnInit {
   environment: any;
-
   getFileOut!: GetFileOut;
   getFileData!: GetFileData;
 
   constructor(
-    public dialog: MatDialogRef<GsDetalleComponent>,
+    public dialog: MatDialogRef<RpDocumentoComponent>,
     @Inject(MAT_DIALOG_DATA) public dataDialog: any,
     private uploadService: UploadFileService,
-    private utilService: UtilService,
-    public dialogOpen: MatDialog
+    private utilService: UtilService
   ) {}
 
   ngOnInit(): void {
@@ -38,21 +31,6 @@ export class GsDetalleComponent implements OnInit {
 
   cancel() {
     this.dialog.close();
-  }
-
-  btnViewFiles(files: any[]): void {
-    if (files.length <= 0) {
-      this.utilService.getAlert('Aviso', 'No hay formatos asociados.');
-      return;
-    }
-    this.getDetalleFiles('Formatos', files);
-  }
-
-  getDetalleFiles(title: string, files: any[]) {
-    return this.dialogOpen.open(GsDetalleFilesComponent, {
-      width: '850px',
-      data: { title: title, files: files },
-    });
   }
 
   download(codigo: string, nombre: string) {

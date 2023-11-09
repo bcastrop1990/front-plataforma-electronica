@@ -219,7 +219,6 @@ export class SeguimientoBusquedaComponent implements OnInit {
         this.obtenerDetalleFirmaOut = data;
       },
       (error) => {
-        console.log('ERROR ERROR');
         this.spinner.hide();
       },
       () => {

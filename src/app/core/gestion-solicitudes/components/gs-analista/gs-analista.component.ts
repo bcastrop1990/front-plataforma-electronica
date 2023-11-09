@@ -23,7 +23,6 @@ export class GsAnalistaComponent implements OnInit {
   }
 
   setAnalista(id: any) {
-    console.log('DESDE GS-ANALISTA: ' + id);
     this.form.controls['id'].setValue(id);
   }
 

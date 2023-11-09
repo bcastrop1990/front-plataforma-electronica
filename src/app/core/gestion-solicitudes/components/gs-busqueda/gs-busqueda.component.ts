@@ -183,9 +183,7 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   validarCoordinador() {
-    this.analistas.forEach((a) => {
-      console.log(a.descripcion);
-    });
+    this.analistas.forEach((a) => {});
   }
 
   //CONDICION PARA BOTON REASIGNAR

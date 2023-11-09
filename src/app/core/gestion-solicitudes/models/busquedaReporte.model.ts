@@ -63,6 +63,7 @@ export class ReporteData {
   oficinaAutorizada: string;
   codigoOrec?: string;
   tipoRegistro: string;
+  plazo?: string;
   constructor() {
     this.analistaAsignado = '';
     this.estadoSolicitud = '';
@@ -74,5 +75,6 @@ export class ReporteData {
     this.codigoOrec = '';
     this.tipoRegistro = '';
     this.dniSolicitante = '';
+    this.plazo = '';
   }
 }
