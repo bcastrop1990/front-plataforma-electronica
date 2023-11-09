@@ -57,10 +57,11 @@ export class GestionService {
     );
   }
 
-  asignar(request: AsignarIn) {
+  asignar(request: AsignarIn, dniCor: string='40663120') {
+    console.log("Desde el servicio: "+dniCor)
     return this.http.post<AsignarOut>(
       `${this.url}/solicitudes/asignar`,
-      request
+      request,
     );
   }
 

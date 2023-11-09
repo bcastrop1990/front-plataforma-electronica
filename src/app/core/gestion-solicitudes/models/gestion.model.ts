@@ -19,8 +19,10 @@ export class RecepcionarOut extends Result {
 export class AsignarIn {
   codigoAnalista: string;
   solicitudes: string[];
+  dniCoordinador: string;
   constructor() {
     this.codigoAnalista = '';
+    this.dniCoordinador = '';
     this.solicitudes = new Array<string>();
   }
 }
@@ -36,8 +38,10 @@ export class AsignarOut extends Result {
 export class ReasignarIn {
   codigoAnalista: string;
   solicitudes: string[];
+  dniCoordinador: string;
   constructor() {
     this.codigoAnalista = '';
+    this.dniCoordinador = '';
     this.solicitudes = new Array<string>();
   }
 }
