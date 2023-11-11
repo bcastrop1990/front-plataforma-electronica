@@ -55,6 +55,8 @@ export class RegistroFirmaOut extends Result {
 export class RegistroFirmaIn {
   archivoSustento: Archivo;
   codigoTipoArchivoSustento: string;
+  codigoTipoArchivoSustento1: string;
+  codigoTipoArchivoSustento2: string;
   email: string;
   celular: string;
   codigoModoRegistro: string;
@@ -62,6 +64,8 @@ export class RegistroFirmaIn {
   constructor() {
     this.archivoSustento = new Archivo();
     this.codigoTipoArchivoSustento = '';
+    this.codigoTipoArchivoSustento1 = '';
+    this.codigoTipoArchivoSustento2 = '';
     this.email = '';
     this.celular = '';
     this.codigoModoRegistro = '';
