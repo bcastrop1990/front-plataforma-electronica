@@ -212,20 +212,21 @@ export class RpReporteComponent implements OnInit {
         this.listaEstadoSolicitud = this.busquedaOut.data;
         //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
-          const dateRecp = item.fechaRecepcion.slice(0, 2);
-          const dateAsig = item.fechaAsignacion.slice(0, 2);
-          const fechaRep = Number(dateRecp);
-          const fechaAsig = Number(dateAsig);
+          if (item.fechaRecepcion && item.fechaAsignacion) {
+            const dateAsig = item.fechaAsignacion.slice(0, 2);
+            const dateAte = item.fechaAsignacion
+            const fechaAsig = Number(dateAsig);
+            const fechaAte = Number(dateAte);
 
-          // Obtiene el día de la fecha
-          // const dayNumber = dateObject.getDate();
-
-          if (fechaAsig - fechaRep > 3) {
-            item.plazo = 'FUERA DEL PLAZO';
+            if (fechaAte - fechaAsig > 3) {
+              item.plazo = 'FUERA DEL PLAZO';
+            } else {
+              item.plazo = 'DENTRO DEL PLAZO';
+            }
           } else {
-            item.plazo = 'DENTRO DEL PLAZO';
           }
         });
+
         this.dataResult = new MatTableDataSource<ReporteData>(
           this.listaEstadoSolicitud
         );

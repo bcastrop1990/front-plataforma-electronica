@@ -24,6 +24,7 @@ export class GsReasignarComponent implements OnInit {
   }
 
   setAnalista(id: any) {
+    console.log(id);
     this.form.controls['id'].setValue(id);
   }
 

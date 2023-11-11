@@ -278,9 +278,6 @@
                     <mat-checkbox
                       (click)="$event.stopPropagation()"
                       (change)="$event ? selection.toggle(row) : null"
-                      [disabled]="
-                        row.estadoSolicitud === environment.TIPO_REASIGNADO
-                      "
                       [checked]="selection.isSelected(row)"
                     >
                     </mat-checkbox>
@@ -363,7 +360,10 @@
               <button
                 mat-flat-button
                 color="accent"
-                [disabled]="form.controls['codigoEstado'].value !== '3'"
+                [disabled]="
+                  form.controls['codigoEstado'].value !== '3' &&
+                  form.controls['codigoEstado'].value !== '5'
+                "
                 class="mx-1"
                 *ngIf="coordinador"
                 (click)="btnReasignar()"

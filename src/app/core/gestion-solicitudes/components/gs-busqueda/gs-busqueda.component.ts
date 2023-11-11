@@ -228,6 +228,7 @@ export class GsBusquedaComponent implements OnInit {
 
     this.busquedaIn = new BusquedaIn();
     this.busquedaIn = this.form.getRawValue();
+    console.log(this.busquedaIn);
 
     this.busquedaIn.fechaIni = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
@@ -405,6 +406,7 @@ export class GsBusquedaComponent implements OnInit {
             this.detalleLibro,
             row.tipoRegistro
           );
+          console.log(this.detalleLibro.detalleSolicitudLibro);
         }
       );
     }
@@ -506,7 +508,7 @@ export class GsBusquedaComponent implements OnInit {
       if (result.sw) {
         this.asignarIn = new AsignarIn();
         this.asignarIn.codigoAnalista = result.id;
-        this.asignarIn.dniCoordinador = String(this.user?.dni)
+        this.asignarIn.dniCoordinador = String(this.user?.dni);
         this.asignarIn.solicitudes = array;
 
         this.gestionService.asignar(this.asignarIn).subscribe(
@@ -671,7 +673,7 @@ export class GsBusquedaComponent implements OnInit {
         this.reAsignarIn = new ReasignarIn();
         this.reAsignarIn.codigoAnalista = result.id;
         this.reAsignarIn.solicitudes = array;
-        this.reAsignarIn.dniCoordinador = String(this.user?.dni)
+        this.reAsignarIn.dniCoordinador = String(this.user?.dni);
 
         this.gestionService.reasignar(this.reAsignarIn).subscribe(
           (data: ReasignarOut) => {
