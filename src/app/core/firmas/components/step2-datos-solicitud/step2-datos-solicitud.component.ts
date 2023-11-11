@@ -76,6 +76,8 @@ export class Step2DatosSolicitudComponent implements OnInit {
   tipoSolicitudOut!: TipoSolicitudOut;
   tipoSolicitud!: TipoSolicitud[];
 
+  listaArchivoSustento!: Archivo[];
+
   tipoArchivoOut!: TipoArchivoOut;
   tipoArchivoDetalleAlta!: TipoArchivo[];
   tipoArchivoDetalleActualizar!: TipoArchivo[];
@@ -296,18 +298,17 @@ export class Step2DatosSolicitudComponent implements OnInit {
     }
 
     // MAPPER ARCHIVO SUSTENTO
-    const archivoSustento = new Archivo();
-    archivoSustento.codigoNombre = this.arrayFilesSustento[0].idFile;
 
     // MAPPER REGISTRO
     this.registroFirmaIn = new RegistroFirmaIn();
-    this.registroFirmaIn.archivoSustento = archivoSustento;
-    this.registroFirmaIn.codigoTipoArchivoSustento =
-      this.arrayFilesSustento[0].fileTypeId;
-    this.registroFirmaIn.codigoTipoArchivoSustento1 =
-      this.arrayFilesSustento[1].fileTypeId;
-    this.registroFirmaIn.codigoTipoArchivoSustento2 =
-      this.arrayFilesSustento[2].fileTypeId;
+    this.arrayFilesSustento.forEach((archivo) => {
+      const archivoSustento = new Archivo();
+      archivoSustento.codigoNombre = archivo.idFile;
+      this.registroFirmaIn.listaArchivoSustento.push(archivoSustento);
+      this.registroFirmaIn.listaCodigoTipoArchivoSustento.push(
+        archivo.fileTypeId
+      );
+    });
     this.registroFirmaIn.email = this.requestPaso1.email;
     this.registroFirmaIn.celular = this.requestPaso1.celular;
     this.registroFirmaIn.codigoModoRegistro = 'E';

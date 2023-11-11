@@ -53,23 +53,26 @@ export class RegistroFirmaOut extends Result {
 }
 
 export class RegistroFirmaIn {
-  archivoSustento: Archivo;
-  codigoTipoArchivoSustento: string;
-  codigoTipoArchivoSustento1: string;
-  codigoTipoArchivoSustento2: string;
+  listaArchivoSustento: Archivo[];
+  listaCodigoTipoArchivoSustento: string[];
   email: string;
   celular: string;
   codigoModoRegistro: string;
   detalleSolicitud: DetalleSolicitud[];
   constructor() {
-    this.archivoSustento = new Archivo();
-    this.codigoTipoArchivoSustento = '';
-    this.codigoTipoArchivoSustento1 = '';
-    this.codigoTipoArchivoSustento2 = '';
+    this.listaArchivoSustento = new Array<Archivo>();
+    this.listaCodigoTipoArchivoSustento = new Array<string>();
     this.email = '';
     this.celular = '';
     this.codigoModoRegistro = '';
     this.detalleSolicitud = new Array<DetalleSolicitud>();
+  }
+}
+
+export class Codigo {
+  codigo: string;
+  constructor() {
+    this.codigo = '';
   }
 }
 
