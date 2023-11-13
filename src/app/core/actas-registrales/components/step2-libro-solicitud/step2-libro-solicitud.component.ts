@@ -176,7 +176,6 @@ export class Step2LibroSolicitudComponent implements OnInit {
   listarLenguas(codigo: string): void {
     this.maestroService.listLenguasOficina(codigo).subscribe(
       (data: LenguaOut) => {
-        console.log('LISTA: ' + this.codigoLenguas);
         this.lenguaOut = data;
       },
       (error) => {},

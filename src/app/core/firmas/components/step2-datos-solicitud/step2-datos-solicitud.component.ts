@@ -181,9 +181,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
           return;
         }
         this.oficinaDetalle = this.oficinaDetalleOut.data;
-        console.log(
-          'this.oficinaDetalle.codigoOrec: ' + this.oficinaDetalle.codigoOrec
-        );
         this.formDetalle.patchValue(this.oficinaDetalle);
       }
     );

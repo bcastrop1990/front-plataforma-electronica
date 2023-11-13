@@ -1,0 +1,65 @@
+<mat-card>
+  <mat-card-title>
+    {{ dataDialog.title }}
+  </mat-card-title>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="content">
+      <ng-container>
+        <div class="row mt-2">
+          <div class="col-sm-12 col-md-2 mb-2">Sustento</div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-12 col-md-2">
+            <div class="custom-cell">
+              {{ dataDialog.detalle.archivoSustento.tipoArchivo }}
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-8">
+            <div class="custom-cell px-4">
+              <a
+                href="javascript:void(0);"
+                (click)="
+                  download(
+                    dataDialog.detalle.archivoSustento.codigo,
+                    dataDialog.detalle.archivoSustento.nombreOriginal
+                  )
+                "
+                class=""
+                >{{ dataDialog.detalle.archivoSustento.nombreOriginal }}</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-2 mb-2">Formato</div>
+        </div>
+        <div
+          class="mb-2 col-sm-12 col-md-10"
+          *ngFor="let file of dataDialog.detalle.detalleSolicitudFirma"
+        >
+          <div *ngFor="let item of file.archivos" class="row mb-2">
+            <div class="col-sm-12 col-md-6">
+              <div class="custom-cell">{{ item.tipoArchivo }}</div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="custom-cell">
+                <a
+                  href="javascript:void(0);"
+                  (click)="download(item.codigo, item.nombreOriginal)"
+                  >{{ item.nombreOriginal }}</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <button tabindex="-1" mat-flat-button color="accent" (click)="cancel()">
+      Cerrar
+    </button>
+  </mat-card-actions>
+</mat-card>

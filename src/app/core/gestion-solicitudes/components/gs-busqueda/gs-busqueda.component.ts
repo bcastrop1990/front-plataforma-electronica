@@ -159,6 +159,7 @@ export class GsBusquedaComponent implements OnInit {
   ngOnInit(): void {
     this.environment = environment;
     this.title = 'Gestión de Solicitudes';
+    this.analistas.forEach((a) => {});
 
     this.form = this.formBuilder.group({
       numeroSolicitud: [''],
@@ -183,9 +184,7 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   validarCoordinador() {
-    this.analistas.forEach((a) => {
-      console.log(a.descripcion);
-    });
+    this.analistas.forEach((a) => {});
   }
 
   //CONDICION PARA BOTON REASIGNAR

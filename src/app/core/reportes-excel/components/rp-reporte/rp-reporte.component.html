@@ -181,6 +181,7 @@
                 mat-flat-button
                 color="accent"
                 class="button-custom-search ml-2"
+                (click)="exportarXlsx()"
               >
                 Exportar a Excel
               </button>
@@ -285,7 +286,14 @@
                     Doc.Atención
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">
-                    DocAtencionPrueba
+                    <button
+                      mat-flat-button
+                      color="accent"
+                      class="button-custom-search"
+                      (click)="btnDoc(element)"
+                    >
+                      Ver
+                    </button>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="estado">

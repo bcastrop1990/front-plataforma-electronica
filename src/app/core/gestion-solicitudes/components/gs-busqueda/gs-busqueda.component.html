@@ -296,8 +296,8 @@
                       color="accent"
                       title="Atender"
                       [disabled]="
-                        element.estadoSolicitud !== environment.TIPO_ASIGNADO ||
-                        element.tipoRegistro !== environment.TIPO_REGISTRO_LIBRO
+                        element.estadoSolicitud !== environment.TIPO_REASIGNADO &&
+                        element.estadoSolicitud !== environment.TIPO_ASIGNADO
                       "
                       (click)="btnAtender(element)"
                     >
