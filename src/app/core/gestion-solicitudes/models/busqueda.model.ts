@@ -1,4 +1,4 @@
-import {Result} from "../../../masters/models/result.model";
+import { Result } from '../../../masters/models/result.model';
 
 export class Busqueda {
   size: number;
@@ -58,6 +58,7 @@ export class BusquedaOut extends Result {
 export class BusquedaData {
   analistaAsignado: string;
   estadoSolicitud: string;
+  fechaAtencion?: string;
   fechaAsignacion: string;
   fechaRecepcion: string;
   fechaSolicitud: string;

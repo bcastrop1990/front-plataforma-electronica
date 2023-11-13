@@ -210,26 +210,52 @@ export class RpReporteComponent implements OnInit {
         this.selection.clear();
         //ASIGNAR VALORES
         this.listaEstadoSolicitud = this.busquedaOut.data;
+
+        this.listaEstadoSolicitud.forEach((item) => {
+          console.log(item.fechaAtencion);
+        });
+
         //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
           if (item.fechaRecepcion && item.fechaAsignacion) {
-            const dateAsig = item.fechaAsignacion.slice(0, 2);
-            const dateAte = item.fechaAsignacion;
-            const fechaAsig = Number(dateAsig);
-            const fechaAte = Number(dateAte);
-
-            if (fechaAte - fechaAsig > 3) {
-              item.plazo = 'FUERA DEL PLAZO';
+            if (item.fechaAtencion == null) {
+              const dateAsig = item.fechaAsignacion.slice(0, 2);
+              const fechaActual = new Date();
+              const dateAte = fechaActual.getDate();
+              console.log('dia de hoy: ' + dateAte);
+              const fechaAsig = Number(dateAsig);
+              const fechaAte = Number(dateAte);
+              if (fechaAte < fechaAsig) {
+                item.plazo = 'FUERA DEL PLAZO';
+              } else {
+                if (fechaAte - fechaAsig > 3) {
+                  item.plazo = 'FUERA DEL PLAZO';
+                } else {
+                  item.plazo = 'DENTRO DEL PLAZO';
+                }
+              }
             } else {
-              item.plazo = 'DENTRO DEL PLAZO';
+              const dateAsig = item.fechaAsignacion.slice(0, 2);
+              const dateAte = item.fechaAtencion?.slice(0, 2);
+              const fechaAsig = Number(dateAsig);
+              const fechaAte = Number(dateAte);
+
+              if (fechaAte - fechaAsig > 3) {
+                item.plazo = 'FUERA DEL PLAZO';
+              } else {
+                item.plazo = 'DENTRO DEL PLAZO';
+              }
             }
-          } else {
           }
         });
 
         this.dataResult = new MatTableDataSource<ReporteData>(
           this.listaEstadoSolicitud
         );
+
+        // this.dataResult.filteredData.forEach((item) => {
+        //   console.log(item.fechaAtencion);
+        // });
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;

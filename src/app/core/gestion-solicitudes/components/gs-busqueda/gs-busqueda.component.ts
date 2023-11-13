@@ -250,9 +250,6 @@ export class GsBusquedaComponent implements OnInit {
         this.dataResult = new MatTableDataSource<BusquedaData>(
           this.listaEstadoSolicitud
         );
-        this.dataResult.filteredData.forEach((item) => {
-          console.log(item);
-        });
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;

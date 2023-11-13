@@ -56,6 +56,7 @@ export class ReporteData {
   dniSolicitante?: string;
   analistaAsignado: string;
   estadoSolicitud: string;
+  fechaAtencion?: string;
   fechaAsignacion: string;
   fechaRecepcion: string;
   fechaSolicitud: string;
