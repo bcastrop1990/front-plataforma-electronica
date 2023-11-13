@@ -161,6 +161,7 @@ export class GsBusquedaComponent implements OnInit {
     this.title = 'Gestión de Solicitudes';
     this.analistas.forEach((a) => {});
 
+
     this.form = this.formBuilder.group({
       numeroSolicitud: [''],
       codigoEstado: [this.codigoEstado],
