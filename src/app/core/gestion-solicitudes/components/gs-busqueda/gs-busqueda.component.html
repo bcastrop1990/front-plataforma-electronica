@@ -29,7 +29,8 @@
                 [label]="'Estado Solicitud'"
                 [options]="estadoSolicitud"
                 [select]="codigoEstado"
-                [optionSelect]="false"
+                [optionSelect]="true"
+                [todosEstados]="false"
                 (selected)="setEstadoSolicitud($event)"
               ></app-options>
             </div>
@@ -327,7 +328,7 @@
               </mat-table>
 
               <mat-paginator
-                [pageSizeOptions]="[10, 20]"
+                [pageSizeOptions]="[10, 20, 50, 100, 150]"
                 [length]="busquedaOut.totalElements"
                 [pageSize]="busquedaIn.size"
                 [pageIndex]="busquedaOut.page"

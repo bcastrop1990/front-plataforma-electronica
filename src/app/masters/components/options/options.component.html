@@ -7,7 +7,9 @@
       (selectionChange)="emit(cbo.value)"
       placeholder="Seleccione"
     >
-      <mat-option *ngIf="optionSelect" [value]="">-- Seleccione --</mat-option>
+      <mat-option *ngIf="optionSelect" [value]="">{{
+        todosEstados ? "TODOS" : "-- Seleccione --"
+      }}</mat-option>
       <mat-option *ngFor="let item of options" [value]="item.codigo">
         {{ item.descripcion | uppercase }}
       </mat-option>

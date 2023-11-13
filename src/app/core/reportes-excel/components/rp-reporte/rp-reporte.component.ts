@@ -127,7 +127,7 @@ export class RpReporteComponent implements OnInit {
   }
 
   //Opcion predeterminada
-  codigoEstado: string = '3';
+  codigoEstado: string = '';
 
   constructor(
     private maestrosService: MaestrosService,
@@ -214,7 +214,7 @@ export class RpReporteComponent implements OnInit {
         this.listaEstadoSolicitud.forEach((item) => {
           if (item.fechaRecepcion && item.fechaAsignacion) {
             const dateAsig = item.fechaAsignacion.slice(0, 2);
-            const dateAte = item.fechaAsignacion
+            const dateAte = item.fechaAsignacion;
             const fechaAsig = Number(dateAsig);
             const fechaAte = Number(dateAte);
 

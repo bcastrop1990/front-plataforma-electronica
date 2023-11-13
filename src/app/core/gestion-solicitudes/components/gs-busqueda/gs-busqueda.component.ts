@@ -119,7 +119,7 @@ export class GsBusquedaComponent implements OnInit {
   @ViewChild('cboEstadoSolicitud') cboEstadoSolicitud!: OptionsComponent;
   @ViewChild('cboTipoRegistro') cboTipoRegistro!: OptionsComponent;
   resetDep: boolean = false;
-  codigoEstado: string = '3';
+  codigoEstado: string = '';
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -228,7 +228,6 @@ export class GsBusquedaComponent implements OnInit {
 
     this.busquedaIn = new BusquedaIn();
     this.busquedaIn = this.form.getRawValue();
-    console.log(this.busquedaIn);
 
     this.busquedaIn.fechaIni = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
@@ -248,10 +247,12 @@ export class GsBusquedaComponent implements OnInit {
         // CLEAR SELECTION
         this.selection.clear();
         this.listaEstadoSolicitud = this.busquedaOut.data;
-        this.listaEstadoSolicitud.forEach((item) => {});
         this.dataResult = new MatTableDataSource<BusquedaData>(
           this.listaEstadoSolicitud
         );
+        this.dataResult.filteredData.forEach((item) => {
+          console.log(item);
+        });
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;

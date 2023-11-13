@@ -114,6 +114,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   }
 
   getFilesArray(arr: List[]): void {
+    //RECIBIENDO ARCHIVO
     this.arrayFiles = arr;
 
     // BLOQUEAR TIPO DE SOLICITUD SI AGREGA 1 ARCHIVO O MÁS

@@ -39,6 +39,7 @@ import {
   DetalleSolicitud,
   RegistroFirmaIn,
   RegistroFirmaOut,
+  Sustento,
 } from '../../models/firmas.model';
 import { RequestPaso1 } from '../step1-datos-solicitante/step1-datos-solicitante.component';
 import { OficinaService } from '../../../../masters/services/oficina.service';
@@ -301,14 +302,18 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
     // MAPPER REGISTRO
     this.registroFirmaIn = new RegistroFirmaIn();
-    this.arrayFilesSustento.forEach((archivo) => {
-      const archivoSustento = new Archivo();
-      archivoSustento.codigoNombre = archivo.idFile;
-      this.registroFirmaIn.listaArchivoSustento.push(archivoSustento);
-      this.registroFirmaIn.listaCodigoTipoArchivoSustento.push(
-        archivo.fileTypeId
-      );
+    const archivoSustento = new Array<Sustento>();
+    this.arrayFilesSustento.forEach((x) => {
+      archivoSustento.push({
+        codigoNombre: x.idFile,
+        tipoCodigoNombre: x.fileTypeId,
+      });
     });
+
+    this.registroFirmaIn.listaDetalleArchivos = archivoSustento;
+    console.log('nueva lista: ' + this.registroFirmaIn.listaDetalleArchivos);
+
+    console.log(this.registroFirmaIn);
     this.registroFirmaIn.email = this.requestPaso1.email;
     this.registroFirmaIn.celular = this.requestPaso1.celular;
     this.registroFirmaIn.codigoModoRegistro = 'E';
@@ -348,6 +353,8 @@ export class Step2DatosSolicitudComponent implements OnInit {
   }
 
   getFilesArray(arr: List[]): void {
+    console.log(arr);
+    //RECIBIENDO ARCHIVO
     this.arrayFilesSustento = arr;
   }
 

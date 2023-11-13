@@ -192,9 +192,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
 
     this.lastAttachUplaoding = false;
     if (this.form.controls['file'].valid) {
-      console.log('data.length: ' + this.data.length);
       if (this.data.length < this.maxPermitted) {
-        console.log('data.length: ' + this.data.length);
         this.lastAttachUplaoding = true;
         if (file) {
           let item: List;

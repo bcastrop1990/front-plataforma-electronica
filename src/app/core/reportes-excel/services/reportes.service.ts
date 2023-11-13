@@ -1,4 +1,3 @@
-// excel-export.service.ts
 import { Injectable } from '@angular/core';
 import * as ExcelJS from 'exceljs';
 import { MatTableDataSource } from '@angular/material/table';
@@ -43,7 +42,7 @@ export class ExcelExportService {
           cell.fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: 'FF00BB00' }, // Código de color rojo
+            fgColor: { argb: 'FF00BB00' }, // Código de color verde
           };
         });
       }

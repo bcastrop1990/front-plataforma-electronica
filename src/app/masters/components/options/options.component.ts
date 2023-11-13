@@ -18,6 +18,7 @@ export class OptionsComponent implements OnInit {
   @Input() options: Options[] = [];
   @Input() select: string = '';
   @Input() optionSelect: boolean = true;
+  @Input() todosEstados: boolean = false;
 
   @Output() selected: EventEmitter<string> = new EventEmitter();
 
