@@ -310,14 +310,13 @@ export class Step2DatosSolicitudComponent implements OnInit {
       });
     });
 
-    this.registroFirmaIn.listaDetalleArchivos = archivoSustento;
-    console.log('nueva lista: ' + this.registroFirmaIn.listaDetalleArchivos);
-
-    console.log(this.registroFirmaIn);
+    this.registroFirmaIn.listArchivoSustento = archivoSustento;
     this.registroFirmaIn.email = this.requestPaso1.email;
     this.registroFirmaIn.celular = this.requestPaso1.celular;
     this.registroFirmaIn.codigoModoRegistro = 'E';
     this.registroFirmaIn.detalleSolicitud = arrayDetalle;
+
+    console.log(this.registroFirmaIn.listArchivoSustento);
 
     this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
       (data: RegistroFirmaOut) => {
@@ -353,7 +352,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
   }
 
   getFilesArray(arr: List[]): void {
-    console.log(arr);
     //RECIBIENDO ARCHIVO
     this.arrayFilesSustento = arr;
   }

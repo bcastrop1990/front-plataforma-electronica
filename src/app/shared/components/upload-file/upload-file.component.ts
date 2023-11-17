@@ -158,6 +158,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   attach(file: FileInput) {
+    //VALIDANDO CANTIDAD DE TIPO ARCHIVO
     let uniqueValues = new Set();
     let todosSonUnicos = true;
     this.data.forEach((item) => {
@@ -176,6 +177,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
       this.emitResponseDifferenteTypeFile();
       return;
     }
+    //Fin
 
     if (
       this.requiredTipoArchivo &&
@@ -190,6 +192,8 @@ export class UploadFileComponent implements OnInit, OnChanges {
       return;
     }
 
+    //todo: modificar para que reciba una lista
+
     this.lastAttachUplaoding = false;
     if (this.form.controls['file'].valid) {
       if (this.data.length < this.maxPermitted) {
@@ -201,6 +205,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
           fileFormData.append('file', file.files[0]);
           this.storageService.upload(fileFormData).subscribe(
             (data: UploadOut) => {
+              console.log('Directo desde back idFile: ' + data.data);
               const fileTypeSelected =
                 this.form.controls['idTipoArchivo'].value;
               item = {

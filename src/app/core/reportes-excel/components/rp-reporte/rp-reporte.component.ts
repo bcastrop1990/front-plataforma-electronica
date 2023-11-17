@@ -211,10 +211,6 @@ export class RpReporteComponent implements OnInit {
         //ASIGNAR VALORES
         this.listaEstadoSolicitud = this.busquedaOut.data;
 
-        this.listaEstadoSolicitud.forEach((item) => {
-          console.log(item.fechaAtencion);
-        });
-
         //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
           if (item.fechaRecepcion && item.fechaAsignacion) {
@@ -222,7 +218,6 @@ export class RpReporteComponent implements OnInit {
               const dateAsig = item.fechaAsignacion.slice(0, 2);
               const fechaActual = new Date();
               const dateAte = fechaActual.getDate();
-              console.log('dia de hoy: ' + dateAte);
               const fechaAsig = Number(dateAsig);
               const fechaAte = Number(dateAte);
               if (fechaAte < fechaAsig) {
