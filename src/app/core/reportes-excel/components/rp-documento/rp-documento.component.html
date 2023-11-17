@@ -13,24 +13,29 @@
           class="row"
           *ngFor="let archivo of dataDialog.detalle.archivoSustento"
         >
-          <div class="col-sm-12 col-md-2">
-            <div class="custom-cell">
-              PAPU
-              <!-- {{ archivo.tipoArchivo }} -->
+          <div class="col-sm-12 col-md-3">
+            <div class="custom-cell" *ngIf="archivo.tipoArchivo == '06'">
+              OFICIO
+            </div>
+            <div class="custom-cell" *ngIf="archivo.tipoArchivo == '05'">
+              ACTA DE ASAMBLEA
+            </div>
+            <div class="custom-cell" *ngIf="archivo.tipoArchivo == '01'">
+              RESOLUCION
             </div>
           </div>
           <div class="col-sm-12 col-md-5 mt-1">
             <div class="custom-cell">
               <a
                 href="javascript:void(0);"
-                (click)="download(archivo.codigo, archivo.tipoArchivo)"
-                >{{ archivo.tipoArchivo }}</a
+                (click)="download(archivo.codigo, archivo.nombreOriginal)"
+                >{{ archivo.nombreOriginal }}</a
               >
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 col-md-2 mb-2">Formato</div>
+          <div class="col-sm-12 col-md-2 mb-2 mt-2">Formato</div>
         </div>
         <div
           class="mb-2 col-sm-12 col-md-10"
