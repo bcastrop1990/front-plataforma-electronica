@@ -29,7 +29,7 @@ export class ExcelExportService {
       const excelRow = worksheet.addRow(values);
 
       // Aplica estilo rojo a las filas pares
-      if (values[10] === 'FUERA DEL PLAZO') {
+      if (values[11] === 'FUERA DEL PLAZO') {
         excelRow.eachCell((cell, colNumber) => {
           cell.fill = {
             type: 'pattern',

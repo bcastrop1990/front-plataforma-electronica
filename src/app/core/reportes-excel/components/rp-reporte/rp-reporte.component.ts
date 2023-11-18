@@ -249,10 +249,6 @@ export class RpReporteComponent implements OnInit {
           this.listaEstadoSolicitud
         );
 
-        // this.dataResult.filteredData.forEach((item) => {
-        //   console.log(item.fechaAtencion);
-        // });
-
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
         if (!length || length <= 0) {
