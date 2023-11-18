@@ -206,10 +206,7 @@
         <ng-container *ngIf="length >= 1">
           <div class="row">
             <div class="col-12">
-              <mat-table
-                [dataSource]="dataResult"
-                [ngStyle]="{ '.mat-row': colorBck }"
-              >
+              <mat-table [dataSource]="dataResult">
                 <ng-container
                   matColumnDef="nroSolicitud"
                   class="col-sm-2 col-md-3 col-lg-4"

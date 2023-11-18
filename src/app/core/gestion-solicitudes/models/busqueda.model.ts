@@ -65,6 +65,8 @@ export class BusquedaData {
   numeroSolicitud: string;
   oficinaAutorizada: string;
   tipoRegistro: string;
+  dniSolicitante: string;
+  codigoAnalistaAsignado: string;
   constructor() {
     this.analistaAsignado = '';
     this.estadoSolicitud = '';
@@ -74,5 +76,7 @@ export class BusquedaData {
     this.numeroSolicitud = '';
     this.oficinaAutorizada = '';
     this.tipoRegistro = '';
+    this.dniSolicitante = '';
+    this.codigoAnalistaAsignado = '';
   }
 }

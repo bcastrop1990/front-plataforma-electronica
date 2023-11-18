@@ -250,9 +250,6 @@ export class GsBusquedaComponent implements OnInit {
         this.dataResult = new MatTableDataSource<BusquedaData>(
           this.listaEstadoSolicitud
         );
-        this.listaEstadoSolicitud.forEach((item) => {
-          console.log(item.analistaAsignado);
-        });
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
@@ -407,7 +404,6 @@ export class GsBusquedaComponent implements OnInit {
             this.detalleLibro,
             row.tipoRegistro
           );
-          console.log(this.detalleLibro.detalleSolicitudLibro);
         }
       );
     }
@@ -433,7 +429,6 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-          console.log(this.detalleFirma);
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
@@ -583,7 +578,6 @@ export class GsBusquedaComponent implements OnInit {
     this.maestrosService.listAnalistas().subscribe(
       (data: OptionsOut) => {
         this.analistasOut = data;
-        console.log(this.analistasOut);
       },
       (error) => {},
       () => {
@@ -596,16 +590,8 @@ export class GsBusquedaComponent implements OnInit {
             (x) => x.codigo === this.user?.dni
           );
           this.analistas = this.analistasOut.data;
-          this.analistas.forEach((item) => {
-            console.log(item.descripcion);
-            console.log(item.codigo);
-          });
         } else {
           this.analistas = this.analistasOut.data;
-          this.analistas.forEach((item) => {
-            console.log(item.descripcion);
-            console.log(item.codigo);
-          });
         }
       }
     );
@@ -678,19 +664,24 @@ export class GsBusquedaComponent implements OnInit {
       (value) => value.analistaAsignado
     );
 
-    console.log('Array: ' + array);
-    console.log('Array2: ' + array2);
-
     if (array.length <= 0) {
       this.utilService.getAlert('Aviso', 'Debe seleccionar a un analista.');
       return;
     }
 
-    const modalAsignacion = this.getReasignar(
-      'Reasignar',
-      this.analistas,
-      array2
+    const nuevoAnalista: string[] = this.selection.selected.map(
+      (item) => item.codigoAnalistaAsignado
     );
+
+    console.log(nuevoAnalista);
+
+    const nuevoArray = this.analistas.filter(
+      (analista) => !nuevoAnalista.includes(analista.codigo)
+    );
+
+    console.log(nuevoArray);
+
+    const modalAsignacion = this.getReasignar('Reasignar', nuevoArray, array2);
     modalAsignacion.afterClosed().subscribe((result) => {
       if (result.sw) {
         this.reAsignarIn = new ReasignarIn();

@@ -10,7 +10,7 @@ export class Busqueda {
 }
 
 export class ReportesIn extends Busqueda {
-  codigoAnalistaAsignado: string;
+  codigoAnalistaAsignado?: string;
   codigoEstado: string;
   codigoOrec: string;
   codigoTipoRegistro: string;
