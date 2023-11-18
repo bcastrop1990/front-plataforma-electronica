@@ -49,6 +49,7 @@ import {
   DetalleSolicitudLibro,
   RegistroLibroIn,
   RegistroLibroOut,
+  Sustento,
 } from '../../models/libro.model';
 import { RegistroLibroService } from '../../services/registro-libro.service';
 
@@ -242,15 +243,17 @@ export class Step2LibroSolicitudComponent implements OnInit {
       return;
     }
 
-    // MAPPER ARCHIVO SUSTENTO
-    const archivoSustento = new Archivo();
-    archivoSustento.codigoNombre = this.arrayFilesSustento[0].idFile;
-
     // MAPPER REGISTRO
     this.registroLibroIn = new RegistroLibroIn();
-    this.registroLibroIn.archivoSustento = archivoSustento;
-    this.registroLibroIn.codigoTipoArchivoSustento =
-      this.arrayFilesSustento[0].fileTypeId;
+    const archivoSustento = new Array<Sustento>();
+    this.arrayFilesSustento.forEach((x) => {
+      archivoSustento.push({
+        codigoNombre: x.idFile,
+        tipoCodigoNombre: x.fileTypeId,
+      });
+    });
+    this.registroLibroIn.listArchivoSustento = archivoSustento;
+
     this.registroLibroIn.email = this.requestPaso1.email;
     this.registroLibroIn.celular = this.requestPaso1.celular;
     this.registroLibroIn.codigoModoRegistro = 'E';

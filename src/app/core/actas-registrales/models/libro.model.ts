@@ -44,19 +44,28 @@ export class RegistroLibroOut extends Result {
 }
 
 export class RegistroLibroIn {
-  archivoSustento: Archivo;
-  codigoTipoArchivoSustento: string;
+  listArchivoSustento: Sustento[];
   email: string;
   celular: string;
   codigoModoRegistro: string;
   detalleSolicitud: DetalleSolicitudLibro[];
   constructor() {
-    this.archivoSustento = new Archivo();
-    this.codigoTipoArchivoSustento = '';
+    this.listArchivoSustento = new Array<Sustento>();
     this.email = '';
     this.celular = '';
     this.codigoModoRegistro = '';
     this.detalleSolicitud = new Array<DetalleSolicitudLibro>();
+  }
+}
+
+export class Sustento {
+  codigoNombre: string;
+  tipoCodigoNombre: string;
+  idArchivo?: string;
+  constructor() {
+    this.codigoNombre = '';
+    this.tipoCodigoNombre = '';
+    this.idArchivo = '';
   }
 }
 
