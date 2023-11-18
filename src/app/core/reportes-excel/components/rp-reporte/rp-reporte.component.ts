@@ -42,7 +42,7 @@ export class RpReporteComponent implements OnInit {
   limit!: any;
   length = 0;
   solicitante: string = '';
-  colorBck!: string;
+  plazoColor: boolean = true;
 
   //VARIABLES CENTRALES PARA LA TABLA
   dataResult!: MatTableDataSource<ReporteData>;
@@ -223,9 +223,11 @@ export class RpReporteComponent implements OnInit {
               const fechaAte = Number(dateAte);
               if (fechaAte < fechaAsig) {
                 item.plazo = 'FUERA DEL PLAZO';
+                this.plazoColor = false;
               } else {
                 if (fechaAte - fechaAsig > 3) {
                   item.plazo = 'FUERA DEL PLAZO';
+                  this.plazoColor = false;
                 } else {
                   item.plazo = 'DENTRO DEL PLAZO';
                 }
@@ -238,8 +240,10 @@ export class RpReporteComponent implements OnInit {
 
               if (fechaAte - fechaAsig > 3) {
                 item.plazo = 'FUERA DEL PLAZO';
+                this.plazoColor = false;
               } else {
                 item.plazo = 'DENTRO DEL PLAZO';
+                this.plazoColor = true;
               }
             }
           }
@@ -256,6 +260,15 @@ export class RpReporteComponent implements OnInit {
         }
       }
     );
+  }
+
+  getRowStyles(row: any) {
+    return {
+      'background-color':
+        row.plazo == 'DENTRO DEL PLAZO'
+          ? 'rgba(0, 255, 42, 0.316)'
+          : 'rgba(255, 72, 0, 0.316)',
+    } as { [klass: string]: any };
   }
 
   exportarXlsx() {
