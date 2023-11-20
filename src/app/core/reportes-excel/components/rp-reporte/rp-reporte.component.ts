@@ -43,6 +43,7 @@ export class RpReporteComponent implements OnInit {
   length = 0;
   solicitante: string = '';
   plazoColor: boolean = true;
+  bgColor!: any;
 
   //VARIABLES CENTRALES PARA LA TABLA
   dataResult!: MatTableDataSource<ReporteData>;
@@ -215,35 +216,39 @@ export class RpReporteComponent implements OnInit {
         //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
           if (item.fechaRecepcion && item.fechaAsignacion) {
-            if (item.fechaAtencion == null) {
-              const dateAsig = item.fechaAsignacion.slice(0, 2);
-              const fechaActual = new Date();
-              const dateAte = fechaActual.getDate();
-              const fechaAsig = Number(dateAsig);
-              const fechaAte = Number(dateAte);
-              if (fechaAte < fechaAsig) {
-                item.plazo = 'FUERA DEL PLAZO';
-                this.plazoColor = false;
+            if (item.fechaRecepcion == null) {
+              item.plazo = '';
+            } else {
+              if (item.fechaAtencion == null) {
+                const dateAsig = item.fechaAsignacion.slice(0, 2);
+                const fechaActual = new Date();
+                const dateAte = fechaActual.getDate();
+                const fechaAsig = Number(dateAsig);
+                const fechaAte = Number(dateAte);
+                if (fechaAte < fechaAsig) {
+                  item.plazo = 'FUERA DEL PLAZO';
+                  this.plazoColor = false;
+                } else {
+                  if (fechaAte - fechaAsig > 3) {
+                    item.plazo = 'FUERA DEL PLAZO';
+                    this.plazoColor = false;
+                  } else {
+                    item.plazo = 'DENTRO DEL PLAZO';
+                  }
+                }
               } else {
+                const dateAsig = item.fechaAsignacion.slice(0, 2);
+                const dateAte = item.fechaAtencion?.slice(0, 2);
+                const fechaAsig = Number(dateAsig);
+                const fechaAte = Number(dateAte);
+
                 if (fechaAte - fechaAsig > 3) {
                   item.plazo = 'FUERA DEL PLAZO';
                   this.plazoColor = false;
                 } else {
                   item.plazo = 'DENTRO DEL PLAZO';
+                  this.plazoColor = true;
                 }
-              }
-            } else {
-              const dateAsig = item.fechaAsignacion.slice(0, 2);
-              const dateAte = item.fechaAtencion?.slice(0, 2);
-              const fechaAsig = Number(dateAsig);
-              const fechaAte = Number(dateAte);
-
-              if (fechaAte - fechaAsig > 3) {
-                item.plazo = 'FUERA DEL PLAZO';
-                this.plazoColor = false;
-              } else {
-                item.plazo = 'DENTRO DEL PLAZO';
-                this.plazoColor = true;
               }
             }
           }
@@ -263,12 +268,14 @@ export class RpReporteComponent implements OnInit {
   }
 
   getRowStyles(row: any) {
-    return {
-      'background-color':
-        row.plazo == 'DENTRO DEL PLAZO'
-          ? 'rgba(0, 255, 42, 0.316)'
-          : 'rgba(255, 72, 0, 0.316)',
-    } as { [klass: string]: any };
+    if (!row.fechaRecepcion) return { '': '' };
+    if (row.plazo == 'DENTRO DEL PLAZO') {
+      return { 'background-color': 'rgba(0, 255, 42, 0.316)' };
+    }
+    if (row.plazo == 'FUERA DEL PLAZO') {
+      return { 'background-color': ' rgba(255, 72, 0, 0.316)' };
+    }
+    return { '': '' };
   }
 
   exportarXlsx() {
@@ -290,6 +297,9 @@ export class RpReporteComponent implements OnInit {
           return;
         }
         this.estadoSolicitud = this.estadoSolicitudOut.data;
+        this.estadoSolicitud.sort((a, b) =>
+          a.descripcion > b.descripcion ? 1 : -1
+        );
       }
     );
   }

@@ -621,6 +621,9 @@ export class GsBusquedaComponent implements OnInit {
           return;
         }
         this.estadoSolicitud = this.estadoSolicitudOut.data;
+        this.estadoSolicitud.sort((a, b) =>
+          a.descripcion > b.descripcion ? 1 : -1
+        );
       }
     );
   }

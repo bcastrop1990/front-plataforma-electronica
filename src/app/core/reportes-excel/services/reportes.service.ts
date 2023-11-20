@@ -37,7 +37,12 @@ export class ExcelExportService {
             fgColor: { argb: 'FFFF0000' }, // Código de color rojo
           };
         });
-      } else {
+        excelRow.getCell(7).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFF0000' },
+        };
+      } else if (values[11] === 'DENTRO DEL PLAZO') {
         excelRow.eachCell((cell, colNumber) => {
           cell.fill = {
             type: 'pattern',
@@ -45,6 +50,11 @@ export class ExcelExportService {
             fgColor: { argb: 'FF00BB00' }, // Código de color verde
           };
         });
+        excelRow.getCell(7).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF00BB00' },
+        };
       }
     });
 
