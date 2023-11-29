@@ -205,7 +205,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
           fileFormData.append('file', file.files[0]);
           this.storageService.upload(fileFormData).subscribe(
             (data: UploadOut) => {
-              console.log('Directo desde back idFile: ' + data.data);
               const fileTypeSelected =
                 this.form.controls['idTipoArchivo'].value;
               item = {

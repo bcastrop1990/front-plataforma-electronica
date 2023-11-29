@@ -34,10 +34,20 @@ export class ExcelExportService {
           cell.fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: 'FFFF0000' }, // Código de color rojo
+            fgColor: { argb: 'FFFF0000' },
           };
         });
         excelRow.getCell(7).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFF0000' },
+        };
+        excelRow.getCell(9).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFF0000' },
+        };
+        excelRow.getCell(11).fill = {
           type: 'pattern',
           pattern: 'solid',
           fgColor: { argb: 'FFFF0000' },
@@ -47,10 +57,20 @@ export class ExcelExportService {
           cell.fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: 'FF00BB00' }, // Código de color verde
+            fgColor: { argb: 'FF00BB00' },
           };
         });
         excelRow.getCell(7).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF00BB00' },
+        };
+        excelRow.getCell(9).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF00BB00' },
+        };
+        excelRow.getCell(11).fill = {
           type: 'pattern',
           pattern: 'solid',
           fgColor: { argb: 'FF00BB00' },

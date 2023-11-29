@@ -316,8 +316,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
     this.registroFirmaIn.codigoModoRegistro = 'E';
     this.registroFirmaIn.detalleSolicitud = arrayDetalle;
 
-    console.log(this.registroFirmaIn.listArchivoSustento);
-
     this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
       (data: RegistroFirmaOut) => {
         this.registroFirmaOut = data;

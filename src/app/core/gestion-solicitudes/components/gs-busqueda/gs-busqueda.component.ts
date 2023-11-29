@@ -384,7 +384,6 @@ export class GsBusquedaComponent implements OnInit {
         (data: ObtenerDetalleLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
-          console.log(data.data);
         },
         (error) => {
           this.spinner.hide();
@@ -399,7 +398,6 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
-          console.log(this.detalleLibro.archivoSustento);
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
@@ -417,7 +415,6 @@ export class GsBusquedaComponent implements OnInit {
         (data: ObtenerDetalleFirmaOut) => {
           this.spinner.hide();
           this.obtenerDetalleFirmaOut = data;
-          console.log(data.data);
         },
         (error) => {
           this.spinner.hide();
@@ -432,7 +429,6 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-          console.log(this.detalleFirma.archivoSustento);
 
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
@@ -681,13 +677,9 @@ export class GsBusquedaComponent implements OnInit {
       (item) => item.codigoAnalistaAsignado
     );
 
-    console.log(nuevoAnalista);
-
     const nuevoArray = this.analistas.filter(
       (analista) => !nuevoAnalista.includes(analista.codigo)
     );
-
-    console.log(nuevoArray);
 
     const modalAsignacion = this.getReasignar('Reasignar', nuevoArray, array2);
     modalAsignacion.afterClosed().subscribe((result) => {

@@ -41,6 +41,9 @@ export class GsDetalleComponent implements OnInit {
   }
 
   btnViewFiles(files: any[]): void {
+    files.forEach((item) => {
+      console.log(item);
+    });
     if (files.length <= 0) {
       this.utilService.getAlert('Aviso', 'No hay formatos asociados.');
       return;
