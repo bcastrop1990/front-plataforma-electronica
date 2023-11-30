@@ -290,10 +290,8 @@ export class RpReporteComponent implements OnInit {
   }
 
   exportarTodoXlsx() {
-    // Modificar el tamaño de this.busquedaIn.size para obtener todos los registros
     this.busquedaIn.size = 9999;
 
-    // Obtener todos los registros sin paginación
     this.busquedaIn.page = this.environment.START_PAGE;
 
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
@@ -303,17 +301,14 @@ export class RpReporteComponent implements OnInit {
       (error) => {},
       () => {
         if (this.busquedaOut.code !== this.environment.CODE_000) {
-          // Manejar el error, si es necesario
           return;
         }
 
-        // Restaurar el tamaño original después de obtener todos los registros
         this.busquedaIn.size = this.paginator.pageSize;
         this.busquedaIn.page = this.paginator.pageIndex + 1;
 
         this.listaEstadoSolicitud = this.busquedaOut.data;
 
-        //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
           if (item.fechaRecepcion && item.fechaAsignacion) {
             if (item.fechaRecepcion == null) {
@@ -362,7 +357,6 @@ export class RpReporteComponent implements OnInit {
           }
         });
 
-        // Llamar al servicio de exportación de Excel con todos los datos
         const allData = new MatTableDataSource<ReporteData>(
           this.listaEstadoSolicitud
         );
