@@ -42,7 +42,6 @@ export class RpReporteComponent implements OnInit {
   limit!: any;
   length = 0;
   solicitante: string = '';
-  plazoColor: boolean = true;
   bgColor!: any;
 
   //VARIABLES CENTRALES PARA LA TABLA
@@ -220,34 +219,42 @@ export class RpReporteComponent implements OnInit {
               item.plazo = '';
             } else {
               if (item.fechaAtencion == null) {
-                const dateAsig = item.fechaAsignacion.slice(0, 2);
                 const fechaActual = new Date();
-                const dateAte = fechaActual.getDate();
-                const fechaAsig = Number(dateAsig);
-                const fechaAte = Number(dateAte);
-                if (fechaAte < fechaAsig) {
+
+                const dataAsiM = item.fechaAsignacion.slice(3, 5);
+                const dateAteM = fechaActual.getMonth() + 1;
+                const fechaAsigM = Number(dataAsiM);
+                const fechaAteM = Number(dateAteM);
+
+                if (fechaAteM > fechaAsigM && fechaAteM !== fechaAsigM) {
                   item.plazo = 'FUERA DEL PLAZO';
-                  this.plazoColor = false;
                 } else {
-                  if (fechaAte - fechaAsig > 3) {
+                  const dateAsig = item.fechaAsignacion.slice(0, 2);
+                  const dateAte = fechaActual.getDate();
+                  const fechaAsig = Number(dateAsig);
+                  const fechaAte = Number(dateAte);
+                  if (fechaAte < fechaAsig) {
                     item.plazo = 'FUERA DEL PLAZO';
-                    this.plazoColor = false;
                   } else {
-                    item.plazo = 'DENTRO DEL PLAZO';
+                    if (fechaAte - fechaAsig > 3) {
+                      item.plazo = 'FUERA DEL PLAZO';
+                    } else {
+                      item.plazo = 'DENTRO DEL PLAZO';
+                    }
                   }
                 }
               } else {
+                console.log('llego aqui');
                 const dateAsig = item.fechaAsignacion.slice(0, 2);
                 const dateAte = item.fechaAtencion?.slice(0, 2);
+
                 const fechaAsig = Number(dateAsig);
                 const fechaAte = Number(dateAte);
 
                 if (fechaAte - fechaAsig > 3) {
                   item.plazo = 'FUERA DEL PLAZO';
-                  this.plazoColor = false;
                 } else {
                   item.plazo = 'DENTRO DEL PLAZO';
-                  this.plazoColor = true;
                 }
               }
             }
