@@ -289,6 +289,89 @@ export class RpReporteComponent implements OnInit {
     this.excelService.exportToExcel(this.dataResult, 'Myexport');
   }
 
+  exportarTodoXlsx() {
+    // Modificar el tamaño de this.busquedaIn.size para obtener todos los registros
+    this.busquedaIn.size = 9999;
+
+    // Obtener todos los registros sin paginación
+    this.busquedaIn.page = this.environment.START_PAGE;
+
+    this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
+      (data: ReporteOut) => {
+        this.busquedaOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.busquedaOut.code !== this.environment.CODE_000) {
+          // Manejar el error, si es necesario
+          return;
+        }
+
+        // Restaurar el tamaño original después de obtener todos los registros
+        this.busquedaIn.size = this.paginator.pageSize;
+        this.busquedaIn.page = this.paginator.pageIndex + 1;
+
+        this.listaEstadoSolicitud = this.busquedaOut.data;
+
+        //Validando Plazos
+        this.listaEstadoSolicitud.forEach((item) => {
+          if (item.fechaRecepcion && item.fechaAsignacion) {
+            if (item.fechaRecepcion == null) {
+              item.plazo = '';
+            } else {
+              if (item.fechaAtencion == null) {
+                const fechaActual = new Date();
+
+                const dataAsiM = item.fechaAsignacion.slice(3, 5);
+                const dateAteM = fechaActual.getMonth() + 1;
+                const fechaAsigM = Number(dataAsiM);
+                const fechaAteM = Number(dateAteM);
+
+                if (fechaAteM > fechaAsigM && fechaAteM !== fechaAsigM) {
+                  item.plazo = 'FUERA DEL PLAZO';
+                } else {
+                  const dateAsig = item.fechaAsignacion.slice(0, 2);
+                  const dateAte = fechaActual.getDate();
+                  const fechaAsig = Number(dateAsig);
+                  const fechaAte = Number(dateAte);
+                  if (fechaAte < fechaAsig) {
+                    item.plazo = 'FUERA DEL PLAZO';
+                  } else {
+                    if (fechaAte - fechaAsig > 3) {
+                      item.plazo = 'FUERA DEL PLAZO';
+                    } else {
+                      item.plazo = 'DENTRO DEL PLAZO';
+                    }
+                  }
+                }
+              } else {
+                console.log('llego aqui');
+                const dateAsig = item.fechaAsignacion.slice(0, 2);
+                const dateAte = item.fechaAtencion?.slice(0, 2);
+
+                const fechaAsig = Number(dateAsig);
+                const fechaAte = Number(dateAte);
+
+                if (fechaAte - fechaAsig > 3) {
+                  item.plazo = 'FUERA DEL PLAZO';
+                } else {
+                  item.plazo = 'DENTRO DEL PLAZO';
+                }
+              }
+            }
+          }
+        });
+
+        // Llamar al servicio de exportación de Excel con todos los datos
+        const allData = new MatTableDataSource<ReporteData>(
+          this.listaEstadoSolicitud
+        );
+        this.excelService.exportToExcel(allData, 'Myexport');
+        this.busquedaIn.size = this.environment.ROWS_PAG;
+      }
+    );
+  }
+
   getEstadosSolicitud(): void {
     this.maestrosService.listEstadoSolicitud().subscribe(
       (data: OptionsOut) => {

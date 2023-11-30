@@ -181,10 +181,18 @@
               <button
                 mat-flat-button
                 color="accent"
-                class="button-custom-search ml-2"
+                class="button-custom-search ml-2 me-2"
                 (click)="exportarXlsx()"
               >
                 Exportar a Excel
+              </button>
+              <button
+                mat-flat-button
+                color="accent"
+                class="button-custom-search ml-2"
+                (click)="exportarTodoXlsx()"
+              >
+                Exportar todo
               </button>
             </div>
           </div>
@@ -327,7 +335,7 @@
                   *matHeaderRowDef="displayedColumns"
                 ></mat-header-row>
                 <mat-row
-                  *matRowDef="let row; columns: displayedColumns;"
+                  *matRowDef="let row; columns: displayedColumns"
                   [ngStyle]="getRowStyles(row)"
                 ></mat-row>
               </mat-table>
