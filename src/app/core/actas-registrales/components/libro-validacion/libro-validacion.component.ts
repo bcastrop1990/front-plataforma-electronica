@@ -139,8 +139,6 @@ export class LibroValidacionComponent implements OnInit {
     );
   }
 
-  //todo: Corregir la entrada del token
-
   consultarPorReg() {
     //VALIDAR REGISTRADOR
     const dni = this.datosPersona.dni;
