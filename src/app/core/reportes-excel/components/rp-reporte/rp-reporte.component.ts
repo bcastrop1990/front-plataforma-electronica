@@ -221,40 +221,75 @@ export class RpReporteComponent implements OnInit {
               if (item.fechaAtencion == null) {
                 const fechaActual = new Date();
 
-                const dataAsiM = item.fechaAsignacion.slice(3, 5);
-                const dateAteM = fechaActual.getMonth() + 1;
-                const fechaAsigM = Number(dataAsiM);
-                const fechaAteM = Number(dateAteM);
+                const dateAtencionYearActual = fechaActual.getFullYear();
+                const dateAtencionMonthActual = fechaActual.getMonth() + 1;
+                // const dateAtecionDayActual = fechaActual.getDay();
 
-                if (fechaAteM > fechaAsigM && fechaAteM !== fechaAsigM) {
+                const dateAsignacionYear = item.fechaAsignacion.slice(6, 10);
+                const dateAsignacionMonth = item.fechaAsignacion.slice(3, 5);
+                // const dateAsignacionDay = item.fechaAsignacion.slice(0, 2);
+
+                const year = Number(dateAsignacionYear);
+                const month = Number(dateAsignacionMonth);
+                // const day = Number(dateAsignacionDay);
+
+                if (dateAtencionYearActual > year) {
                   item.plazo = 'FUERA DEL PLAZO';
                 } else {
-                  const dateAsig = item.fechaAsignacion.slice(0, 2);
-                  const dateAte = fechaActual.getDate();
-                  const fechaAsig = Number(dateAsig);
-                  const fechaAte = Number(dateAte);
-                  if (fechaAte < fechaAsig) {
+                  if (
+                    dateAtencionMonthActual > month &&
+                    dateAtencionMonthActual !== month
+                  ) {
                     item.plazo = 'FUERA DEL PLAZO';
                   } else {
+                    const dateAsig = item.fechaAsignacion.slice(0, 2);
+                    const dateAte = fechaActual.getDate();
+                    const fechaAsig = Number(dateAsig);
+                    const fechaAte = Number(dateAte);
+                    if (fechaAte < fechaAsig) {
+                      item.plazo = 'FUERA DEL PLAZO';
+                    } else {
+                      if (fechaAte - fechaAsig > 3) {
+                        item.plazo = 'FUERA DEL PLAZO';
+                      } else {
+                        item.plazo = 'DENTRO DEL PLAZO';
+                      }
+                    }
+                  }
+                }
+              } else {
+                const dateAtencionYear = item.fechaAtencion.slice(6, 10);
+                const dateAtencionMonth = item.fechaAtencion.slice(3, 5);
+
+                const dateAsignacionYear = item.fechaAsignacion.slice(6, 10);
+                const dateAsignacionMonth = item.fechaAsignacion.slice(3, 5);
+
+                const yearAtencion = Number(dateAtencionYear);
+                const monthAtencion = Number(dateAtencionMonth);
+                const yearAsignacion = Number(dateAsignacionYear);
+                const monthAsignacion = Number(dateAsignacionMonth);
+
+                if (yearAtencion > yearAsignacion) {
+                  item.plazo = 'FUERA DEL PLAZO';
+                } else {
+                  if (
+                    monthAtencion > monthAsignacion &&
+                    monthAtencion !== monthAsignacion
+                  ) {
+                    item.plazo = 'FUERA DEL PLAZO';
+                  } else {
+                    const dateAsig = item.fechaAsignacion.slice(0, 2);
+                    const dateAte = item.fechaAtencion?.slice(0, 2);
+
+                    const fechaAsig = Number(dateAsig);
+                    const fechaAte = Number(dateAte);
+
                     if (fechaAte - fechaAsig > 3) {
                       item.plazo = 'FUERA DEL PLAZO';
                     } else {
                       item.plazo = 'DENTRO DEL PLAZO';
                     }
                   }
-                }
-              } else {
-                console.log('llego aqui');
-                const dateAsig = item.fechaAsignacion.slice(0, 2);
-                const dateAte = item.fechaAtencion?.slice(0, 2);
-
-                const fechaAsig = Number(dateAsig);
-                const fechaAte = Number(dateAte);
-
-                if (fechaAte - fechaAsig > 3) {
-                  item.plazo = 'FUERA DEL PLAZO';
-                } else {
-                  item.plazo = 'DENTRO DEL PLAZO';
                 }
               }
             }
@@ -317,40 +352,75 @@ export class RpReporteComponent implements OnInit {
               if (item.fechaAtencion == null) {
                 const fechaActual = new Date();
 
-                const dataAsiM = item.fechaAsignacion.slice(3, 5);
-                const dateAteM = fechaActual.getMonth() + 1;
-                const fechaAsigM = Number(dataAsiM);
-                const fechaAteM = Number(dateAteM);
+                const dateAtencionYearActual = fechaActual.getFullYear();
+                const dateAtencionMonthActual = fechaActual.getMonth() + 1;
+                // const dateAtecionDayActual = fechaActual.getDay();
 
-                if (fechaAteM > fechaAsigM && fechaAteM !== fechaAsigM) {
+                const dateAsignacionYear = item.fechaAsignacion.slice(6, 10);
+                const dateAsignacionMonth = item.fechaAsignacion.slice(3, 5);
+                // const dateAsignacionDay = item.fechaAsignacion.slice(0, 2);
+
+                const year = Number(dateAsignacionYear);
+                const month = Number(dateAsignacionMonth);
+                // const day = Number(dateAsignacionDay);
+
+                if (dateAtencionYearActual > year) {
                   item.plazo = 'FUERA DEL PLAZO';
                 } else {
-                  const dateAsig = item.fechaAsignacion.slice(0, 2);
-                  const dateAte = fechaActual.getDate();
-                  const fechaAsig = Number(dateAsig);
-                  const fechaAte = Number(dateAte);
-                  if (fechaAte < fechaAsig) {
+                  if (
+                    dateAtencionMonthActual > month &&
+                    dateAtencionMonthActual !== month
+                  ) {
                     item.plazo = 'FUERA DEL PLAZO';
                   } else {
+                    const dateAsig = item.fechaAsignacion.slice(0, 2);
+                    const dateAte = fechaActual.getDate();
+                    const fechaAsig = Number(dateAsig);
+                    const fechaAte = Number(dateAte);
+                    if (fechaAte < fechaAsig) {
+                      item.plazo = 'FUERA DEL PLAZO';
+                    } else {
+                      if (fechaAte - fechaAsig > 3) {
+                        item.plazo = 'FUERA DEL PLAZO';
+                      } else {
+                        item.plazo = 'DENTRO DEL PLAZO';
+                      }
+                    }
+                  }
+                }
+              } else {
+                const dateAtencionYear = item.fechaAtencion.slice(6, 10);
+                const dateAtencionMonth = item.fechaAtencion.slice(3, 5);
+
+                const dateAsignacionYear = item.fechaAsignacion.slice(6, 10);
+                const dateAsignacionMonth = item.fechaAsignacion.slice(3, 5);
+
+                const yearAtencion = Number(dateAtencionYear);
+                const monthAtencion = Number(dateAtencionMonth);
+                const yearAsignacion = Number(dateAsignacionYear);
+                const monthAsignacion = Number(dateAsignacionMonth);
+
+                if (yearAtencion > yearAsignacion) {
+                  item.plazo = 'FUERA DEL PLAZO';
+                } else {
+                  if (
+                    monthAtencion > monthAsignacion &&
+                    monthAtencion !== monthAsignacion
+                  ) {
+                    item.plazo = 'FUERA DEL PLAZO';
+                  } else {
+                    const dateAsig = item.fechaAsignacion.slice(0, 2);
+                    const dateAte = item.fechaAtencion?.slice(0, 2);
+
+                    const fechaAsig = Number(dateAsig);
+                    const fechaAte = Number(dateAte);
+
                     if (fechaAte - fechaAsig > 3) {
                       item.plazo = 'FUERA DEL PLAZO';
                     } else {
                       item.plazo = 'DENTRO DEL PLAZO';
                     }
                   }
-                }
-              } else {
-                console.log('llego aqui');
-                const dateAsig = item.fechaAsignacion.slice(0, 2);
-                const dateAte = item.fechaAtencion?.slice(0, 2);
-
-                const fechaAsig = Number(dateAsig);
-                const fechaAte = Number(dateAte);
-
-                if (fechaAte - fechaAsig > 3) {
-                  item.plazo = 'FUERA DEL PLAZO';
-                } else {
-                  item.plazo = 'DENTRO DEL PLAZO';
                 }
               }
             }
