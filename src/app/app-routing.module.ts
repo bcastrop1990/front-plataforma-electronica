@@ -48,6 +48,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'rpDetalle',
+    loadChildren: () =>
+      import('./core/reportes-detalle/reportes-detalle.module').then(
+        (x) => x.ReportesDetalleModule
+      ),
+  },
+  {
     path: 'gestion-solicitudes',
     loadChildren: () =>
       import('./core/gestion-solicitudes/gestion-solicitudes.module').then(

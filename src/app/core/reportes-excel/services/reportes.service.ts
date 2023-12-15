@@ -27,55 +27,6 @@ export class ExcelExportService {
     dataSource.data.forEach((row: any, index: number) => {
       const values = columns.map((column) => row[column]);
       const excelRow = worksheet.addRow(values);
-
-      // Aplica estilo rojo a las filas pares
-      if (values[11] === 'FUERA DEL PLAZO') {
-        excelRow.eachCell((cell, colNumber) => {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFFF0000' },
-          };
-        });
-        excelRow.getCell(7).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FFFF0000' },
-        };
-        excelRow.getCell(9).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FFFF0000' },
-        };
-        excelRow.getCell(11).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FFFF0000' },
-        };
-      } else if (values[11] === 'DENTRO DEL PLAZO') {
-        excelRow.eachCell((cell, colNumber) => {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FF00BB00' },
-          };
-        });
-        excelRow.getCell(7).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FF00BB00' },
-        };
-        excelRow.getCell(9).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FF00BB00' },
-        };
-        excelRow.getCell(11).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FF00BB00' },
-        };
-      }
     });
 
     // Guarda el archivo Excel

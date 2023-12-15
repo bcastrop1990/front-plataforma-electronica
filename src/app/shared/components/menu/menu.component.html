@@ -40,6 +40,13 @@
     </button>
     <button
       mat-button
+      *ngIf="esInternal()"
+      [routerLink]="environment.URL_MOD_REPORTES_DETALLE"
+    >
+      Reportes Detalle
+    </button>
+    <button
+      mat-button
       *ngIf="esExternal()"
       [routerLink]="environment.URL_MOD_REPORTES"
     >

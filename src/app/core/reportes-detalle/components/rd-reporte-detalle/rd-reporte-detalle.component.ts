@@ -1,60 +1,65 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { OptionsComponent } from 'src/app/masters/components/options/options.component';
-import { Options, OptionsOut } from 'src/app/masters/models/option.model';
 import { MaestrosService } from 'src/app/masters/services/maestros.service';
-import { UtilService } from 'src/app/shared/services/util.service';
-import { User } from 'src/app/auth/models/user.model';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
+import { environment } from 'src/environments/environment';
+import { UtilService } from '../../../../shared/services/util.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { formatDate } from '@angular/common';
 import { GestionService } from 'src/app/core/gestion-solicitudes/services/gestion.service';
-import { MatSort } from '@angular/material/sort';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ExcelExportService } from 'src/app/core/reportes-excel/services/reportes.service';
+import { User } from 'src/app/auth/models/user.model';
+import { Subscription } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 import {
+  ReporteData,
   ReporteOut,
   ReportesIn,
-  ReporteData,
 } from 'src/app/core/gestion-solicitudes/models/busquedaReporte.model';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { OptionsComponent } from 'src/app/auth/components/options/options.component';
+import { OptionsOut, Options } from 'src/app/masters/models/option.model';
+import { formatDate } from '@angular/common';
 import {
+  ObtenerDetalleLibroOut,
+  ObtenerDetalleFirmaOut,
   DetalleFirma,
   DetalleLibro,
-  ObtenerDetalleFirmaOut,
-  ObtenerDetalleLibroOut,
 } from 'src/app/core/gestion-solicitudes/models/gestion.model';
-import { RpDetalleComponent } from '../rp-detalle/rp-detalle.component';
-import { RpDocumentoComponent } from '../rp-documento/rp-documento.component';
-import { ExcelExportService } from '../../services/reportes.service';
+import { RpDetalleComponent } from 'src/app/core/reportes-excel/components/rp-detalle/rp-detalle.component';
+import { RpDocumentoComponent } from 'src/app/core/reportes-excel/components/rp-documento/rp-documento.component';
+import {
+  ReporteDetalle,
+  ReporteDetalleExp,
+} from '../../models/rdReporte.model';
 
 @Component({
-  selector: 'app-rp-reporte',
-  templateUrl: './rp-reporte.component.html',
-  styleUrls: ['./rp-reporte.component.scss'],
+  selector: 'app-rd-reporte-detalle',
+  templateUrl: './rd-reporte-detalle.component.html',
+  styleUrls: ['./rd-reporte-detalle.component.scss'],
 })
-export class RpReporteComponent implements OnInit {
+export class RdReporteDetalleComponent implements OnInit {
   environment: any;
-  message!: string;
   limit!: any;
   length = 0;
+  message!: string;
   solicitante: string = '';
+  title!: string;
   bgColor!: any;
 
-  //VARIABLES CENTRALES PARA LA TABLA
-  dataResult!: MatTableDataSource<ReporteData>;
-  selection = new SelectionModel<ReporteData>(true, []);
-
-  title!: string;
   form!: FormGroup;
 
   user?: User;
   subUser!: Subscription;
 
-  //CREANDO MODELOS LAS BUSQUEDAS
+  dataResult!: MatTableDataSource<ReporteDetalleExp>;
+  selection = new SelectionModel<ReporteDetalleExp>(true, []);
+
+  //Variables de entrada
+  codigoEstado: string = '';
+
   busquedaIn!: ReportesIn;
   busquedaOut!: ReporteOut;
 
@@ -67,7 +72,6 @@ export class RpReporteComponent implements OnInit {
   analistasOut!: OptionsOut;
   analistas: Options[] = [];
 
-  //Model Views
   obtenerDetalleLibroOut!: ObtenerDetalleLibroOut;
   detalleLibro!: DetalleLibro;
 
@@ -76,12 +80,9 @@ export class RpReporteComponent implements OnInit {
 
   listaEstadoSolicitud!: ReporteData[];
 
-  fecIni = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() - 1,
-    new Date().getDate()
-  );
-  fecFin = new Date();
+  listaReporteDetalle!: ReporteDetalle[];
+
+  reporteDetalle: ReporteDetalleExp[] = [];
 
   @ViewChild('cboAnalista') cboAnalista!: OptionsComponent;
   @ViewChild('cboEstadoSolicitud') cboEstadoSolicitud!: OptionsComponent;
@@ -90,20 +91,25 @@ export class RpReporteComponent implements OnInit {
   //ESTRUCTURANDO VALORES DE LA TABLA
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort!: MatSort;
+
   resetDep: boolean = false;
   displayedColumns: string[] = [
-    'nroSolicitud',
-    'fechaRegistro',
-    'tipoRegistro',
-    'oficinaAutorizada',
-    'solicitante',
     'fechaRecepcion',
+    'nroSolicitud',
     'fechaAsignacion',
+    // 'departamento',
+    // 'provincia',
+    // 'distrito',
+    'ubigeo',
+    // 'centroPoblado',
+    'dni',
+    'registradorCivil',
     'fechaAtencion',
-    'analistaAsignado',
-    'estado',
-    'detalleSolicitud',
-    'docAtencion',
+    'detalleRegistro',
+    'email',
+    'celular',
+    'analista',
+    'plazo',
   ];
 
   isAllSelected() {
@@ -119,9 +125,6 @@ export class RpReporteComponent implements OnInit {
 
     this.selection.select(...this.dataResult.data);
   }
-
-  //Opcion predeterminada
-  codigoEstado: string = '';
 
   constructor(
     private maestrosService: MaestrosService,
@@ -141,7 +144,7 @@ export class RpReporteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title = 'Reportes';
+    this.title = 'Reportes Detalle';
     this.environment = environment;
     this.form = this.formBuilder.group({
       dniSolicitante: [''],
@@ -183,9 +186,9 @@ export class RpReporteComponent implements OnInit {
     this.busquedaIn = new ReportesIn();
     this.busquedaIn = this.form.getRawValue();
 
-    this.solicitante = this.busquedaIn.dniSolicitante; // PROV
-
-    this.busquedaIn.fechaIni = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
+    //nueva entrada ->
+    this.solicitante = this.busquedaIn.dniSolicitante;
+    this.busquedaIn.fechaFin = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
@@ -289,11 +292,29 @@ export class RpReporteComponent implements OnInit {
           }
         });
 
-        this.dataResult = new MatTableDataSource<ReporteData>(
-          this.listaEstadoSolicitud
+        // this.listaEstadoSolicitud.forEach((item) => {
+        //   this.listaReporteDetalle.fechaRecepcion = item.fechaRecepcion;
+        //   this.listaReporteDetalle.numeroSolicitud = item.numeroSolicitud;
+        //   this.listaReporteDetalle.fechaAsignacion = item.fechaAsignacion;
+        //   this.listaReporteDetalle.analistaAsignado = item.analistaAsignado;
+        //   this.listaReporteDetalle.plazo = item.plazo!;
+        // });
+
+        //concatenando data
+        if (this.listaEstadoSolicitud) {
+          this.listaEstadoSolicitud.forEach((item) => {
+            this.btnView(item);
+          });
+        } else {
+          console.error('Error: this.listaEstadoSolicitud es undefined');
+        }
+
+        console.log(this.reporteDetalle);
+        this.dataResult = new MatTableDataSource<ReporteDetalleExp>(
+          this.reporteDetalle
         );
 
-        console.log(this.listaEstadoSolicitud);
+        this.reporteDetalle = [];
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
@@ -304,6 +325,7 @@ export class RpReporteComponent implements OnInit {
     );
   }
 
+  //fin
   getRowStyles(row: any) {
     if (!row.fechaRecepcion) return { '': '' };
     if (row.plazo == 'DENTRO DEL PLAZO') {
@@ -315,9 +337,9 @@ export class RpReporteComponent implements OnInit {
     return { '': '' };
   }
 
-  exportarXlsx() {
-    this.excelService.exportToExcel(this.dataResult, 'Myexport');
-  }
+  // exportarXlsx() {
+  //   this.excelService.exportToExcel(this.dataResult, 'Myexport');
+  // }
 
   exportarTodoXlsx() {
     this.busquedaIn.size = 9999;
@@ -422,10 +444,9 @@ export class RpReporteComponent implements OnInit {
           }
         });
 
-        const allData = new MatTableDataSource<ReporteData>(
-          this.listaEstadoSolicitud
+        const allData = new MatTableDataSource<ReporteDetalleExp>(
+          this.reporteDetalle
         );
-        this.excelService.exportToExcel(allData, 'Myexport');
         this.busquedaIn.size = this.environment.ROWS_PAG;
       }
     );
@@ -550,19 +571,22 @@ export class RpReporteComponent implements OnInit {
             return;
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
+
           // ENVIAR RESPONSE A MODAL DETALLE
+          /*
           this.getDetalle(
             'Detalle de Solicitud',
             this.detalleLibro,
             row.tipoRegistro
           );
+          */
         }
       );
     }
 
     // FIRMA - Muestra fomatos - FORMATO A SEGUIR
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
-      this.spinner.show();
+      // this.spinner.show();
       this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
         (data: ObtenerDetalleFirmaOut) => {
           this.spinner.hide();
@@ -581,15 +605,57 @@ export class RpReporteComponent implements OnInit {
             return;
           }
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-          // ENVIAR RESPONSE A MODAL DETALLE
+
+          this.combinarDetalle(row, this.detalleFirma);
+          /*
           this.getDetalle(
             'Detalle de Solicitud',
             this.detalleFirma,
             row.tipoRegistro
           );
+          */
         }
       );
     }
+  }
+
+  combinarDetalle(row: ReporteData, detalle: DetalleFirma) {
+    Object.assign(row, detalle);
+
+    // Imprimir el nuevo objeto en la consola
+    this.getReporteDetalle(row);
+  }
+
+  getReporteDetalle(lista: any) {
+    this.listaReporteDetalle = [lista];
+    this.listaReporteDetalle.forEach((item) => {
+      item.detalleSolicitudFirma.forEach((detalle) => {
+        const aux = new ReporteDetalleExp();
+        aux.analistaAsignado = item.analistaAsignado;
+        aux.celular = detalle.celular;
+        aux.codigoAnalistaAsignado = item.codigoAnalistaAsignado;
+        aux.codigoOrec = item.codigoOrec;
+        aux.descripcionOrecLarga = item.descripcionOrecLarga;
+        aux.dniSolicitante = detalle.numeroDocumento; //! ojo
+        aux.email = detalle.email;
+        aux.estadoSolicitud = item.estadoSolicitud;
+        aux.fechaAsignacion = item.fechaAsignacion;
+        aux.fechaRecepcion = item.fechaRecepcion;
+        aux.fechaSolicitud = item.fechaSolicitud;
+        aux.numeroDocumento = detalle.numeroDocumento;
+        aux.numeroSolicitud = item.numeroSolicitud;
+        aux.oficinaAutorizada = item.oficinaAutorizada;
+        aux.plazo = item.plazo;
+        aux.preNombres = detalle.preNombres;
+        aux.primerApellido = detalle.primerApellido;
+        aux.segundoApellido = detalle.segundoApellido;
+        aux.tipoRegistro = item.tipoRegistro;
+        aux.ubigeo = item.ubigeo;
+        aux.tipoSolicitud = detalle.tipoSolicitud;
+
+        this.reporteDetalle.push(aux);
+      });
+    });
   }
 
   getDetalle(title: string, detalle: any, tipo: string) {
