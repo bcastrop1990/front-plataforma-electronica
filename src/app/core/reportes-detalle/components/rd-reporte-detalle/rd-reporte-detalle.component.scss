@@ -1,9 +1,7 @@
 button:first-child {
   margin-right: 8px;
 }
-.example-container {
-  overflow-x: auto;
-}
+
 
 .row {
   align-items: center;
@@ -31,6 +29,8 @@ mat-header-row.mat-header-row {
   font-weight: 600;
   font-size: .9rem;
   color: #000;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 mat-cell.mat-cell {

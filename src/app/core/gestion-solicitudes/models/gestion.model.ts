@@ -96,8 +96,10 @@ export class Detalle {
 
 export class Detalle2 {
   archivoSustento: ArchivoSustento;
+  ubigeo: string;
   constructor() {
     this.archivoSustento = new ArchivoSustento();
+    this.ubigeo = '';
   }
 }
 
@@ -123,10 +125,10 @@ export class DetalleSolicitudLibro {
 }
 
 export class DetalleFirma extends Detalle2 {
-  detalleSolicitudLibro: DetalleSolicitudFirma[];
+  detalleSolicitudFirma: DetalleSolicitudFirma[];
   constructor() {
     super();
-    this.detalleSolicitudLibro = new Array<DetalleSolicitudFirma>();
+    this.detalleSolicitudFirma = new Array<DetalleSolicitudFirma>();
   }
 }
 

@@ -208,10 +208,7 @@
             <div class="col-12">
               <div class="example-container">
                 <mat-table [dataSource]="dataResult">
-                  <ng-container
-                    matColumnDef="fechaRecepcion"
-                    class="col-sm-2 col-md-3 col-lg-4"
-                  >
+                  <ng-container matColumnDef="fechaRecepcion">
                     <mat-header-cell *matHeaderCellDef>
                       Fecha Recepción
                     </mat-header-cell>
@@ -236,16 +233,40 @@
                       {{ element?.fechaAsignacion }}
                     </mat-cell>
                   </ng-container>
-                  <ng-container matColumnDef="ubigeo">
+                  <ng-container matColumnDef="departamento">
                     <mat-header-cell *matHeaderCellDef>
-                      DEP/PRO/DIS
+                      Departamento
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                      {{ element?.ubigeo }}
+                      {{ element?.nombreDepartamento }}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="provincia">
+                    <mat-header-cell *matHeaderCellDef>
+                      Provincia
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element?.nombreProvincia }}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="distrito">
+                    <mat-header-cell *matHeaderCellDef>
+                      Distrito
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element?.nombreDistrito }}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="centroPoblado">
+                    <mat-header-cell *matHeaderCellDef>
+                      Centro Poblado
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element?.nombreCentroPoblado }}
                     </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="dni">
-                    <mat-header-cell *matHeaderCellDef> DNI </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>DNI</mat-header-cell>
                     <mat-cell *matCellDef="let element">
                       {{ element?.numeroDocumento }}
                     </mat-cell>
@@ -272,7 +293,7 @@
                       Detalle Registro
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                      {{ element?.tipoSolicitud }}
+                      {{ element?.detalleRegistro }}
                     </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="email">
@@ -325,7 +346,7 @@
                 </mat-table>
               </div>
               <mat-paginator
-                [pageSizeOptions]="[10, 20, 50, 100, 150]"
+                [pageSizeOptions]="[50, 100, 150, 200, 500]"
                 [length]="busquedaOut.totalElements"
                 [pageSize]="busquedaIn.size"
                 [pageIndex]="busquedaOut.page"

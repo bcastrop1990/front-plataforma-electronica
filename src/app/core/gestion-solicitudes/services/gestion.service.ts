@@ -18,6 +18,7 @@ import {
   RegistroAtencionOut,
 } from '../models/atencion.model';
 import { ReporteOut, ReportesIn } from '../models/busquedaReporte.model';
+import { BusquedaDetalleOut } from '../../reportes-detalle/models/rdReporte.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,13 @@ export class GestionService {
   listSolicitudes(request: BusquedaIn | ReportesIn) {
     return this.http.post<BusquedaOut>(
       `${this.url}/solicitudes/consultar?page=${request.page}&size=${request.size}`,
+      request
+    );
+  }
+
+  listSolicitudesDetalle(request: BusquedaIn | ReportesIn) {
+    return this.http.post<BusquedaDetalleOut>(
+      `${this.url}/solicitudes/consultarDetalle?page=${request.page}&size=${request.size}`,
       request
     );
   }

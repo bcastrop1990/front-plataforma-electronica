@@ -39,6 +39,7 @@ export const environment = {
 
   // PAGINATION
   ROWS_PAGE: 10, // Filas por página
+  ROWS_PAGE2: 50, // Filas por página
   START_PAGE: 1, // Página inicial
 
   // TIPO DE ARCHIVO

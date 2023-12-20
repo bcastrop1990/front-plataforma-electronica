@@ -293,7 +293,7 @@ export class RpReporteComponent implements OnInit {
           this.listaEstadoSolicitud
         );
 
-        console.log(this.listaEstadoSolicitud);
+        console.log(this.listaEstadoSolicitud.length);
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;

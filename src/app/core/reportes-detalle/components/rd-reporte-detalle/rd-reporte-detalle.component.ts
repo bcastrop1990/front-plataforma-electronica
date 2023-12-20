@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 import { GestionService } from 'src/app/core/gestion-solicitudes/services/gestion.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ExcelExportService } from 'src/app/core/reportes-excel/services/reportes.service';
 import { User } from 'src/app/auth/models/user.model';
 import { Subscription } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -31,9 +30,10 @@ import {
 import { RpDetalleComponent } from 'src/app/core/reportes-excel/components/rp-detalle/rp-detalle.component';
 import { RpDocumentoComponent } from 'src/app/core/reportes-excel/components/rp-documento/rp-documento.component';
 import {
-  ReporteDetalle,
+  BusquedaDetalleOut,
   ReporteDetalleExp,
 } from '../../models/rdReporte.model';
+import { RdServiceService } from '../../services/rd-service.service';
 
 @Component({
   selector: 'app-rd-reporte-detalle',
@@ -49,6 +49,8 @@ export class RdReporteDetalleComponent implements OnInit {
   title!: string;
   bgColor!: any;
 
+  contador: number = 12;
+
   form!: FormGroup;
 
   user?: User;
@@ -61,7 +63,7 @@ export class RdReporteDetalleComponent implements OnInit {
   codigoEstado: string = '';
 
   busquedaIn!: ReportesIn;
-  busquedaOut!: ReporteOut;
+  busquedaOut!: BusquedaDetalleOut;
 
   estadoSolicitudOut!: OptionsOut;
   estadoSolicitud: Options[] = [];
@@ -78,11 +80,7 @@ export class RdReporteDetalleComponent implements OnInit {
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
   detalleFirma!: DetalleFirma;
 
-  listaEstadoSolicitud!: ReporteData[];
-
-  listaReporteDetalle!: ReporteDetalle[];
-
-  reporteDetalle: ReporteDetalleExp[] = [];
+  listaEstadoSolicitud!: ReporteDetalleExp[];
 
   @ViewChild('cboAnalista') cboAnalista!: OptionsComponent;
   @ViewChild('cboEstadoSolicitud') cboEstadoSolicitud!: OptionsComponent;
@@ -97,11 +95,10 @@ export class RdReporteDetalleComponent implements OnInit {
     'fechaRecepcion',
     'nroSolicitud',
     'fechaAsignacion',
-    // 'departamento',
-    // 'provincia',
-    // 'distrito',
-    'ubigeo',
-    // 'centroPoblado',
+    'departamento',
+    'provincia',
+    'distrito',
+    'centroPoblado',
     'dni',
     'registradorCivil',
     'fechaAtencion',
@@ -134,7 +131,7 @@ export class RdReporteDetalleComponent implements OnInit {
     private seguridadService: SeguridadService,
     private gestionService: GestionService,
     private spinner: NgxSpinnerService,
-    private excelService: ExcelExportService
+    private excelService: RdServiceService
   ) {
     this.subUser = this.seguridadService
       .getObsUser()
@@ -191,10 +188,10 @@ export class RdReporteDetalleComponent implements OnInit {
     this.busquedaIn.fechaFin = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
-    this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
+    this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE2;
 
-    this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
-      (data: ReporteOut) => {
+    this.gestionService.listSolicitudesDetalle(this.busquedaIn).subscribe(
+      (data: BusquedaDetalleOut) => {
         this.busquedaOut = data;
       },
       (error) => {},
@@ -207,6 +204,8 @@ export class RdReporteDetalleComponent implements OnInit {
         this.selection.clear();
         //ASIGNAR VALORES
         this.listaEstadoSolicitud = this.busquedaOut.data;
+
+        console.log(this.listaEstadoSolicitud);
 
         //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
@@ -292,29 +291,11 @@ export class RdReporteDetalleComponent implements OnInit {
           }
         });
 
-        // this.listaEstadoSolicitud.forEach((item) => {
-        //   this.listaReporteDetalle.fechaRecepcion = item.fechaRecepcion;
-        //   this.listaReporteDetalle.numeroSolicitud = item.numeroSolicitud;
-        //   this.listaReporteDetalle.fechaAsignacion = item.fechaAsignacion;
-        //   this.listaReporteDetalle.analistaAsignado = item.analistaAsignado;
-        //   this.listaReporteDetalle.plazo = item.plazo!;
-        // });
-
-        //concatenando data
-        if (this.listaEstadoSolicitud) {
-          this.listaEstadoSolicitud.forEach((item) => {
-            this.btnView(item);
-          });
-        } else {
-          console.error('Error: this.listaEstadoSolicitud es undefined');
-        }
-
-        console.log(this.reporteDetalle);
         this.dataResult = new MatTableDataSource<ReporteDetalleExp>(
-          this.reporteDetalle
+          this.listaEstadoSolicitud
         );
 
-        this.reporteDetalle = [];
+        //concatenando data
 
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;
@@ -337,17 +318,17 @@ export class RdReporteDetalleComponent implements OnInit {
     return { '': '' };
   }
 
-  // exportarXlsx() {
-  //   this.excelService.exportToExcel(this.dataResult, 'Myexport');
-  // }
+  exportarXlsx() {
+    this.excelService.exportToExcel(this.dataResult, 'Myexport');
+  }
 
   exportarTodoXlsx() {
     this.busquedaIn.size = 9999;
 
     this.busquedaIn.page = this.environment.START_PAGE;
 
-    this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
-      (data: ReporteOut) => {
+    this.gestionService.listSolicitudesDetalle(this.busquedaIn).subscribe(
+      (data: BusquedaDetalleOut) => {
         this.busquedaOut = data;
       },
       (error) => {},
@@ -445,8 +426,9 @@ export class RdReporteDetalleComponent implements OnInit {
         });
 
         const allData = new MatTableDataSource<ReporteDetalleExp>(
-          this.reporteDetalle
+          this.listaEstadoSolicitud
         );
+        this.excelService.exportToExcel(allData, 'Myexport');
         this.busquedaIn.size = this.environment.ROWS_PAG;
       }
     );
@@ -539,123 +521,6 @@ export class RdReporteDetalleComponent implements OnInit {
 
   setAnalista(id: any) {
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
-  }
-
-  btnView(row: ReporteData): void {
-    if (!row.tipoRegistro) {
-      this.utilService.getAlert(
-        'Aviso',
-        'No se ha obtenido el tipo de registro.'
-      );
-      return;
-    }
-
-    // LIBRO
-    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
-      this.spinner.show();
-      this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
-          this.spinner.hide();
-          this.obtenerDetalleLibroOut = data;
-        },
-        (error) => {
-          this.spinner.hide();
-        },
-        () => {
-          this.spinner.hide();
-          if (this.obtenerDetalleLibroOut.code !== this.environment.CODE_000) {
-            this.utilService.getAlert(
-              `Aviso:`,
-              `${this.obtenerDetalleLibroOut.message}`
-            );
-            return;
-          }
-          this.detalleLibro = this.obtenerDetalleLibroOut.data;
-
-          // ENVIAR RESPONSE A MODAL DETALLE
-          /*
-          this.getDetalle(
-            'Detalle de Solicitud',
-            this.detalleLibro,
-            row.tipoRegistro
-          );
-          */
-        }
-      );
-    }
-
-    // FIRMA - Muestra fomatos - FORMATO A SEGUIR
-    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
-      // this.spinner.show();
-      this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleFirmaOut) => {
-          this.spinner.hide();
-          this.obtenerDetalleFirmaOut = data;
-        },
-        (error) => {
-          this.spinner.hide();
-        },
-        () => {
-          this.spinner.hide();
-          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
-            this.utilService.getAlert(
-              `Aviso:`,
-              `${this.obtenerDetalleFirmaOut.message}`
-            );
-            return;
-          }
-          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-
-          this.combinarDetalle(row, this.detalleFirma);
-          /*
-          this.getDetalle(
-            'Detalle de Solicitud',
-            this.detalleFirma,
-            row.tipoRegistro
-          );
-          */
-        }
-      );
-    }
-  }
-
-  combinarDetalle(row: ReporteData, detalle: DetalleFirma) {
-    Object.assign(row, detalle);
-
-    // Imprimir el nuevo objeto en la consola
-    this.getReporteDetalle(row);
-  }
-
-  getReporteDetalle(lista: any) {
-    this.listaReporteDetalle = [lista];
-    this.listaReporteDetalle.forEach((item) => {
-      item.detalleSolicitudFirma.forEach((detalle) => {
-        const aux = new ReporteDetalleExp();
-        aux.analistaAsignado = item.analistaAsignado;
-        aux.celular = detalle.celular;
-        aux.codigoAnalistaAsignado = item.codigoAnalistaAsignado;
-        aux.codigoOrec = item.codigoOrec;
-        aux.descripcionOrecLarga = item.descripcionOrecLarga;
-        aux.dniSolicitante = detalle.numeroDocumento; //! ojo
-        aux.email = detalle.email;
-        aux.estadoSolicitud = item.estadoSolicitud;
-        aux.fechaAsignacion = item.fechaAsignacion;
-        aux.fechaRecepcion = item.fechaRecepcion;
-        aux.fechaSolicitud = item.fechaSolicitud;
-        aux.numeroDocumento = detalle.numeroDocumento;
-        aux.numeroSolicitud = item.numeroSolicitud;
-        aux.oficinaAutorizada = item.oficinaAutorizada;
-        aux.plazo = item.plazo;
-        aux.preNombres = detalle.preNombres;
-        aux.primerApellido = detalle.primerApellido;
-        aux.segundoApellido = detalle.segundoApellido;
-        aux.tipoRegistro = item.tipoRegistro;
-        aux.ubigeo = item.ubigeo;
-        aux.tipoSolicitud = detalle.tipoSolicitud;
-
-        this.reporteDetalle.push(aux);
-      });
-    });
   }
 
   getDetalle(title: string, detalle: any, tipo: string) {
