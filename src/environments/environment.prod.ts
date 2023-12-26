@@ -13,7 +13,8 @@ export const environment = {
   // prod
   API_AUTH: 'https://servicesdemo.reniec.gob.pe',
   // API_MASTER: 'http://10.48.60.13:7010/api-plataforma-electronica',
-  API_MASTER: 'https://portalrcm.reniec.gob.pe/api-plataforma-electronica', //desa
+  API_MASTER:
+    'http://sisgesusuaextn1desa.reniec.gob.pe:7003/api-plataforma-electronica', //desa
 
   jwtDomainsTokenized: [
     'portalrcm.reniec.gob.pe', //

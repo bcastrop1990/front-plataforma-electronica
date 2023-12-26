@@ -1,10 +1,10 @@
 export const environment = {
-  production: true,
+  production: false,
 
   API_AUTH: 'https://servicesdemo.reniec.gob.pe',
   // API_MASTER: 'http://10.48.60.13:7010/api-plataforma-electronica',
   API_MASTER:
-    'https://portalproyectos.reniec.gob.pe/api-plataforma-electronica',
+    'http://sisgesusuaextn1desa.reniec.gob.pe:7003/api-plataforma-electronica',
 
   jwtDomainsTokenized: ['portalproyectos.reniec.gob.pe'],
 
