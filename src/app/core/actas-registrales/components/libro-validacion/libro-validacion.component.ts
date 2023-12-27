@@ -39,6 +39,8 @@ export class LibroValidacionComponent implements OnInit {
   consultarRuipinIn!: ConsultarRuipinIn;
   consultarRuipinOut!: ConsultarRuipinOut;
 
+  noSoyRobot: boolean = false;
+
   @ViewChild('formValidacionDatos')
   formValidacionDatos!: ValidacionDatosComponent;
   @ViewChild('formDatosOficinaAutorizada')
@@ -167,5 +169,13 @@ export class LibroValidacionComponent implements OnInit {
 
   back(): void {
     this.utilService.link(environment.URL_MENU);
+  }
+
+  resolveCaptcha(resolved: boolean) {
+    this.noSoyRobot = resolved;
+  }
+
+  get isExternal(): boolean {
+    return !this.seguridadService.getUserInternal();
   }
 }

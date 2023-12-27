@@ -77,4 +77,7 @@ export const environment = {
   URL_MOD_REPORTES: '/reportes',
   URL_MOD_REPORTES_EXCEL: '/reportes/excel',
   URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes-excel',
+
+  //RE CAPTCHA
+  SITE_KEY_RECAPTCHA: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
 };

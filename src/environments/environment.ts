@@ -85,6 +85,9 @@ export const environment = {
   URL_MOD_GESTION_SOLICITUDES: '/gestion-solicitudes',
   URL_MOD_REPORTES: '/reportes',
   URL_MOD_GESTION_SOLICITUDES_ATENCION: '/gestion-solicitudes/atencion',
+
+  //RE CAPTCHA
+  SITE_KEY_RECAPTCHA: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
 };
 
 /*
