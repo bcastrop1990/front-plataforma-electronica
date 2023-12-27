@@ -1,15 +1,19 @@
-import {Result} from "../../../masters/models/result.model";
+import { Result } from '../../../masters/models/result.model';
 
 export class ValidarDatosIn {
   digitoVerifica: string;
   dni: string;
   fechaEmision: string;
   numeroSolicitud: string;
+  fechaIni: string;
+  fechaFin: string;
   constructor() {
     this.digitoVerifica = '';
     this.dni = '';
     this.fechaEmision = '';
     this.numeroSolicitud = '';
+    this.fechaIni = '';
+    this.fechaFin = '';
   }
 }
 
@@ -95,7 +99,6 @@ export class DetalleSolicitudFirma {
     this.archivos = new Array<Archivos>();
   }
 }
-
 
 export class Archivos {
   codigo: string;

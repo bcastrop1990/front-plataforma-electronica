@@ -1,5 +1,5 @@
-import {Result} from "../../../masters/models/result.model";
-import {Busqueda} from "../../gestion-solicitudes/models/busqueda.model";
+import { Result } from '../../../masters/models/result.model';
+import { Busqueda } from '../../gestion-solicitudes/models/busqueda.model';
 
 export class BusquedaIn extends Busqueda {
   fechaFin: string;
@@ -10,6 +10,15 @@ export class BusquedaIn extends Busqueda {
     this.fechaFin = '';
     this.fechaIni = '';
     this.numeroSolicitud = '';
+  }
+}
+
+export class Fechas {
+  fechaFin: string;
+  fechaIni: string;
+  constructor() {
+    this.fechaFin = '';
+    this.fechaIni = '';
   }
 }
 

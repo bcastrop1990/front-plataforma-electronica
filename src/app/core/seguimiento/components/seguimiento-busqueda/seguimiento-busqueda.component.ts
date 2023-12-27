@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,11 +9,8 @@ import {
   BusquedaOut,
   DocumentosRespuesta,
   DocumentosRespuestaOut,
+  Fechas,
 } from '../../models/busqueda.model';
-import {
-  DetalleFirma,
-  ObtenerDetalleFirmaOut,
-} from 'src/app/core/gestion-solicitudes/models/gestion.model';
 import { UtilService } from '../../../../shared/services/util.service';
 import { SeguimientoService } from '../../services/seguimiento.service';
 import { environment } from 'src/environments/environment';
@@ -24,15 +21,9 @@ import {
   GetFileOut,
 } from '../../../../shared/models/upload-file.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ModalDocumentosComponent } from '../modal-documentos/modal-documentos.component';
-import { GsDetalleFilesComponent } from 'src/app/core/gestion-solicitudes/components/gs-detalle-files/gs-detalle-files.component';
-import { GestionService } from 'src/app/core/gestion-solicitudes/services/gestion.service';
-import { GsDetalleComponent } from 'src/app/core/gestion-solicitudes/components/gs-detalle/gs-detalle.component';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-seguimiento-busqueda',
@@ -63,11 +54,10 @@ export class SeguimientoBusquedaComponent implements OnInit {
   getFileOut!: GetFileOut;
   getFileData!: GetFileData;
 
+  fechasOut!: Fechas;
+
   documentosRespuestaOut!: DocumentosRespuestaOut;
   documentosRespuesta!: DocumentosRespuesta[];
-
-  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
-  detalleFirma!: DetalleFirma;
 
   lista!: BusquedaData[];
 
@@ -76,16 +66,17 @@ export class SeguimientoBusquedaComponent implements OnInit {
 
   message!: string;
 
+  rangeMax: number = 30;
+  rangeMaxMessage: string = `El rango máximo es de ${this.rangeMax} días.`;
+
   constructor(
     private formBuilder: FormBuilder,
     public utilService: UtilService,
     private seguimientoService: SeguimientoService,
     private uploadService: UploadFileService,
     private spinner: NgxSpinnerService,
-    public dialog: MatDialogRef<GsDetalleComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataDialog: any,
-    public dialogOpen: MatDialog,
-    private gestionService: GestionService
+    private dateAdapter: DateAdapter<Date>,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +108,21 @@ export class SeguimientoBusquedaComponent implements OnInit {
     this.getLista();
   }
 
+  changeDateRange() {
+    const start = this.form.get('fechaInicio')?.value;
+    const end = this.form.get('fechaFin')?.value;
+
+    if (start && end) {
+      const startMoreMax = this.dateAdapter.addCalendarDays(
+        start,
+        this.rangeMax
+      );
+      if (startMoreMax < end) {
+        this.form.get('fechaFin')?.setErrors({ maxRange: true });
+      }
+    }
+  }
+
   getLista(e?: PageEvent): void {
     this.length = 0;
     this.message = 'Cargando...';
@@ -134,12 +140,20 @@ export class SeguimientoBusquedaComponent implements OnInit {
 
     const busquedaIn = new BusquedaIn();
     busquedaIn.numeroSolicitud = this.form.controls['numeroSolicitud'].value;
-    busquedaIn.fechaIni = fInicio
-      ? formatDate(fInicio, 'yyyy-MM-dd', 'EN')
-      : '';
-    busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
+
+    this.fechasOut = this.seguimientoService.getSharedData();
+
+    if (this.fechasOut) {
+      busquedaIn.fechaIni = this.fechasOut.fechaIni;
+      busquedaIn.fechaFin = this.fechasOut.fechaFin;
+    } else {
+      busquedaIn.fechaIni = fInicio
+        ? formatDate(fInicio, 'yyyy-MM-dd', 'EN')
+        : '';
+      busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
+    }
 
     this.seguimientoService.listSolicitudes(busquedaIn).subscribe(
       (data: BusquedaOut) => {
@@ -202,7 +216,6 @@ export class SeguimientoBusquedaComponent implements OnInit {
     }, 100);
   }
 
-  //Permite ver el nombre del archivo
   btnVerArchivosRespuesta(numeroSolicitud: string): void {
     if (!numeroSolicitud) {
       this.utilService.getAlert(
@@ -212,40 +225,6 @@ export class SeguimientoBusquedaComponent implements OnInit {
       return;
     }
 
-    this.spinner.show();
-    this.gestionService.getDetailFirma(numeroSolicitud).subscribe(
-      (data: ObtenerDetalleFirmaOut) => {
-        this.spinner.hide();
-        this.obtenerDetalleFirmaOut = data;
-      },
-      (error) => {
-        this.spinner.hide();
-      },
-      () => {
-        this.spinner.hide();
-        if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.documentosRespuestaOut.message}`
-          );
-          return;
-        }
-        this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-        // ENVIAR RESPONSE A MODAL DETALLE
-        this.getDetalle2('Sustento', this.detalleFirma, numeroSolicitud);
-      }
-    );
-  }
-
-  //Permite ver datos del archivos
-  btnVerArchivos(numeroSolicitud: string): void {
-    if (!numeroSolicitud) {
-      this.utilService.getAlert(
-        'Aviso',
-        'No se ha obtenido el número de solicitud.'
-      );
-      return;
-    }
     this.spinner.show();
     this.seguimientoService.getDocumentosRespuesta(numeroSolicitud).subscribe(
       (data: DocumentosRespuestaOut) => {
@@ -271,34 +250,10 @@ export class SeguimientoBusquedaComponent implements OnInit {
     );
   }
 
-  //Prbando - buscars files.
-  btnViewFiles(files: any[]): void {
-    if (files.length <= 0) {
-      this.utilService.getAlert('Aviso', 'No hay formatos asociados.');
-      return;
-    }
-    this.getDetalleFiles('Formatos', files);
-  }
-
-  getDetalleFiles(title: string, files: any[]) {
-    return this.dialogOpen.open(GsDetalleFilesComponent, {
-      width: '850px',
-      data: { title: title, files: files },
-    });
-  }
-
-  //No Opcion
   getDetalle(title: string, detalle: any) {
-    return this.dialogOpen.open(ModalDocumentosComponent, {
+    return this.dialog.open(ModalDocumentosComponent, {
       width: '1100px',
       data: { title: title, files: detalle },
-    });
-  }
-
-  getDetalle2(title: string, detalle: any, tipo: string) {
-    return this.dialogOpen.open(GsDetalleComponent, {
-      width: '850px',
-      data: { title: title, detalle: detalle, tipo: tipo },
     });
   }
 }

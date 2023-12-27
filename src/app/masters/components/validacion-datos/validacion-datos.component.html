@@ -24,7 +24,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-sm-12 col-md-4 mb-2">
+          <div class="col-sm-12 col-md-4 mb-2" *ngIf="isExternal">
             <label>Dígito de Verificación: <span>(*)</span></label>
             <mat-form-field appearance="outline" class="w-100">
               <input
@@ -40,7 +40,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-sm-12 col-md-4 mb-2">
+          <div class="col-sm-12 col-md-4 mb-2" *ngIf="isExternal">
             <label>Fecha de Emisión del DNI: <span>(*)</span></label>
             <mat-form-field appearance="outline" class="w-100">
               <input
@@ -71,14 +71,13 @@
         <ng-container *ngIf="paraSeguimiento">
           <div class="row">
             <div class="col-sm-12 col-md-4 mb-2">
-              <label>Número de Solicitud: <span>(*)</span></label>
+              <label>Número de Solicitud:</label>
               <mat-form-field appearance="outline" class="w-100">
                 <input
                   matInput
                   formControlName="numeroSolicitud"
                   placeholder="Ingresar"
                   autocomplete="off"
-                  (input)="actualizarEstadoRangoFecha()"
                 />
                 <mat-error *ngIf="form.get('numeroSolicitud')?.invalid">{{
                   utilService.getErrorMessage(
@@ -92,40 +91,42 @@
               </mat-form-field>
             </div>
             <div class="col-sm-12 col-md-4 mb-2">
-              <label>Rango de fecha</label>
+              <label>Rango de fechas:</label>
               <mat-form-field appearance="outline" class="w-100">
-                <mat-date-range-input [rangePicker]="picker">
+                <mat-date-range-input
+                  [rangePicker]="picker"
+                  formGroupName="dateRange"
+                  [disabled]="disabledRange"
+                >
                   <input
+                    matInput
                     matStartDate
-                    formControlName="fechaInicio"
-                    placeholder="Desde"
-                    [disabled]="!rangoFechaActivo"
+                    formControlName="start"
+                    placeholder="Fecha inicial"
+                    readonly
+                    autocomplete="off"
+                    (dateChange)="changeDateRange()"
                   />
                   <input
+                    matInput
                     matEndDate
-                    formControlName="fechaFin"
-                    placeholder="Hasta"
-                    [disabled]="!rangoFechaActivo"
-                    [max]="dateNow"
+                    formControlName="end"
+                    placeholder="Fecha final"
+                    readonly
+                    autocomplete="off"
+                    (dateChange)="changeDateRange()"
                   />
                 </mat-date-range-input>
                 <mat-datepicker-toggle
-                  matSuffix
+                  matIconSuffix
                   [for]="picker"
-                  [disabled]="!rangoFechaActivo"
-                >
-                  <mat-icon
-                    matDatepickerToggleIcon
-                    fontSet="fas"
-                    fontIcon="fa-calendar-day"
-                  ></mat-icon>
-                </mat-datepicker-toggle>
+                ></mat-datepicker-toggle>
                 <mat-datepicker-toggle
                   matSuffix
-                  (click)="clearDate(['fechaInicio', 'fechaFin'])"
+                  (click)="clearRangeDate()"
                   *ngIf="
-                    form.controls['fechaInicio']?.value ||
-                    form.controls['fechaFin']?.value
+                    this.form.get('dateRange')?.get('start')?.value ||
+                    this.form.get('dateRange')?.get('end')?.value
                   "
                 >
                   <mat-icon
@@ -134,16 +135,14 @@
                     fontIcon="fa-times"
                   ></mat-icon>
                 </mat-datepicker-toggle>
-                <mat-date-range-picker
-                  #picker
-                  color="accent"
-                ></mat-date-range-picker>
-                <mat-error *ngIf="form.get('fechaInicio')?.invalid">{{
-                  utilService.getErrorMessage(form, "fechaInicio")
-                }}</mat-error>
-                <mat-error *ngIf="form.get('fechaFin')?.invalid">{{
-                  utilService.getErrorMessage(form, "fechaFin")
-                }}</mat-error>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+                <mat-error
+                  *ngIf="
+                    form.get('dateRange')?.get('end')?.hasError('maxRange')
+                  "
+                >
+                  {{ rangeMaxMessage }}
+                </mat-error>
               </mat-form-field>
             </div>
           </div>
