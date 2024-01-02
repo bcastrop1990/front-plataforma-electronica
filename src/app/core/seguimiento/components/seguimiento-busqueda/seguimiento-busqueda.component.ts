@@ -47,6 +47,7 @@ export class SeguimientoBusquedaComponent implements OnInit {
   ];
   dataResult!: MatTableDataSource<BusquedaData>;
   length = 0;
+  aux = 0;
 
   busquedaIn!: BusquedaIn;
   busquedaOut!: BusquedaOut;
@@ -55,6 +56,7 @@ export class SeguimientoBusquedaComponent implements OnInit {
   getFileData!: GetFileData;
 
   fechasOut!: Fechas;
+  fecha!: Fechas;
 
   documentosRespuestaOut!: DocumentosRespuestaOut;
   documentosRespuesta!: DocumentosRespuesta[];
@@ -145,9 +147,10 @@ export class SeguimientoBusquedaComponent implements OnInit {
 
     this.fechasOut = this.seguimientoService.getSharedData();
 
-    if (this.fechasOut) {
+    if (this.aux == 0 && this.fechasOut) {
       busquedaIn.fechaIni = this.fechasOut.fechaIni;
       busquedaIn.fechaFin = this.fechasOut.fechaFin;
+      this.aux++;
     } else {
       busquedaIn.fechaIni = fInicio
         ? formatDate(fInicio, 'yyyy-MM-dd', 'EN')
@@ -175,6 +178,8 @@ export class SeguimientoBusquedaComponent implements OnInit {
       }
     );
   }
+
+  clearSesionDate() {}
 
   clearDate(formControl: string[]) {
     formControl.forEach((item) => {
