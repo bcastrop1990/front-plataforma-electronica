@@ -9,6 +9,31 @@ export class ValidarDatosIn {
   }
 }
 
+export class OficinaOut extends Result {
+  data: Oficina;
+  constructor() {
+    super();
+    this.data = new Oficina();
+  }
+}
+
+export class Oficina {
+  nombreDepartamento: string;
+  nombreProvincia: string;
+  nombreDistrito: string;
+  nombreCentroPoblado: string;
+  nombreOficina: string;
+  coNombreOficina: string;
+  constructor() {
+    this.nombreDepartamento = '';
+    this.nombreProvincia = '';
+    this.nombreDistrito = '';
+    this.nombreCentroPoblado = '';
+    this.nombreOficina = '';
+    this.coNombreOficina = '';
+  }
+}
+
 export class ValidarDatosOut extends Result {
   data: string;
   constructor() {

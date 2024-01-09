@@ -27,7 +27,6 @@ export class SeguimientoService {
   }
 
   listSolicitudes(request: BusquedaIn) {
-    console.log(request);
     return this.http.post<BusquedaOut>(
       `${this.url}/solicitudes?page=${request.page}&size=${request.size}`,
       request

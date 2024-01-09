@@ -11,13 +11,15 @@ import { SeguimientoBusquedaComponent } from './components/seguimiento-busqueda/
 import {SharedModule} from "../../shared/shared.module";
 import {MastersModule} from "../../masters/masters.module";
 import { ModalDocumentosComponent } from './components/modal-documentos/modal-documentos.component';
+import { SeguimientoDetalleComponent } from './components/seguimiento-detalle/seguimiento-detalle.component';
 
 @NgModule({
   declarations: [
     SeguimientoDashboardComponent,
     SeguimientoValidacionComponent,
     SeguimientoBusquedaComponent,
-    ModalDocumentosComponent
+    ModalDocumentosComponent,
+    SeguimientoDetalleComponent
   ],
   imports: [
     CommonModule,

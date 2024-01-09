@@ -157,9 +157,11 @@
                       *ngIf="element.codigoArchivoSustento"
                       mat-flat-button
                       color="accent"
-                      (click)="btnDownloadFile(element.codigoArchivoSustento)"
+                      (click)="
+                        btnVer(element?.tipoRegistro, element?.numeroSolicitud)
+                      "
                     >
-                      Descargar
+                      Ver
                     </button>
                   </mat-cell>
                 </ng-container>

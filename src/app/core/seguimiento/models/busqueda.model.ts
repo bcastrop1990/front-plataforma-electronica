@@ -14,11 +14,13 @@ export class BusquedaIn extends Busqueda {
 }
 
 export class Fechas {
+  numeroSolicitud?: string;
   fechaFin: string;
   fechaIni: string;
   constructor() {
     this.fechaFin = '';
     this.fechaIni = '';
+    this.numeroSolicitud = '';
   }
 }
 

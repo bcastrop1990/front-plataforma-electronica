@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { OficinaOut } from '../models/libro.model';
 
 //TODO: REVISAR SERVICIO
 
@@ -6,26 +7,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SessionService {
-  private token: string | null = null;
+  private oficina!: OficinaOut;
 
-  constructor() {
-    this.token = this.getToken();
+  setOficinaData(data: OficinaOut): void {
+    this.oficina = data;
   }
 
-  setToken(token: string): void {
-    this.token = token;
-    sessionStorage.setItem('tokenprueba', token);
-  }
-
-  getToken(): string | null {
-    if (!this.token) {
-      this.token = sessionStorage.getItem('tokenprueba');
-    }
-    return this.token;
-  }
-
-  clearSession(): void {
-    this.token = null;
-    sessionStorage.removeItem('tokenprueba');
+  getOficinaData(): OficinaOut {
+    return this.oficina;
   }
 }

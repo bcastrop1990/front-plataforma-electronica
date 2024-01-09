@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
 
   API_AUTH: 'https://servicesdemo.reniec.gob.pe',
   // API_MASTER: 'http://10.48.60.13:7010/api-plataforma-electronica',

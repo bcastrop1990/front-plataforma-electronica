@@ -73,6 +73,7 @@ export class SeguimientoValidacionComponent implements OnInit {
     this.fecha.fechaFin = formDatosPersona.dateRange.end
       ? formatDate(formDatosPersona.dateRange.end, 'yyyy-MM-dd', 'EN')
       : '';
+    this.fecha.numeroSolicitud = formDatosPersona.numeroSolicitud;
 
     this.seguimientoService.setSharedData(this.fecha);
 

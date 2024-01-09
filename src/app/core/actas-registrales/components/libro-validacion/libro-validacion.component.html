@@ -25,9 +25,30 @@
       tabindex="-1"
       mat-flat-button
       color="accent"
-      (click)="verificar()"
+      (click)="start()"
       class="mx-2"
       [disabled]="!noSoyRobot"
+      *ngIf="verificarDni"
+    >
+      Validar DNI
+    </button>
+    <button
+      tabindex="-1"
+      mat-flat-button
+      color="accent"
+      (click)="oficinaAutorizada()"
+      class="mx-2"
+      *ngIf="verificarOficina"
+    >
+      Validar Oficina
+    </button>
+    <button
+      tabindex="-1"
+      mat-flat-button
+      color="accent"
+      (click)="start()"
+      class="mx-2"
+      *ngIf="iniciar"
     >
       Iniciar
     </button>

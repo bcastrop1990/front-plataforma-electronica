@@ -1,17 +1,28 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import {UtilService} from "../../../shared/services/util.service";
-import {OficinaService} from "../../services/oficina.service";
-import {OficinaOrec, OficinaOrecIn, OficinaOrecOut} from "../../models/oficina.model";
+import { UtilService } from '../../../shared/services/util.service';
+import { OficinaService } from '../../services/oficina.service';
+import {
+  OficinaOrec,
+  OficinaOrecIn,
+  OficinaOrecOut,
+} from '../../models/oficina.model';
 
 @Component({
   selector: 'app-oficina-autorizada',
   templateUrl: './oficina-autorizada.component.html',
-  styleUrls: ['./oficina-autorizada.component.scss']
+  styleUrls: ['./oficina-autorizada.component.scss'],
 })
 export class OficinaAutorizadaComponent implements OnInit, OnChanges {
-
   environment: any;
   form!: FormGroup;
 
@@ -27,9 +38,11 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
 
   @Output() oficinaOrecSelected: EventEmitter<string> = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder,
-              public utilService: UtilService,
-              private oficinaService: OficinaService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    public utilService: UtilService,
+    private oficinaService: OficinaService
+  ) {}
 
   ngOnInit(): void {
     this.environment = environment;
@@ -39,7 +52,6 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
     });
 
     this.validate();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -49,15 +61,30 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   }
 
   validate(): void {
-    if (this.idDepartamento || this.idProvincia || this.idDistrito || this.idCentroPoblado) {
-      this.requestMapper(this.idDepartamento, this.idProvincia, this.idDistrito, this.idCentroPoblado);
+    if (
+      this.idDepartamento ||
+      this.idProvincia ||
+      this.idDistrito ||
+      this.idCentroPoblado
+    ) {
+      this.requestMapper(
+        this.idDepartamento,
+        this.idProvincia,
+        this.idDistrito,
+        this.idCentroPoblado
+      );
     } else {
       this.form.controls['idOficinaAutorizada'].setValue('');
       this.oficinasOrec = [];
     }
   }
 
-  requestMapper(idDepartamento: string, idProvincia: string, idDistrito: string, idCentroPoblado: string): void {
+  requestMapper(
+    idDepartamento: string,
+    idProvincia: string,
+    idDistrito: string,
+    idCentroPoblado: string
+  ): void {
     this.oficinaOrecIn = new OficinaOrecIn();
     this.oficinaOrecIn.codigoDepartamento = idDepartamento;
     this.oficinaOrecIn.codigoProvincia = idProvincia;
@@ -67,20 +94,22 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   }
 
   listarOficinasOrec(request: OficinaOrecIn): void {
-    this.oficinaService.listOficinasOrec(request).subscribe((data: OficinaOrecOut) => {
-      this.oficinaOrecOut = data;
-    }, error => {
-    }, () => {
-      if (this.oficinaOrecOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.oficinaOrecOut.message}`);
-        return;
+    this.oficinaService.listOficinasOrec(request).subscribe(
+      (data: OficinaOrecOut) => {
+        this.oficinaOrecOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.oficinaOrecOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.oficinaOrecOut.message}`);
+          return;
+        }
+        this.oficinasOrec = this.oficinaOrecOut.data;
       }
-      this.oficinasOrec = this.oficinaOrecOut.data;
-    });
+    );
   }
 
   emitOficinaAutorizada(value: string) {
     this.oficinaOrecSelected.emit(value ? value : '');
   }
-
 }

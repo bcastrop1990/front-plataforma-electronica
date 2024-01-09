@@ -317,6 +317,7 @@ export class Step2LibroSolicitudComponent implements OnInit {
     this.maestroService.listTipoArchivos(idTipoUso).subscribe(
       (data: TipoArchivoOut) => {
         this.tipoArchivoOut = data;
+        console.log(this.tipoArchivoOut);
       },
       (error) => {},
       () => {

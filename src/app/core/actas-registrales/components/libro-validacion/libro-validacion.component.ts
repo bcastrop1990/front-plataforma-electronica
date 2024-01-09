@@ -15,7 +15,13 @@ import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { RegistroLibroService } from '../../services/registro-libro.service';
 import { SessionService } from '../../services/sesion.service';
-import { Persona, ConsultarPorDniOut } from '../../models/libro.model';
+import {
+  Persona,
+  ConsultarPorDniOut,
+  Oficina,
+  OficinaOut,
+} from '../../models/libro.model';
+import { User } from 'src/app/auth/models/user.model';
 
 @Component({
   selector: 'app-libro-validacion',
@@ -39,7 +45,14 @@ export class LibroValidacionComponent implements OnInit {
   consultarRuipinIn!: ConsultarRuipinIn;
   consultarRuipinOut!: ConsultarRuipinOut;
 
+  oficina!: OficinaOut;
+  oficinaAutorizadaL: string = '';
+
+  //CONDICIONALES DE BOTONES
   noSoyRobot: boolean = false;
+  verificarDni: boolean = true;
+  verificarOficina: boolean = false;
+  iniciar: boolean = false;
 
   @ViewChild('formValidacionDatos')
   formValidacionDatos!: ValidacionDatosComponent;
@@ -58,12 +71,12 @@ export class LibroValidacionComponent implements OnInit {
   }
 
   //crear el token y luego evalua
-  verificar() {
-    this.start();
-    setTimeout(() => {
-      this.consultarPorReg();
-    }, 1000);
-  }
+  // verificar() {
+  //   this.start();
+  //   setTimeout(() => {
+  //     this.consultarPorReg();
+  //   }, 1000);
+  // }
 
   start(): void {
     // ACCESS TO DATA OF COMPONENTS CHILDS
@@ -96,13 +109,15 @@ export class LibroValidacionComponent implements OnInit {
       ? formatDate(formDatosPersona.fechaEmision, 'yyyy-MM-dd', 'EN')
       : '';
 
+    //MAPPER RUIPIN
+    this.consultarRuipinIn = new DatosPersona();
+    this.consultarRuipinIn.dni = formDatosPersona.nroDni;
+
     // MAPPER OF OFFICE DATA
     this.datosOficina = new DatosOficina();
     this.datosOficina.codigoOrec = formDatosOficina.oficinaAutorizada;
 
-    //MAPPER RUIPIN
-    this.consultarRuipinIn = new DatosPersona();
-    this.consultarRuipinIn.dni = formDatosPersona.nroDni;
+    // this.datosOficina.codigoOrec = '505120';
 
     // MAPPER OF REQUEST OF VALIDATE DATA
     this.validarDatosIn = new ValidarDatosIn();
@@ -110,7 +125,6 @@ export class LibroValidacionComponent implements OnInit {
     this.validarDatosIn.datosOficina = this.datosOficina;
 
     // CALL SERVICE
-    this.consultarPorReg();
     this.registroLibroService.validarDatos(this.validarDatosIn).subscribe(
       (data: ValidarDatosOut) => {
         this.validarDatosOut = data;
@@ -135,36 +149,62 @@ export class LibroValidacionComponent implements OnInit {
           this.validarDatosOut.data
         );
 
-        this.sessionService.setToken(this.validarDatosOut.data);
         this.verificacionRealizada = true;
+        this.verificarDni = false;
+        this.verificarOficina = true;
+
+        // this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
       }
     );
   }
 
-  consultarPorReg() {
-    //VALIDAR REGISTRADOR
-    const dni = this.datosPersona.dni;
+  oficinaAutorizada() {
+    const formDatosPersona = this.formValidacionDatos.form.getRawValue();
+    const formDatosOficina = this.formDatosOficinaAutorizada.form.getRawValue();
+    if (this.formValidacionDatos.form.invalid) {
+      this.formValidacionDatos.form.markAllAsTouched();
+      this.utilService.getAlert(
+        'Aviso',
+        'Debe completar la validación de datos.'
+      );
+      return;
+    }
+
     this.registroLibroService
-      .consultarRegCivil(dni)
-      .subscribe((data: ConsultarPorDniOut) => {
-        if (data.code == this.environment.CODE_999) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `¡Firma
-          inhabilitada!,\nComunicarse con el 315-4000 anexo 1876`
+      .ofinaAutorizada(formDatosPersona.nroDni)
+      .subscribe(
+        (data: OficinaOut) => {
+          this.oficina = data;
+          this.sessionService.setOficinaData(this.oficina);
+        },
+        (error) => {},
+        () => {
+          if (this.oficina.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(`Aviso:`, `${this.oficina.message}`);
+            return;
+          }
+          if (!this.oficina.data.nombreDepartamento) {
+            this.utilService.getAlert(`Aviso:`, `Firma Incorrecta`);
+            return;
+          }
+          //Sigo
+
+          this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
+          const lsuser = localStorage.getItem('user');
+          const user: User = JSON.parse(lsuser!);
+          console.log('directo desde el ls: ' + user.codigoOrec);
+          console.log('entro de la funcion' + this.oficinaAutorizadaL);
+          localStorage.removeItem(environment.VAR_USER);
+          user.codigoOrec = this.oficinaAutorizadaL;
+          this.utilService.setLocalStorage(
+            environment.VAR_USER,
+            JSON.stringify(user)
           );
-          return;
+
+          this.verificarOficina = false;
+          this.iniciar = true;
         }
-        let persona = new Persona();
-        persona = data.data;
-        if (persona.estadoRegistrador == '1') {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `Oficina Autorizada ${persona.descripcionOrec}`
-          );
-          this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
-        }
-      });
+      );
   }
 
   back(): void {

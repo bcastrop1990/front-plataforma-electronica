@@ -1,17 +1,26 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import {Ubigeo, UbigeoOut} from "../../models/ubigeo.model";
-import {UtilService} from "../../../shared/services/util.service";
-import {UbigeoService} from "../../services/ubigeo.service";
+import { Ubigeo, UbigeoOut } from '../../models/ubigeo.model';
+import { UtilService } from '../../../shared/services/util.service';
+import { UbigeoService } from '../../services/ubigeo.service';
+import { SessionService } from 'src/app/core/actas-registrales/services/sesion.service';
+import { OficinaOut } from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-ubigeo',
   templateUrl: './ubigeo.component.html',
-  styleUrls: ['./ubigeo.component.scss']
+  styleUrls: ['./ubigeo.component.scss'],
 })
 export class UbigeoComponent implements OnInit, OnChanges {
-
   environment: any;
   form!: FormGroup;
 
@@ -20,6 +29,18 @@ export class UbigeoComponent implements OnInit, OnChanges {
   ubigeoOut!: UbigeoOut;
   ubigeo!: Ubigeo[];
 
+  encontrado: boolean = false;
+
+  oficinaEncontrada!: OficinaOut;
+
+  departamentoPrueba: string = 'ANCASH';
+  provinciaPrueba: string = 'CARHUAZ';
+  distritoPrueba: string = 'CARHUAZ';
+
+  //!NO VA ACA
+  centroPrueba?: string = '';
+  ofaPrueba: string = 'OFICINA REGISTRAL AFILIADA DE CARHUAZ';
+
   @Input() required: boolean = false;
   @Input() type: string = '';
   @Input() idDepartamento: string = '';
@@ -27,9 +48,12 @@ export class UbigeoComponent implements OnInit, OnChanges {
 
   @Output() ubigeoSelected: EventEmitter<string> = new EventEmitter();
   @Input() reset: boolean = false;
-  constructor(private formBuilder: FormBuilder,
-              public utilService: UtilService,
-              private ubigeoService: UbigeoService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    public utilService: UtilService,
+    private ubigeoService: UbigeoService,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
     this.environment = environment;
@@ -39,7 +63,6 @@ export class UbigeoComponent implements OnInit, OnChanges {
     });
 
     this.fnValidate();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -93,43 +116,82 @@ export class UbigeoComponent implements OnInit, OnChanges {
     }
   }
 
+  /*
   listarDep(): void {
-    this.ubigeoService.listDep().subscribe((data: UbigeoOut) => {
-      this.ubigeoOut = data;
-    }, error => {
-    }, () => {
-      if (this.ubigeoOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
-        return;
+    this.ubigeoService.listDep().subscribe(
+      (data: UbigeoOut) => {
+        this.ubigeoOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.ubigeoOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+          return;
+        }
+        this.ubigeo = this.ubigeoOut.data;
       }
-      this.ubigeo = this.ubigeoOut.data;
-    });
+    );
+  }
+  */
+
+  listarDep(): void {
+    this.ubigeoService.listDep().subscribe(
+      (data: UbigeoOut) => {
+        this.ubigeoOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.ubigeoOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+          return;
+        }
+        this.ubigeo = this.ubigeoOut.data;
+        const selectedUbigeo = this.ubigeo.find(
+          (item) => item.descripcion === this.departamentoPrueba
+        );
+
+        if (selectedUbigeo) {
+          /*
+          setTimeout(() => {
+            this.form.get('sUbigeo')?.setValue(selectedUbigeo.codigo.trim());
+            this.encontrado = true;
+          }, 1000);
+          */
+        }
+      }
+    );
   }
 
   listarPro(idDepartamento: string): void {
-    this.ubigeoService.listPro(idDepartamento).subscribe((data: UbigeoOut) => {
-      this.ubigeoOut = data;
-    }, error => {
-    }, () => {
-      if (this.ubigeoOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
-        return;
+    this.ubigeoService.listPro(idDepartamento).subscribe(
+      (data: UbigeoOut) => {
+        this.ubigeoOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.ubigeoOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+          return;
+        }
+        this.ubigeo = this.ubigeoOut.data;
       }
-      this.ubigeo = this.ubigeoOut.data;
-    });
+    );
   }
 
   listarDis(idDepartamento: string, idProvincia: string): void {
-    this.ubigeoService.listDis(idDepartamento, idProvincia).subscribe((data: UbigeoOut) => {
-      this.ubigeoOut = data;
-    }, error => {
-    }, () => {
-      if (this.ubigeoOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
-        return;
+    this.ubigeoService.listDis(idDepartamento, idProvincia).subscribe(
+      (data: UbigeoOut) => {
+        this.ubigeoOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.ubigeoOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+          return;
+        }
+        this.ubigeo = this.ubigeoOut.data;
       }
-      this.ubigeo = this.ubigeoOut.data;
-    });
+    );
   }
 
   setActivateValidation() {
@@ -153,5 +215,4 @@ export class UbigeoComponent implements OnInit, OnChanges {
   emitUbigeo(value: string) {
     this.ubigeoSelected.emit(value ? value : '');
   }
-
 }
