@@ -10,12 +10,15 @@
             <app-ubigeo
               [type]="'DEP'"
               [required]="true"
+              [departamentoEncontrado]="departamento"
               (ubigeoSelected)="getDep($event)"
             ></app-ubigeo>
           </div>
           <div class="col-sm-12 col-md-4 mb-2">
             <app-ubigeo
               [type]="'PRO'"
+              [departamentoEncontrado]="departamento"
+              [provinciaEncontrado]="provincia"
               [idDepartamento]="form.controls['ubigeoDepartamento'].value"
               (ubigeoSelected)="getPro($event)"
             ></app-ubigeo>
@@ -23,6 +26,9 @@
           <div class="col-sm-12 col-md-4 mb-2">
             <app-ubigeo
               [type]="'DIS'"
+              [departamentoEncontrado]="departamento"
+              [provinciaEncontrado]="provincia"
+              [distritoEncontrado]="distrito"
               [idDepartamento]="form.controls['ubigeoDepartamento'].value"
               [idProvincia]="form.controls['ubigeoProvincia'].value"
               (ubigeoSelected)="getDis($event)"
@@ -34,6 +40,10 @@
           <div class="col-sm-12 col-md-4 mb-2">
             <app-centro-problado
               #cboCentroPoblado
+              [departamentoEncontrado]="departamento"
+              [provinciaEncontrado]="provincia"
+              [distritoEncontrado]="distrito"
+              [centroEncontrado]="centroPoblado"
               [idDepartamento]="form.controls['ubigeoDepartamento'].value"
               [idProvincia]="form.controls['ubigeoProvincia'].value"
               [idDistrito]="form.controls['ubigeoDistrito'].value"
@@ -44,6 +54,11 @@
             <app-oficina-autorizada
               #cboOficinaAutorizada
               [required]="true"
+              [departamentoEncontrado]="departamento"
+              [provinciaEncontrado]="provincia"
+              [distritoEncontrado]="distrito"
+              [centroEncontrado]="centroPoblado"
+              [oficinaEncontrado]="ofiAutorizada"
               [idDepartamento]="form.controls['ubigeoDepartamento'].value"
               [idProvincia]="form.controls['ubigeoProvincia'].value"
               [idDistrito]="form.controls['ubigeoDistrito'].value"

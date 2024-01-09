@@ -1,33 +1,49 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import {UtilService} from "../../../shared/services/util.service";
-import {UbigeoService} from "../../services/ubigeo.service";
-import {Ubigeo, UbigeoOut} from "../../models/ubigeo.model";
+import { UtilService } from '../../../shared/services/util.service';
+import { UbigeoService } from '../../services/ubigeo.service';
+import { Ubigeo, UbigeoOut } from '../../models/ubigeo.model';
 
 @Component({
   selector: 'app-centro-problado',
   templateUrl: './centro-problado.component.html',
-  styleUrls: ['./centro-problado.component.scss']
+  styleUrls: ['./centro-problado.component.scss'],
 })
 export class CentroProbladoComponent implements OnInit, OnChanges {
-
   environment: any;
   form!: FormGroup;
 
   ubigeoOut!: UbigeoOut;
   ubigeo!: Ubigeo[];
 
+  encontrado: boolean = false;
+
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
   @Input() idProvincia: string = '';
   @Input() idDistrito: string = '';
 
+  @Input() departamentoEncontrado: string = '';
+  @Input() provinciaEncontrado: string = '';
+  @Input() distritoEncontrado: string = '';
+  @Input() centroEncontrado: string = '';
+
   @Output() ubigeoSelected: EventEmitter<string> = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder,
-              public utilService: UtilService,
-              private ubigeoService: UbigeoService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    public utilService: UtilService,
+    private ubigeoService: UbigeoService
+  ) {}
 
   ngOnInit(): void {
     this.environment = environment;
@@ -46,29 +62,51 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
   }
 
   validate(): void {
-    if (this.idDepartamento && this.idProvincia && this.idDistrito) {
-      this.listarCentroPoblado(this.idDepartamento, this.idProvincia, this.idDistrito);
+    if (this.centroEncontrado) {
+      this.listarCentroPoblado(
+        this.departamentoEncontrado,
+        this.provinciaEncontrado,
+        this.distritoEncontrado
+      );
+      this.form.controls['sUbigeo'].setValue(this.centroEncontrado);
+      this.encontrado = true;
     } else {
-      this.form.controls['sUbigeo'].setValue('')
-      this.ubigeo = [];
+      if (this.idDepartamento && this.idProvincia && this.idDistrito) {
+        this.listarCentroPoblado(
+          this.idDepartamento,
+          this.idProvincia,
+          this.idDistrito
+        );
+      } else {
+        this.form.controls['sUbigeo'].setValue('');
+        this.ubigeo = [];
+      }
     }
   }
 
-  listarCentroPoblado(idDepartamento: string, idProvincia: string, idDistrito: string): void {
-    this.ubigeoService.listCentroPoblado(idDepartamento, idProvincia, idDistrito).subscribe((data: UbigeoOut) => {
-      this.ubigeoOut = data;
-    }, error => {
-    }, () => {
-      if (this.ubigeoOut.code !== this.environment.CODE_000) {
-        this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
-        return;
-      }
-      this.ubigeo = this.ubigeoOut.data;
-    });
+  listarCentroPoblado(
+    idDepartamento: string,
+    idProvincia: string,
+    idDistrito: string
+  ): void {
+    this.ubigeoService
+      .listCentroPoblado(idDepartamento, idProvincia, idDistrito)
+      .subscribe(
+        (data: UbigeoOut) => {
+          this.ubigeoOut = data;
+        },
+        (error) => {},
+        () => {
+          if (this.ubigeoOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+            return;
+          }
+          this.ubigeo = this.ubigeoOut.data;
+        }
+      );
   }
 
   emitCentroPoblado(value: string) {
     this.ubigeoSelected.emit(value ? value : '');
   }
-
 }

@@ -30,11 +30,19 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   oficinaOrecOut!: OficinaOrecOut;
   oficinasOrec!: OficinaOrec[];
 
+  encontrado: boolean = false;
+
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
   @Input() idProvincia: string = '';
   @Input() idDistrito: string = '';
   @Input() idCentroPoblado: string = '';
+
+  @Input() departamentoEncontrado: string = '';
+  @Input() provinciaEncontrado: string = '';
+  @Input() distritoEncontrado: string = '';
+  @Input() centroEncontrado: string = '';
+  @Input() oficinaEncontrado: string = '';
 
   @Output() oficinaOrecSelected: EventEmitter<string> = new EventEmitter();
 
@@ -61,21 +69,34 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   }
 
   validate(): void {
-    if (
-      this.idDepartamento ||
-      this.idProvincia ||
-      this.idDistrito ||
-      this.idCentroPoblado
-    ) {
+    if (this.oficinaEncontrado) {
       this.requestMapper(
-        this.idDepartamento,
-        this.idProvincia,
-        this.idDistrito,
-        this.idCentroPoblado
+        this.departamentoEncontrado,
+        this.provinciaEncontrado,
+        this.distritoEncontrado,
+        this.centroEncontrado
       );
+      this.form.controls['idOficinaAutorizada'].setValue(
+        this.oficinaEncontrado
+      );
+      this.encontrado = true;
     } else {
-      this.form.controls['idOficinaAutorizada'].setValue('');
-      this.oficinasOrec = [];
+      if (
+        this.idDepartamento ||
+        this.idProvincia ||
+        this.idDistrito ||
+        this.idCentroPoblado
+      ) {
+        this.requestMapper(
+          this.idDepartamento,
+          this.idProvincia,
+          this.idDistrito,
+          this.idCentroPoblado
+        );
+      } else {
+        this.form.controls['idOficinaAutorizada'].setValue('');
+        this.oficinasOrec = [];
+      }
     }
   }
 

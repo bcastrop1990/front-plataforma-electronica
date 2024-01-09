@@ -20,6 +20,12 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
 
   form!: FormGroup;
 
+  departamento!: string;
+  provincia!: string;
+  distrito!: string;
+  centroPoblado!: string;
+  ofiAutorizada!: string;
+
   @ViewChild('cboUbigeo') cboUbigeo!: UbigeoComponent;
   @ViewChild('cboCentroPoblado') cboCentroPoblado!: CentroProbladoComponent;
   @ViewChild('cboComunidad') cboComunidad!: ComunidadComponent;

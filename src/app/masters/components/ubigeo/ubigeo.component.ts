@@ -31,20 +31,13 @@ export class UbigeoComponent implements OnInit, OnChanges {
 
   encontrado: boolean = false;
 
-  oficinaEncontrada!: OficinaOut;
-
-  departamentoPrueba: string = 'ANCASH';
-  provinciaPrueba: string = 'CARHUAZ';
-  distritoPrueba: string = 'CARHUAZ';
-
-  //!NO VA ACA
-  centroPrueba?: string = '';
-  ofaPrueba: string = 'OFICINA REGISTRAL AFILIADA DE CARHUAZ';
-
   @Input() required: boolean = false;
   @Input() type: string = '';
   @Input() idDepartamento: string = '';
   @Input() idProvincia: string = '';
+  @Input() departamentoEncontrado: string = '';
+  @Input() provinciaEncontrado: string = '';
+  @Input() distritoEncontrado: string = '';
 
   @Output() ubigeoSelected: EventEmitter<string> = new EventEmitter();
   @Input() reset: boolean = false;
@@ -81,11 +74,15 @@ export class UbigeoComponent implements OnInit, OnChanges {
   callUbigeo(type: string): void {
     switch (type) {
       case 'DEP':
+        if (this.departamentoEncontrado) {
+          console.log(
+            'ID DEPARTAMENTO DENTRO DE DES: ' + this.departamentoEncontrado
+          );
+          this.form.controls['sUbigeo'].setValue(this.departamentoEncontrado);
+          this.encontrado = true;
+        }
         this.label = 'Departamento';
         this.listarDep();
-        // if (this.selectEmpty) {
-        //   this.form.controls['sUbigeo'].setValue('');
-        // }
         break;
       case 'PRO':
         this.label = 'Provincia';
@@ -93,30 +90,41 @@ export class UbigeoComponent implements OnInit, OnChanges {
         this.form.controls['sUbigeo'].setValue('');
         this.ubigeo = [];
 
-        if (this.idDepartamento) {
+        if (this.departamentoEncontrado) {
+          this.listarPro(this.departamentoEncontrado);
+          this.form.controls['sUbigeo'].setValue(this.provinciaEncontrado);
+          this.encontrado = true;
+        } else if (this.idDepartamento) {
           this.listarPro(this.idDepartamento);
           this.form.controls['sUbigeo'].setValue('');
         }
         break;
       case 'DIS':
+        console.log('DIS: ' + this.distritoEncontrado);
+
         this.label = 'Distrito';
 
         this.form.controls['sUbigeo'].setValue('');
         this.ubigeo = [];
 
-        if (this.idDepartamento) {
-          this.form.controls['sUbigeo'].setValue('');
-          this.ubigeo = [];
-        }
-        if (this.idDepartamento && this.idProvincia) {
-          this.listarDis(this.idDepartamento, this.idProvincia);
-          this.form.controls['sUbigeo'].setValue('');
+        if (this.distritoEncontrado) {
+          this.listarDis(this.departamentoEncontrado, this.provinciaEncontrado);
+          this.form.controls['sUbigeo'].setValue(this.distritoEncontrado);
+          this.encontrado = true;
+        } else {
+          if (this.idDepartamento) {
+            this.form.controls['sUbigeo'].setValue('');
+            this.ubigeo = [];
+          }
+          if (this.idDepartamento && this.idProvincia) {
+            this.listarDis(this.idDepartamento, this.idProvincia);
+            this.form.controls['sUbigeo'].setValue('');
+          }
         }
         break;
     }
   }
 
-  /*
   listarDep(): void {
     this.ubigeoService.listDep().subscribe(
       (data: UbigeoOut) => {
@@ -129,35 +137,6 @@ export class UbigeoComponent implements OnInit, OnChanges {
           return;
         }
         this.ubigeo = this.ubigeoOut.data;
-      }
-    );
-  }
-  */
-
-  listarDep(): void {
-    this.ubigeoService.listDep().subscribe(
-      (data: UbigeoOut) => {
-        this.ubigeoOut = data;
-      },
-      (error) => {},
-      () => {
-        if (this.ubigeoOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
-          return;
-        }
-        this.ubigeo = this.ubigeoOut.data;
-        const selectedUbigeo = this.ubigeo.find(
-          (item) => item.descripcion === this.departamentoPrueba
-        );
-
-        if (selectedUbigeo) {
-          /*
-          setTimeout(() => {
-            this.form.get('sUbigeo')?.setValue(selectedUbigeo.codigo.trim());
-            this.encontrado = true;
-          }, 1000);
-          */
-        }
       }
     );
   }

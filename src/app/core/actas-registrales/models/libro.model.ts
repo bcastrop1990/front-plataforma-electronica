@@ -19,9 +19,13 @@ export class OficinaOut extends Result {
 
 export class Oficina {
   nombreDepartamento: string;
+  coNombreDepartamento: string;
   nombreProvincia: string;
+  coNombreProvincia: string;
   nombreDistrito: string;
+  coNombreDistrito: string;
   nombreCentroPoblado: string;
+  coNombreCentroPoblado: string;
   nombreOficina: string;
   coNombreOficina: string;
   constructor() {
@@ -31,9 +35,12 @@ export class Oficina {
     this.nombreCentroPoblado = '';
     this.nombreOficina = '';
     this.coNombreOficina = '';
+    this.coNombreDepartamento = '';
+    this.coNombreProvincia = '';
+    this.coNombreDistrito = '';
+    this.coNombreCentroPoblado = '';
   }
 }
-
 export class ValidarDatosOut extends Result {
   data: string;
   constructor() {

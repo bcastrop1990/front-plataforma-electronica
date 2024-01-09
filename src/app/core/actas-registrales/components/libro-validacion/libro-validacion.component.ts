@@ -190,14 +190,28 @@ export class LibroValidacionComponent implements OnInit {
           this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
           const lsuser = localStorage.getItem('user');
           const user: User = JSON.parse(lsuser!);
-          console.log('directo desde el ls: ' + user.codigoOrec);
-          console.log('entro de la funcion' + this.oficinaAutorizadaL);
+
           localStorage.removeItem(environment.VAR_USER);
           user.codigoOrec = this.oficinaAutorizadaL;
           this.utilService.setLocalStorage(
             environment.VAR_USER,
             JSON.stringify(user)
           );
+
+          this.formDatosOficinaAutorizada.departamento =
+            this.oficina.data.coNombreDepartamento;
+
+          this.formDatosOficinaAutorizada.provincia =
+            this.oficina.data.coNombreProvincia;
+
+          this.formDatosOficinaAutorizada.distrito =
+            this.oficina.data.coNombreDistrito;
+
+          this.formDatosOficinaAutorizada.centroPoblado =
+            this.oficina.data.coNombreCentroPoblado;
+
+          this.formDatosOficinaAutorizada.ofiAutorizada =
+            this.oficina.data.coNombreOficina;
 
           this.verificarOficina = false;
           this.iniciar = true;

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {LibroDashboardComponent} from "./components/libro-dashboard/libro-dashboard.component";
-import {LibroValidacionComponent} from "./components/libro-validacion/libro-validacion.component";
-import {LibroRegistroComponent} from "./components/libro-registro/libro-registro.component";
-import {GuardianUserGuard} from "../../shared/guards/guardian-user.guard";
+import { LibroDashboardComponent } from './components/libro-dashboard/libro-dashboard.component';
+import { LibroValidacionComponent } from './components/libro-validacion/libro-validacion.component';
+import { LibroRegistroComponent } from './components/libro-registro/libro-registro.component';
+import { GuardianUserGuard } from '../../shared/guards/guardian-user.guard';
 
 const routes: Routes = [
   {
@@ -13,23 +13,23 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'validacion',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'validacion',
-        component: LibroValidacionComponent
+        component: LibroValidacionComponent,
       },
       {
         path: 'registro',
         component: LibroRegistroComponent,
-        canActivate: [GuardianUserGuard]
+        canActivate: [GuardianUserGuard],
       },
-    ]
+    ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ActasRegistralesRoutingModule { }
+export class ActasRegistralesRoutingModule {}
