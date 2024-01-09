@@ -78,7 +78,7 @@ export class LibroValidacionComponent implements OnInit {
   //   }, 1000);
   // }
 
-  start(): void {
+  validarDNI(): void {
     // ACCESS TO DATA OF COMPONENTS CHILDS
     const formDatosPersona = this.formValidacionDatos.form.getRawValue();
     const formDatosOficina = this.formDatosOficinaAutorizada.form.getRawValue();
@@ -152,8 +152,6 @@ export class LibroValidacionComponent implements OnInit {
         this.verificacionRealizada = true;
         this.verificarDni = false;
         this.verificarOficina = true;
-
-        // this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
       }
     );
   }
@@ -205,6 +203,10 @@ export class LibroValidacionComponent implements OnInit {
           this.iniciar = true;
         }
       );
+  }
+
+  start() {
+    this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
   }
 
   back(): void {
