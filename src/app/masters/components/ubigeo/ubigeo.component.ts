@@ -29,7 +29,7 @@ export class UbigeoComponent implements OnInit, OnChanges {
   ubigeoOut!: UbigeoOut;
   ubigeo!: Ubigeo[];
 
-  encontrado: boolean = false;
+  @Input() encontrado: boolean = true;
 
   @Input() required: boolean = false;
   @Input() type: string = '';
@@ -75,9 +75,6 @@ export class UbigeoComponent implements OnInit, OnChanges {
     switch (type) {
       case 'DEP':
         if (this.departamentoEncontrado) {
-          console.log(
-            'ID DEPARTAMENTO DENTRO DE DES: ' + this.departamentoEncontrado
-          );
           this.form.controls['sUbigeo'].setValue(this.departamentoEncontrado);
           this.encontrado = true;
         }
@@ -100,8 +97,6 @@ export class UbigeoComponent implements OnInit, OnChanges {
         }
         break;
       case 'DIS':
-        console.log('DIS: ' + this.distritoEncontrado);
-
         this.label = 'Distrito';
 
         this.form.controls['sUbigeo'].setValue('');

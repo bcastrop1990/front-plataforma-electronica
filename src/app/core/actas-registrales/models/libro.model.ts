@@ -18,6 +18,7 @@ export class OficinaOut extends Result {
 }
 
 export class Oficina {
+  codigo: string;
   nombreDepartamento: string;
   coNombreDepartamento: string;
   nombreProvincia: string;
@@ -29,6 +30,7 @@ export class Oficina {
   nombreOficina: string;
   coNombreOficina: string;
   constructor() {
+    this.codigo = '';
     this.nombreDepartamento = '';
     this.nombreProvincia = '';
     this.nombreDistrito = '';

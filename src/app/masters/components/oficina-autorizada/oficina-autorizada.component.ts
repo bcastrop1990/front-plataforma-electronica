@@ -30,7 +30,7 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   oficinaOrecOut!: OficinaOrecOut;
   oficinasOrec!: OficinaOrec[];
 
-  encontrado: boolean = false;
+  @Input() encontrado: boolean = false;
 
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';

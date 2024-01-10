@@ -17,7 +17,7 @@ export class RegistroLibroService {
   private urlService = environment.API_MASTER;
   url = `${this.urlService}/registro-libros`;
   url2 = `${this.urlService}/registrador-civil`;
-  url3 = `${this.urlService}/seguimientos/oficina-por-datos`;
+  url3 = `${this.urlService}/ubigeos/oficina-por-datos`;
 
   validarDatosOutData: any;
   constructor(private http: HttpClient) {}

@@ -10,6 +10,7 @@
             <app-ubigeo
               [type]="'DEP'"
               [required]="true"
+              [encontrado]="registroLibro"
               [departamentoEncontrado]="departamento"
               (ubigeoSelected)="getDep($event)"
             ></app-ubigeo>
@@ -39,6 +40,7 @@
         <div class="row">
           <div class="col-sm-12 col-md-4 mb-2">
             <app-centro-problado
+              [encontrado]="registroLibro"
               #cboCentroPoblado
               [departamentoEncontrado]="departamento"
               [provinciaEncontrado]="provincia"
@@ -52,6 +54,7 @@
           </div>
           <div class="col-sm-12 col-md-8 mb-2">
             <app-oficina-autorizada
+              [encontrado]="registroLibro"
               #cboOficinaAutorizada
               [required]="true"
               [departamentoEncontrado]="departamento"

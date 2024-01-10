@@ -14,14 +14,7 @@ import { SeguridadService } from '../../../../shared/services/seguridad.service'
 import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { RegistroLibroService } from '../../services/registro-libro.service';
-import { SessionService } from '../../services/sesion.service';
-import {
-  Persona,
-  ConsultarPorDniOut,
-  Oficina,
-  OficinaOut,
-} from '../../models/libro.model';
-import { User } from 'src/app/auth/models/user.model';
+import { ConsultarPorDniOut, OficinaOut } from '../../models/libro.model';
 
 @Component({
   selector: 'app-libro-validacion',
@@ -50,9 +43,6 @@ export class LibroValidacionComponent implements OnInit {
 
   //CONDICIONALES DE BOTONES
   noSoyRobot: boolean = false;
-  verificarDni: boolean = true;
-  verificarOficina: boolean = false;
-  iniciar: boolean = false;
 
   @ViewChild('formValidacionDatos')
   formValidacionDatos!: ValidacionDatosComponent;
@@ -62,8 +52,7 @@ export class LibroValidacionComponent implements OnInit {
   constructor(
     public utilService: UtilService,
     private registroLibroService: RegistroLibroService,
-    private seguridadService: SeguridadService,
-    private sessionService: SessionService
+    private seguridadService: SeguridadService
   ) {}
 
   ngOnInit(): void {
@@ -78,25 +67,15 @@ export class LibroValidacionComponent implements OnInit {
   //   }, 1000);
   // }
 
-  validarDNI(): void {
+  start(): void {
     // ACCESS TO DATA OF COMPONENTS CHILDS
     const formDatosPersona = this.formValidacionDatos.form.getRawValue();
-    const formDatosOficina = this.formDatosOficinaAutorizada.form.getRawValue();
 
     if (this.formValidacionDatos.form.invalid) {
       this.formValidacionDatos.form.markAllAsTouched();
       this.utilService.getAlert(
         'Aviso',
         'Debe completar la validación de datos.'
-      );
-      return;
-    }
-
-    if (this.formDatosOficinaAutorizada.form.invalid) {
-      this.formDatosOficinaAutorizada.form.markAllAsTouched();
-      this.utilService.getAlert(
-        'Aviso',
-        'Debe completar los datos de la oficina autorizada.'
       );
       return;
     }
@@ -115,7 +94,8 @@ export class LibroValidacionComponent implements OnInit {
 
     // MAPPER OF OFFICE DATA
     this.datosOficina = new DatosOficina();
-    this.datosOficina.codigoOrec = formDatosOficina.oficinaAutorizada;
+    console.log('codigo oficina: ' + this.oficinaAutorizadaL);
+    this.datosOficina.codigoOrec = this.oficinaAutorizadaL;
 
     // this.datosOficina.codigoOrec = '505120';
 
@@ -148,79 +128,13 @@ export class LibroValidacionComponent implements OnInit {
           this.environment.VAR_TOKEN_EXTERNAL,
           this.validarDatosOut.data
         );
-
-        this.verificacionRealizada = true;
-        this.verificarDni = false;
-        this.verificarOficina = true;
+        this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
       }
     );
   }
 
-  oficinaAutorizada() {
-    const formDatosPersona = this.formValidacionDatos.form.getRawValue();
-    const formDatosOficina = this.formDatosOficinaAutorizada.form.getRawValue();
-    if (this.formValidacionDatos.form.invalid) {
-      this.formValidacionDatos.form.markAllAsTouched();
-      this.utilService.getAlert(
-        'Aviso',
-        'Debe completar la validación de datos.'
-      );
-      return;
-    }
-
-    this.registroLibroService
-      .ofinaAutorizada(formDatosPersona.nroDni)
-      .subscribe(
-        (data: OficinaOut) => {
-          this.oficina = data;
-          this.sessionService.setOficinaData(this.oficina);
-        },
-        (error) => {},
-        () => {
-          if (this.oficina.code !== this.environment.CODE_000) {
-            this.utilService.getAlert(`Aviso:`, `${this.oficina.message}`);
-            return;
-          }
-          if (!this.oficina.data.nombreDepartamento) {
-            this.utilService.getAlert(`Aviso:`, `Firma Incorrecta`);
-            return;
-          }
-          //Sigo
-
-          this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
-          const lsuser = localStorage.getItem('user');
-          const user: User = JSON.parse(lsuser!);
-
-          localStorage.removeItem(environment.VAR_USER);
-          user.codigoOrec = this.oficinaAutorizadaL;
-          this.utilService.setLocalStorage(
-            environment.VAR_USER,
-            JSON.stringify(user)
-          );
-
-          this.formDatosOficinaAutorizada.departamento =
-            this.oficina.data.coNombreDepartamento;
-
-          this.formDatosOficinaAutorizada.provincia =
-            this.oficina.data.coNombreProvincia;
-
-          this.formDatosOficinaAutorizada.distrito =
-            this.oficina.data.coNombreDistrito;
-
-          this.formDatosOficinaAutorizada.centroPoblado =
-            this.oficina.data.coNombreCentroPoblado;
-
-          this.formDatosOficinaAutorizada.ofiAutorizada =
-            this.oficina.data.coNombreOficina;
-
-          this.verificarOficina = false;
-          this.iniciar = true;
-        }
-      );
-  }
-
-  start() {
-    this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
+  getOficina(codigo: string) {
+    this.oficinaAutorizadaL = codigo;
   }
 
   back(): void {

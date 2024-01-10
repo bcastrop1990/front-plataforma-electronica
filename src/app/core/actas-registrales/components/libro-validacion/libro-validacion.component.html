@@ -1,16 +1,8 @@
-<div class="row mb-3">
-  <div class="col-12">
-    <app-validacion-datos #formValidacionDatos></app-validacion-datos>
-  </div>
-</div>
-
-<div class="row mb-3">
-  <div class="col-12">
-    <app-datos-oficina-autorizada
-      #formDatosOficinaAutorizada
-    ></app-datos-oficina-autorizada>
-  </div>
-</div>
+<app-validacion-datos
+  #formValidacionDatos
+  [paraRegistroLibro]="true"
+  (codigoOrec)="getOficina($event)"
+></app-validacion-datos>
 
 <div class="row">
   <app-recaptcha (resolveEvent)="resolveCaptcha($event)"></app-recaptcha>
@@ -25,30 +17,9 @@
       tabindex="-1"
       mat-flat-button
       color="accent"
-      (click)="validarDNI()"
-      class="mx-2"
-      [disabled]="!noSoyRobot"
-      *ngIf="verificarDni"
-    >
-      Validar DNI
-    </button>
-    <button
-      tabindex="-1"
-      mat-flat-button
-      color="accent"
-      (click)="oficinaAutorizada()"
-      class="mx-2"
-      *ngIf="verificarOficina"
-    >
-      Validar Oficina
-    </button>
-    <button
-      tabindex="-1"
-      mat-flat-button
-      color="accent"
       (click)="start()"
+      [disabled]="!noSoyRobot"
       class="mx-2"
-      *ngIf="iniciar"
     >
       Iniciar
     </button>

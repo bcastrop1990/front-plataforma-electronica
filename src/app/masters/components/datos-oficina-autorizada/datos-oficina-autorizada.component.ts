@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
@@ -25,6 +25,8 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
   distrito!: string;
   centroPoblado!: string;
   ofiAutorizada!: string;
+
+  @Input() registroLibro: boolean = false;
 
   @ViewChild('cboUbigeo') cboUbigeo!: UbigeoComponent;
   @ViewChild('cboCentroPoblado') cboCentroPoblado!: CentroProbladoComponent;
