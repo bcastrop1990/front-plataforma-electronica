@@ -36,8 +36,10 @@ export class RegistroLibroService {
     return this.http.post<RegistroLibroOut>(`${this.url}`, request);
   }
 
-  ofinaAutorizada(dni: string) {
-    return this.http.get<OficinaOut>(`${this.url3}/${dni}`);
+  ofinaAutorizada(dni: string, digitoVerifica: string, fechaEmision: string) {
+    return this.http.get<OficinaOut>(
+      `${this.url3}/?dni=${dni}&digitoVerifica=${digitoVerifica}&fechaEmision=${fechaEmision}`
+    );
   }
 
   consultarRegCivil(dni: string) {

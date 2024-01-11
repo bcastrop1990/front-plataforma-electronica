@@ -15,6 +15,7 @@ import { DatosOficinaAutorizadaComponent } from '../datos-oficina-autorizada/dat
 import { RegistroLibroService } from 'src/app/core/actas-registrales/services/registro-libro.service';
 import { OficinaOut } from 'src/app/core/actas-registrales/models/libro.model';
 import { User } from 'src/app/auth/models/user.model';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-validacion-datos',
@@ -109,6 +110,10 @@ export class ValidacionDatosComponent implements OnInit {
     //Valida que el fomulario este llenado correctamente
 
     const formDatosPersona = this.form.getRawValue();
+    const fechaIncial = this.form.controls['fechaEmision'].value;
+    const fechaEmision = fechaIncial
+      ? formatDate(fechaIncial, 'yyyy-MM-dd', 'EN')
+      : '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.utilService.getAlert(
@@ -118,8 +123,14 @@ export class ValidacionDatosComponent implements OnInit {
       return;
     }
 
+    console.log('fecha de emision: ' + fechaEmision);
+
     this.registroLibroService
-      .ofinaAutorizada(formDatosPersona.nroDni)
+      .ofinaAutorizada(
+        formDatosPersona.nroDni,
+        formDatosPersona.digito,
+        fechaEmision
+      )
       .subscribe((data: OficinaOut) => {
         this.oficina = data;
         if (this.oficina.code !== this.environment.CODE_000) {

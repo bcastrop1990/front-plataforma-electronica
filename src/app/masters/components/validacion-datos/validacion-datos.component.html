@@ -45,16 +45,30 @@
               <div class="col-sm-12 col-md-4 mb-2" *ngIf="isExternal">
                 <label>Fecha de Emisión del DNI: <span>(*)</span></label>
                 <mat-form-field appearance="outline" class="w-100">
-                  <input
-                    matInput
-                    formControlName="fechaEmision"
-                    [matDatepicker]="fechaEmision"
-                    readonly
-                    [max]="dateNow"
-                    placeholder="Seleccione"
-                    autocomplete="off"
-                    (dateChange)="oficinaEncontrada()"
-                  />
+                  <div *ngIf="paraRegistroLibro">
+                    <input
+                      matInput
+                      formControlName="fechaEmision"
+                      [matDatepicker]="fechaEmision"
+                      readonly
+                      [max]="dateNow"
+                      placeholder="Seleccione"
+                      autocomplete="off"
+                      (dateChange)="oficinaEncontrada()"
+                    />
+                  </div>
+                  <div *ngIf="!paraRegistroLibro">
+                    <input
+                      matInput
+                      formControlName="fechaEmision"
+                      [matDatepicker]="fechaEmision"
+                      readonly
+                      [max]="dateNow"
+                      placeholder="Seleccione"
+                      autocomplete="off"
+                    />
+                  </div>
+
                   <mat-datepicker-toggle matSuffix [for]="fechaEmision">
                     <mat-icon
                       matDatepickerToggleIcon
