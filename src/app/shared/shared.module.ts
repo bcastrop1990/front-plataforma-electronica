@@ -16,6 +16,8 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { GsAnalistaComponent } from '../core/gestion-solicitudes/components/gs-analista/gs-analista.component';
 import { RecaptchaComponent } from './components/recaptcha/recaptcha.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { MenuInternoComponent } from './components/menu-interno/menu-interno.component';
+import { MainInternoComponent } from './components/main-interno/main-interno.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { RecaptchaModule } from 'ng-recaptcha';
     ConfirmationComponent,
     UploadFileComponent,
     RecaptchaComponent,
+    MenuInternoComponent,
+    MainInternoComponent,
   ],
   imports: [
     CommonModule,

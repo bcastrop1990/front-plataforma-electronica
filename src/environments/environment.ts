@@ -69,6 +69,7 @@ export const environment = {
 
   // URLS
   URL_MENU: '/menu',
+  URL_MENU_INTERNO: '/menuInterno',
   URL_INTRO: '/auth/intro',
   URL_LOGIN: '/auth/login',
   URL_MOD_FIRMAS: '/firmas',
