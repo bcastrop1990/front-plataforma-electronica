@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
             this.environment.VAR_TOKEN,
             this.authOut.data
           );
-          this.utilService.link(environment.URL_MOD_GESTION_SOLICITUDES);
+          this.utilService.link(environment.URL_MENU_INTERNO);
         } else {
           this.utilService.getAlert(`Aviso:`, this.authOut.message);
         }

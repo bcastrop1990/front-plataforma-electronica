@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { environment } from '../../../../environments/environment';
 import { User } from 'src/app/auth/models/user.model';
-import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs/internal/Subscription';
 import { SeguridadService } from '../../services/seguridad.service';
 import { UtilService } from '../../services/util.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  selector: 'app-menu-interno',
+  templateUrl: './menu-interno.component.html',
+  styleUrls: ['./menu-interno.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class MenuInternoComponent implements OnInit {
   environment: any;
 
   user?: User;
@@ -36,11 +36,13 @@ export class HeaderComponent implements OnInit {
     this.utilService.link(environment.URL_INTRO);
   }
 
+  /*
   esExternal(): boolean {
-    return !this.seguridadService.getUserInternal();
+   return !this.seguridadService.getUserInternal();
   }
 
   esInternal(): boolean {
     return this.seguridadService.getUserInternal();
   }
+  */
 }

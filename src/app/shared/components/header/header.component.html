@@ -1,14 +1,19 @@
 <header>
   <mat-toolbar color="primary">
     <mat-toolbar-row class="main">
-      <img src="assets/images/reniec-logo.png" class="logo" alt="Logo RENIEC"/>
+      <img src="assets/images/reniec-logo.png" class="logo" alt="Logo RENIEC" />
       <div class="row">
-        <span class="title">Plataforma Electrónica de Solicitudes</span>
+        <span class="title"> Plataforma Electrónica de Solicitudes</span>
         <span class="subtitle">PARA REGISTRADORES CIVILES</span>
       </div>
     </mat-toolbar-row>
     <mat-toolbar-row class="secondary">
-      <app-menu></app-menu>
+      <div *ngIf="esExternal()">
+        <app-menu></app-menu>
+      </div>
+      <div *ngIf="esInternal()">
+        <app-menu-interno></app-menu-interno>
+      </div>
     </mat-toolbar-row>
   </mat-toolbar>
 </header>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './shared/components/main/main.component';
+import { MainInternoComponent } from './shared/components/main-interno/main-interno.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'menu',
     component: MainComponent,
+  },
+  {
+    path: 'menuInterno',
+    component: MainInternoComponent,
   },
   {
     path: 'auth',
