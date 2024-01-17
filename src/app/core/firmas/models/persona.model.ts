@@ -7,6 +7,14 @@ export class PersonaOut extends Result {
     this.data = new Persona();
   }
 }
+export class PersonaIn {
+  dni: string
+  primerApellido: string
+  constructor() {
+    this.dni = '';
+    this.primerApellido = '';
+  }
+}
 
 export class Persona {
   dni: string;

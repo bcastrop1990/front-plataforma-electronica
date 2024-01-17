@@ -24,9 +24,10 @@ import {
   DetalleSolicitud,
 } from '../../models/firmas.model';
 import { RegistroFirmasService } from '../../services/registro-firmas.service';
-import { Persona, PersonaOut } from '../../models/persona.model';
+import { Persona, PersonaIn, PersonaOut } from '../../models/persona.model';
 import { ValidacionRegCivilModalComponent } from '../validacion-reg-civil-modal/validacion-reg-civil-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DatosPersona } from '../../../actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-step2-detalle-solicitud',
@@ -45,6 +46,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
 
   detalleSolicitud!: DetalleSolicitud;
 
+  personaIn!: PersonaIn;
   // requiredTipoArchivoBoolean: boolean = true;
   disabledAll: boolean = false;
 
@@ -249,23 +251,21 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   }
   validateDNIandApellido(apellidoPaternoIngresado: string): void {
     const dni = this.form.controls['numeroDocumento'].value;
+    const datosPersona = new PersonaIn();
+    datosPersona.dni = dni;
+    datosPersona.primerApellido = apellidoPaternoIngresado.toUpperCase();
 
     if (dni && apellidoPaternoIngresado) {
       this.registroFirmasService
-        .consultarPersona(dni)
+        .consultarPersona(datosPersona)
         .subscribe((data: PersonaOut) => {
           if (data.code !== this.environment.CODE_000) {
             this.utilService.getAlert('Aviso', data.message);
             return;
           }
-
           let persona = data.data;
-
           // Convertir ambos apellidos a mayúsculas antes de comparar
-          if (
-            persona.primerApellido.toUpperCase() ===
-            apellidoPaternoIngresado.toUpperCase()
-          ) {
+
             this.form.controls['preNombres'].setValue(persona.preNombre);
             this.form.controls['segundoApellido'].setValue(
               persona.segundoApellido
@@ -273,12 +273,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
             this.form.controls['primerApellido'].setValue(
               persona.primerApellido
             );
-          } else {
-            this.utilService.getAlert(
-              'Aviso',
-              'El apellido paterno introducido no coincide con el registrado para ese DNI.'
-            );
-          }
+
         });
     }
   }
@@ -287,10 +282,13 @@ export class Step2DetalleSolicitudComponent implements OnInit {
     const dialogRef = this.dialog.open(this.dniApellidoModal);
     const dni = this.form.controls['numeroDocumento'].value;
     const apellidoPaternoIngresado = this.form.controls['primerApellido'].value;
-
+    const datosPersona = new PersonaIn();
+    datosPersona.dni = dni;
+    console.log('ESTE ES EL DNI 2:'+ datosPersona.dni)
+    datosPersona.primerApellido = apellidoPaternoIngresado.toUpperCase();
     if (dni && apellidoPaternoIngresado) {
       this.registroFirmasService
-        .consultarPersona(dni)
+        .consultarPersona(datosPersona)
         .subscribe((data: PersonaOut) => {
           //this.registroFirmasService.consultarPersona2(dni,apellidoPaternoIngresado).subscribe((data: PersonaOut) => {
           if (data.code !== this.environment.CODE_000) {
@@ -316,11 +314,8 @@ export class Step2DetalleSolicitudComponent implements OnInit {
           } else {
             this.utilService.getAlert(
               'Aviso',
-              'El apellido paterno introducido no coincide con el registrado para ese DNI.'
+              'El apellido paterno no son correctos.'
             );
-            this.form.controls['preNombres'].setValue('');
-            this.form.controls['segundoApellido'].setValue('');
-            this.form.controls['primerApellido'].setValue('');
           }
         });
       dialogRef.close();

@@ -8,7 +8,7 @@ import {
   ValidarDatosOut,
 } from '../models/firmas.model';
 import { TipoSolicitudOut } from '../models/tipo-solicitud.model';
-import { PersonaOut } from '../models/persona.model';
+import { PersonaIn, PersonaOut } from '../models/persona.model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,9 +38,9 @@ export class RegistroFirmasService {
     return this.http.post<RegistroFirmaOut>(`${this.url2}`, request);
   }
 
-  consultarPersona(dni: string) {
-    return this.http.get<PersonaOut>(
-      `${this.url}/consultar-personas?dni=${dni}`
+  consultarPersona(request: PersonaIn) {
+    return this.http.post<PersonaOut>(
+      `${this.url}/consultar-por-datos-ruipin`, request
     );
   }
   consultarPersona2(dni: string, pat: string) {

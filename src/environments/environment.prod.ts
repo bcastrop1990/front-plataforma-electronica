@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
 
   //desa
   /*API_AUTH: 'https://servicesdemo.reniec.gob.pe',

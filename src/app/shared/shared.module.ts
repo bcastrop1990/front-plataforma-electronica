@@ -14,8 +14,8 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { GsAnalistaComponent } from '../core/gestion-solicitudes/components/gs-analista/gs-analista.component';
-import { RecaptchaComponent } from './components/recaptcha/recaptcha.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaComponent } from './components/recaptcha/recaptcha.component';
 
 @NgModule({
   declarations: [
