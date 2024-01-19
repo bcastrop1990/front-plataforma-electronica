@@ -7,6 +7,7 @@ import {
   DatosOficina,
   DatosPersona,
   ValidarDatosIn,
+  ValidarDatosInternoIn,
   ValidarDatosOut,
 } from '../../models/firmas.model';
 import { RegistroFirmasService } from '../../services/registro-firmas.service';
@@ -26,6 +27,7 @@ export class FirmaValidacionComponent implements OnInit {
   datosOficina!: DatosOficina;
 
   validarDatosIn!: ValidarDatosIn;
+  validarDatosInternoIn!: ValidarDatosInternoIn;
   validarDatosOut!: ValidarDatosOut;
   noSoyRobot: boolean = false;
 
@@ -42,6 +44,7 @@ export class FirmaValidacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
+    this.estadoUser();
   }
 
   start(): void {
@@ -84,27 +87,61 @@ export class FirmaValidacionComponent implements OnInit {
     this.validarDatosIn.datosPersona = this.datosPersona;
     this.validarDatosIn.datosOficina = this.datosOficina;
 
-    // CALL SERVICE
-    this.registroFirmasService.validarDatos(this.validarDatosIn).subscribe(
-      (data: ValidarDatosOut) => {
-        this.validarDatosOut = data;
-      },
-      (error) => {},
-      () => {
-        if (this.validarDatosOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.validarDatosOut.message}`
+    this.validarDatosInternoIn = new ValidarDatosInternoIn();
+    this.validarDatosInternoIn.dni = formDatosPersona.nroDni;
+    this.validarDatosInternoIn.datosOficina = this.datosOficina;
+
+    //USUARIO INTERNO
+    if (this.isExternal) {
+      this.registroFirmasService.validarDatos(this.validarDatosIn).subscribe(
+        (data: ValidarDatosOut) => {
+          this.validarDatosOut = data;
+        },
+        (error) => {},
+        () => {
+          if (this.validarDatosOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.validarDatosOut.message}`
+            );
+            return;
+          }
+          this.seguridadService.setToken(
+            this.environment.VAR_TOKEN_EXTERNAL,
+            this.validarDatosOut.data
           );
-          return;
+          this.utilService.link(environment.URL_MOD_FIRMAS_REGISTRO);
         }
-        this.seguridadService.setToken(
-          this.environment.VAR_TOKEN_EXTERNAL,
-          this.validarDatosOut.data
+      );
+    }
+
+    //USUARIO INTERNO
+    if (this.isInternal) {
+      this.registroFirmasService
+        .validarDatosInterno(this.validarDatosInternoIn)
+        .subscribe(
+          (data: ValidarDatosOut) => {
+            this.validarDatosOut = data;
+          },
+          (error) => {},
+          () => {
+            if (this.validarDatosOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.validarDatosOut.message}`
+              );
+              return;
+            }
+            this.seguridadService.setToken(
+              this.environment.VAR_TOKEN_EXTERNAL,
+              this.validarDatosOut.data
+            );
+            this.utilService.link(environment.URL_MOD_FIRMAS_REGISTRO);
+          }
         );
-        this.utilService.link(environment.URL_MOD_FIRMAS_REGISTRO);
-      }
-    );
+    }
+
+    // CALL SERVICE
   }
 
   back(): void {
@@ -115,8 +152,23 @@ export class FirmaValidacionComponent implements OnInit {
     this.noSoyRobot = resolved;
   }
 
+  estadoUser() {
+    if (this.isExternal) {
+      console.log('Estamos como usuarios externos');
+    }
+    if (this.isInternal) {
+      console.log('Estamos como usuarios internos');
+    }
+  }
+
+  //Validadores de estado del usuario
+
   get isExternal(): boolean {
     return !this.seguridadService.getUserInternal();
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 
   get user(): User {

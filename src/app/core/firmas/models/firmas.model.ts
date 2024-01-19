@@ -9,6 +9,15 @@ export class ValidarDatosIn {
   }
 }
 
+export class ValidarDatosInternoIn {
+  datosOficina: DatosOficina;
+  dni: string;
+  constructor() {
+    this.datosOficina = new DatosOficina();
+    this.dni = '';
+  }
+}
+
 export class ValidarDatosOut extends Result {
   data: string;
   constructor() {

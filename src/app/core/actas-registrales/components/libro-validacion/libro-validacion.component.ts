@@ -6,6 +6,7 @@ import {
   ValidarDatosOut,
   ConsultarRuipinIn,
   ConsultarRuipinOut,
+  ValidarDatosInternoIn,
 } from '../../../firmas/models/firmas.model';
 import { ValidacionDatosComponent } from '../../../../masters/components/validacion-datos/validacion-datos.component';
 import { DatosOficinaAutorizadaComponent } from '../../../../masters/components/datos-oficina-autorizada/datos-oficina-autorizada.component';
@@ -30,6 +31,7 @@ export class LibroValidacionComponent implements OnInit {
   datosOficina!: DatosOficina;
 
   validarDatosIn!: ValidarDatosIn;
+  validarDatosInternoIn!: ValidarDatosInternoIn;
   validarDatosOut!: ValidarDatosOut;
 
   //Nuevas implementaciones - libroValidacion
@@ -43,6 +45,7 @@ export class LibroValidacionComponent implements OnInit {
 
   //CONDICIONALES DE BOTONES
   noSoyRobot: boolean = false;
+  registrador: boolean = false;
 
   @ViewChild('formValidacionDatos')
   formValidacionDatos!: ValidacionDatosComponent;
@@ -104,33 +107,68 @@ export class LibroValidacionComponent implements OnInit {
     this.validarDatosIn.datosPersona = this.datosPersona;
     this.validarDatosIn.datosOficina = this.datosOficina;
 
-    // CALL SERVICE
-    this.registroLibroService.validarDatos(this.validarDatosIn).subscribe(
-      (data: ValidarDatosOut) => {
-        this.validarDatosOut = data;
-        this.registroLibroService.setValidarDatosOutData(
-          this.validarDatosOut.data
-        );
-      },
+    this.validarDatosInternoIn = new ValidarDatosInternoIn();
+    this.validarDatosInternoIn.dni = formDatosPersona.nroDni;
+    this.validarDatosInternoIn.datosOficina = this.datosOficina;
 
-      (error) => {
-        console.error('Error en validarDatos:', error);
-      },
-      () => {
-        if (this.validarDatosOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.validarDatosOut.message}`
+    // CALL SERVICE - VALIDANDO ESTADO DEL USUARIO
+
+    if (this.isExternal) {
+      this.registroLibroService.validarDatos(this.validarDatosIn).subscribe(
+        (data: ValidarDatosOut) => {
+          this.validarDatosOut = data;
+          this.registroLibroService.setValidarDatosOutData(
+            this.validarDatosOut.data
           );
-          return;
+        },
+
+        (error) => {},
+        () => {
+          if (this.validarDatosOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.validarDatosOut.message}`
+            );
+            return;
+          }
+          this.seguridadService.setToken(
+            this.environment.VAR_TOKEN_EXTERNAL,
+            this.validarDatosOut.data
+          );
+          this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
         }
-        this.seguridadService.setToken(
-          this.environment.VAR_TOKEN_EXTERNAL,
-          this.validarDatosOut.data
+      );
+    }
+    if (this.isInternal) {
+      this.registroLibroService
+        .validarDatosInterno(this.validarDatosInternoIn)
+        .subscribe(
+          (data: ValidarDatosOut) => {
+            this.validarDatosOut = data;
+            this.registroLibroService.setValidarDatosOutData(
+              this.validarDatosOut.data
+            );
+          },
+
+          (error) => {},
+          () => {
+            if (this.validarDatosOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.validarDatosOut.message}`
+              );
+              return;
+            }
+            this.seguridadService.setToken(
+              this.environment.VAR_TOKEN_EXTERNAL,
+              this.validarDatosOut.data
+            );
+            this.utilService.link(
+              environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO
+            );
+          }
         );
-        this.utilService.link(environment.URL_MOD_ACTAS_REGISTRALES_REGISTRO);
-      }
-    );
+    }
   }
 
   getOficina(codigo: string) {
@@ -147,5 +185,8 @@ export class LibroValidacionComponent implements OnInit {
 
   get isExternal(): boolean {
     return !this.seguridadService.getUserInternal();
+  }
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 }

@@ -11,15 +11,43 @@
               <div class="col-sm-12 col-md-4 mb-2">
                 <label>DNI: <span>(*)</span></label>
                 <mat-form-field appearance="outline" class="w-100">
-                  <input
-                    matInput
-                    formControlName="nroDni"
-                    placeholder="Ingresar"
-                    autocomplete="off"
-                    pattern="[0-9]{8}"
-                    maxlength="8"
-                    onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
-                  />
+                  <div *ngIf="isExternal">
+                    <input
+                      matInput
+                      formControlName="nroDni"
+                      placeholder="Ingresar"
+                      autocomplete="off"
+                      pattern="[0-9]{8}"
+                      maxlength="8"
+                      onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
+                    />
+                  </div>
+                  <div *ngIf="!isExternal">
+                    <div *ngIf="!paraRegistroLibro">
+                      <input
+                        matInput
+                        formControlName="nroDni"
+                        placeholder="Ingresar"
+                        autocomplete="off"
+                        pattern="[0-9]{8}"
+                        maxlength="8"
+                        onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
+                      />
+                    </div>
+                    <div *ngIf="paraRegistroLibro">
+                      <input
+                        matInput
+                        formControlName="nroDni"
+                        placeholder="Ingresar"
+                        autocomplete="off"
+                        pattern="[0-9]{8}"
+                        maxlength="8"
+                        onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
+                        (keyup.enter)="busquedaPorDni()"
+                        #dniInput
+                      />
+                    </div>
+                  </div>
                   <mat-error *ngIf="form.get('nroDni')?.invalid">{{
                     utilService.getErrorMessage(form, "nroDni")
                   }}</mat-error>

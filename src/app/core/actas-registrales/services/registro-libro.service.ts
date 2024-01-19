@@ -9,6 +9,7 @@ import {
   ValidarDatosIn,
   ValidarDatosOut,
 } from '../../actas-registrales/models/libro.model';
+import { ValidarDatosInternoIn } from '../../firmas/models/firmas.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ export class RegistroLibroService {
   url = `${this.urlService}/registro-libros`;
   url2 = `${this.urlService}/registrador-civil`;
   url3 = `${this.urlService}/ubigeos/oficina-por-datos`;
+  url4 = `${this.urlService}/ubigeos/oficina-por-dni`;
 
   validarDatosOutData: any;
   constructor(private http: HttpClient) {}
@@ -32,6 +34,13 @@ export class RegistroLibroService {
     );
   }
 
+  validarDatosInterno(request: ValidarDatosInternoIn) {
+    return this.http.post<ValidarDatosOut>(
+      `${this.url}/validar-datos-usuario-interno`,
+      request
+    );
+  }
+
   registroLibro(request: RegistroLibroIn) {
     return this.http.post<RegistroLibroOut>(`${this.url}`, request);
   }
@@ -40,6 +49,10 @@ export class RegistroLibroService {
     return this.http.get<OficinaOut>(
       `${this.url3}/?dni=${dni}&digitoVerifica=${digitoVerifica}&fechaEmision=${fechaEmision}`
     );
+  }
+
+  ofinaAutorizadaInterno(dni: string) {
+    return this.http.get<OficinaOut>(`${this.url4}/${dni}`);
   }
 
   consultarRegCivil(dni: string) {

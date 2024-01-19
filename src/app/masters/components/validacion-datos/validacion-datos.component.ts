@@ -5,6 +5,7 @@ import {
   Output,
   ViewChild,
   EventEmitter,
+  ElementRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
@@ -36,6 +37,9 @@ export class ValidacionDatosComponent implements OnInit {
   @Input() paraRegistroLibro: boolean = false;
 
   disabledRange: boolean = false;
+
+  @ViewChild('dniInput')
+  dniInput!: ElementRef<HTMLInputElement>;
 
   @ViewChild('formDatosOficinaAutorizada')
   formDatosOficinaAutorizada!: DatosOficinaAutorizadaComponent;
@@ -106,6 +110,10 @@ export class ValidacionDatosComponent implements OnInit {
     }
   }
 
+  busquedaPorDni() {
+    this.oficinaEncontrada();
+  }
+
   oficinaEncontrada() {
     //Valida que el fomulario este llenado correctamente
 
@@ -123,38 +131,24 @@ export class ValidacionDatosComponent implements OnInit {
       return;
     }
 
-    console.log('fecha de emision: ' + fechaEmision);
+    // OBTENIENDO LA OFICINA -- VALIDANDO EL ESTADO DEL USUARIO
 
-    this.registroLibroService
-      .ofinaAutorizada(
-        formDatosPersona.nroDni,
-        formDatosPersona.digito,
-        fechaEmision
-      )
-      .subscribe((data: OficinaOut) => {
-        this.oficina = data;
-        if (this.oficina.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(`Aviso:`, `${this.oficina.message}`);
-          return;
-        }
-        if (this.oficina.data.codigo === '2') {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `Firma
-            inhabilitada, comunicarse con el 315-4000 anexo 1876.`
-          );
-          return;
-        }
-        if (this.oficina.data.codigo === '3') {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `La persona natural no se encuentra registrada como Registrador.`
-          );
-          return;
-        }
-        //Sigo
+    if (this.isExternal) {
+      this.registroLibroService
+        .ofinaAutorizada(
+          formDatosPersona.nroDni,
+          formDatosPersona.digito,
+          fechaEmision
+        )
+        .subscribe((data: OficinaOut) => {
+          this.oficina = data;
+          if (this.oficina.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(`Aviso:`, `${this.oficina.message}`);
+            return;
+          }
 
-        /*
+          //Sigo
+          /*
         this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
         const lsuser = localStorage.getItem('user');
         const user: User = JSON.parse(lsuser!);
@@ -167,23 +161,66 @@ export class ValidacionDatosComponent implements OnInit {
         );
         */
 
-        this.formDatosOficinaAutorizada.departamento =
-          this.oficina.data.coNombreDepartamento;
+          this.formDatosOficinaAutorizada.departamento =
+            this.oficina.data.coNombreDepartamento;
 
-        this.formDatosOficinaAutorizada.provincia =
-          this.oficina.data.coNombreProvincia;
+          this.formDatosOficinaAutorizada.provincia =
+            this.oficina.data.coNombreProvincia;
 
-        this.formDatosOficinaAutorizada.distrito =
-          this.oficina.data.coNombreDistrito;
+          this.formDatosOficinaAutorizada.distrito =
+            this.oficina.data.coNombreDistrito;
 
-        this.formDatosOficinaAutorizada.centroPoblado =
-          this.oficina.data.coNombreCentroPoblado;
+          this.formDatosOficinaAutorizada.centroPoblado =
+            this.oficina.data.coNombreCentroPoblado;
 
-        this.formDatosOficinaAutorizada.ofiAutorizada =
-          this.oficina.data.coNombreOficina;
+          this.formDatosOficinaAutorizada.ofiAutorizada =
+            this.oficina.data.coNombreOficina;
 
-        this.emitUbigeo(this.oficina.data.coNombreOficina);
-      });
+          this.emitUbigeo(this.oficina.data.coNombreOficina);
+        });
+    }
+    if (this.isInternal) {
+      this.registroLibroService
+        .ofinaAutorizadaInterno(formDatosPersona.nroDni)
+        .subscribe((data: OficinaOut) => {
+          this.oficina = data;
+          if (this.oficina.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(`Aviso:`, `${this.oficina.message}`);
+            return;
+          }
+
+          //Sigo
+          /*
+        this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
+        const lsuser = localStorage.getItem('user');
+        const user: User = JSON.parse(lsuser!);
+
+        localStorage.removeItem(environment.VAR_USER);
+        user.codigoOrec = this.oficinaAutorizadaL;
+        this.utilService.setLocalStorage(
+          environment.VAR_USER,
+          JSON.stringify(user)
+        );
+        */
+
+          this.formDatosOficinaAutorizada.departamento =
+            this.oficina.data.coNombreDepartamento;
+
+          this.formDatosOficinaAutorizada.provincia =
+            this.oficina.data.coNombreProvincia;
+
+          this.formDatosOficinaAutorizada.distrito =
+            this.oficina.data.coNombreDistrito;
+
+          this.formDatosOficinaAutorizada.centroPoblado =
+            this.oficina.data.coNombreCentroPoblado;
+
+          this.formDatosOficinaAutorizada.ofiAutorizada =
+            this.oficina.data.coNombreOficina;
+
+          this.emitUbigeo(this.oficina.data.coNombreOficina);
+        });
+    }
   }
 
   clearRangeDate() {
@@ -193,6 +230,10 @@ export class ValidacionDatosComponent implements OnInit {
 
   get isExternal(): boolean {
     return !this.seguridadService.getUserInternal();
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 
   emitUbigeo(value: string) {

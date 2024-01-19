@@ -5,6 +5,7 @@ import {
   RegistroFirmaIn,
   RegistroFirmaOut,
   ValidarDatosIn,
+  ValidarDatosInternoIn,
   ValidarDatosOut,
 } from '../models/firmas.model';
 import { TipoSolicitudOut } from '../models/tipo-solicitud.model';
@@ -17,11 +18,19 @@ export class RegistroFirmasService {
   private urlService = environment.API_MASTER;
   url = `${this.urlService}/registro-firmas`;
   url2 = `${this.urlService}/registrar-baja`;
+  url3 = `${this.urlService}/registro-libros`;
   constructor(private http: HttpClient) {}
 
   validarDatos(request: ValidarDatosIn) {
     return this.http.post<ValidarDatosOut>(
       `${this.url}/validar-datos`,
+      request
+    );
+  }
+
+  validarDatosInterno(request: ValidarDatosInternoIn) {
+    return this.http.post<ValidarDatosOut>(
+      `${this.url3}/validar-datos-usuario-interno`,
       request
     );
   }
@@ -40,7 +49,8 @@ export class RegistroFirmasService {
 
   consultarPersona(request: PersonaIn) {
     return this.http.post<PersonaOut>(
-      `${this.url}/consultar-por-datos-ruipin`, request
+      `${this.url}/consultar-por-datos-ruipin`,
+      request
     );
   }
   consultarPersona2(dni: string, pat: string) {

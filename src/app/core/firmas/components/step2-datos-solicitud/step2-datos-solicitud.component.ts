@@ -198,6 +198,11 @@ export class Step2DatosSolicitudComponent implements OnInit {
       value.setDetalleSolicitud()
     );
 
+    //LISTA DE DETALLES
+    arrayDetalle.forEach((item) => {
+      console.log('detalle: ' + item.idTipoSolicitud);
+    });
+
     // VALIDACION 1
     if (arrayDetalle.length <= 0) {
       this.utilService.getAlert(
@@ -315,6 +320,9 @@ export class Step2DatosSolicitudComponent implements OnInit {
     this.registroFirmaIn.celular = this.requestPaso1.celular;
     this.registroFirmaIn.codigoModoRegistro = 'E';
     this.registroFirmaIn.detalleSolicitud = arrayDetalle;
+
+    //Cambio
+    console.log('detalle de la Solicitud: ' + arrayDetalle);
 
     this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
       (data: RegistroFirmaOut) => {
