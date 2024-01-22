@@ -427,6 +427,11 @@ export class Step2DatosSolicitudComponent implements OnInit {
             break;
           case this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA:
             this.tipoArchivoDetalleAlta = this.tipoArchivoOut.data;
+            if (this.isExternal) {
+              this.tipoArchivoDetalleAlta = this.tipoArchivoDetalleAlta.filter(
+                (item) => item.codigo !== '08'
+              );
+            }
             break;
           case this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR:
             this.tipoArchivoDetalleActualizar = this.tipoArchivoOut.data;

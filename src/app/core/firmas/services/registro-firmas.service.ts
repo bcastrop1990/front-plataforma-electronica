@@ -18,7 +18,6 @@ export class RegistroFirmasService {
   private urlService = environment.API_MASTER;
   url = `${this.urlService}/registro-firmas`;
   url2 = `${this.urlService}/registrar-baja`;
-  url3 = `${this.urlService}/registro-libros`;
   constructor(private http: HttpClient) {}
 
   validarDatos(request: ValidarDatosIn) {
@@ -30,7 +29,7 @@ export class RegistroFirmasService {
 
   validarDatosInterno(request: ValidarDatosInternoIn) {
     return this.http.post<ValidarDatosOut>(
-      `${this.url3}/validar-datos-firma-usuario-interno`,
+      `${this.url}/validar-datos-firma-usuario-interno`,
       request
     );
   }

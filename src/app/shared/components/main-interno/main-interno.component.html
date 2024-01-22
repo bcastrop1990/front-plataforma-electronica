@@ -22,7 +22,7 @@
                 src="assets/images/icon-1.png"
                 alt="Solicitar Registro de Firmas"
               />
-              <p>Registro de Firmas</p>
+              <p>Registro de Firmas Manuales</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -57,13 +57,27 @@
           </mat-card>
         </div>
       </a>
+      <a [routerLink]="environment.URL_MOD_GESTION_SOLICITUDES">
+        <div class="direct-access">
+          <mat-card class="direct-access-back"></mat-card>
+          <mat-card class="direct-access-front">
+            <mat-card-content>
+              <img
+                src="assets/images/icon-3.png"
+                alt="Seguimiento de Solicitudes"
+              />
+              <p>Gestion de Solicitudes</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </a>
       <a [routerLink]="environment.URL_MOD_REPORTES_EXCEL">
         <div class="direct-access">
           <mat-card class="direct-access-back"></mat-card>
           <mat-card class="direct-access-front">
             <mat-card-content>
               <img src="assets/images/icon-2.png" alt="Reportes" />
-              <p>Reportes Generales</p>
+              <p>Reportes</p>
             </mat-card-content>
           </mat-card>
         </div>
