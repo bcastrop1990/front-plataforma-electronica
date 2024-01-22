@@ -30,7 +30,7 @@ export class RegistroFirmasService {
 
   validarDatosInterno(request: ValidarDatosInternoIn) {
     return this.http.post<ValidarDatosOut>(
-      `${this.url3}/validar-datos-usuario-interno`,
+      `${this.url3}/validar-datos-firma-usuario-interno`,
       request
     );
   }
@@ -41,6 +41,13 @@ export class RegistroFirmasService {
 
   registroFirma(request: RegistroFirmaIn) {
     return this.http.post<RegistroFirmaOut>(`${this.url}`, request);
+  }
+
+  registroFirmaInterno(request: RegistroFirmaIn) {
+    return this.http.post<RegistroFirmaOut>(
+      `${this.url}/usuario-interno`,
+      request
+    );
   }
 
   registroFirma2(request: RegistroFirmaIn) {

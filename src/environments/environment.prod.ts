@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
 
   //desa
   /*API_AUTH: 'https://servicesdemo.reniec.gob.pe',
@@ -47,6 +47,7 @@ export const environment = {
 
   // PAGINATION
   ROWS_PAGE: 10, // Filas por página
+  ROWS_PAGE2: 50, // Filas por página
   START_PAGE: 1, // Página inicial
 
   // TIPO DE ARCHIVO
@@ -64,6 +65,8 @@ export const environment = {
   TIPO_RECEPCIONADO: 'RECEPCIONADO',
   TIPO_ASIGNADO: 'ASIGNADO',
   TIPO_ATENDIDO: 'ATENDIDO',
+  TIPO_REGISTRADO: 'REGISTRADO',
+  TIPO_REASIGNADO: 'REASIGNADO',
 
   // TIPO DE TRÁMITE
   TIPO_REGISTRO_LIBRO_ID: '1',
@@ -73,6 +76,7 @@ export const environment = {
 
   // URLS
   URL_MENU: '/menu',
+  URL_MENU_INTERNO: '/menuInterno',
   URL_INTRO: '/auth/intro',
   URL_LOGIN: '/auth/login',
   URL_MOD_FIRMAS: '/firmas',
@@ -84,9 +88,11 @@ export const environment = {
   URL_MOD_SEGUIMIENTO: '/seguimiento',
   URL_MOD_SEGUIMIENTO_VALIDACION: '/seguimiento/validacion',
   URL_MOD_SEGUIMIENTO_BUSQUEDA: '/seguimiento/busqueda',
+  URL_MOD_REPORTES_EXCEL: '/reportesExcel',
+  URL_MOD_REPORTES_DETALLE: '/rpDetalle',
   URL_MOD_GESTION_SOLICITUDES: '/gestion-solicitudes',
+  URL_MOD_REPORTES: '/reportes',
   URL_MOD_GESTION_SOLICITUDES_ATENCION: '/gestion-solicitudes/atencion',
-  URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes-excel',
 
   //RE CAPTCHA
   SITE_KEY_RECAPTCHA: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',

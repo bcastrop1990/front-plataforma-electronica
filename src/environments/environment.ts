@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
+  production: false,
 
   API_AUTH: 'https://servicesdemo.reniec.gob.pe',
   // API_MASTER: 'http://10.48.60.13:7010/api-plataforma-electronica',

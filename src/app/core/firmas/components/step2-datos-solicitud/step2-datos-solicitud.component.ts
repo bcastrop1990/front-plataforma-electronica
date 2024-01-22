@@ -50,6 +50,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 
 export interface Detalle {
   index: number;
@@ -121,7 +122,8 @@ export class Step2DatosSolicitudComponent implements OnInit {
     private registroFirmasService: RegistroFirmasService,
     private maestroService: MaestrosService,
     private oficinaService: OficinaService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private seguridadService: SeguridadService
   ) {}
 
   abrirModalConfirmacion() {
@@ -324,25 +326,50 @@ export class Step2DatosSolicitudComponent implements OnInit {
     //Cambio
     console.log('detalle de la Solicitud: ' + arrayDetalle);
 
-    this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
-      (data: RegistroFirmaOut) => {
-        this.registroFirmaOut = data;
-      },
-      (error) => {},
-      () => {
-        if (this.registroFirmaOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.registroFirmaOut.message}`
-          );
-          return;
+    if (this.isExternal) {
+      this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
+        (data: RegistroFirmaOut) => {
+          this.registroFirmaOut = data;
+        },
+        (error) => {},
+        () => {
+          if (this.registroFirmaOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.registroFirmaOut.message}`
+            );
+            return;
+          }
+          this.doEmmitRequestPaso2.emit(this.registroFirmaOut.data);
+          // @ts-ignore
+          stepper.selected.completed = true;
+          stepper.next();
         }
-        this.doEmmitRequestPaso2.emit(this.registroFirmaOut.data);
-        // @ts-ignore
-        stepper.selected.completed = true;
-        stepper.next();
-      }
-    );
+      );
+    }
+    if (this.isInternal) {
+      this.registroFirmasService
+        .registroFirmaInterno(this.registroFirmaIn)
+        .subscribe(
+          (data: RegistroFirmaOut) => {
+            this.registroFirmaOut = data;
+          },
+          (error) => {},
+          () => {
+            if (this.registroFirmaOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.registroFirmaOut.message}`
+              );
+              return;
+            }
+            this.doEmmitRequestPaso2.emit(this.registroFirmaOut.data);
+            // @ts-ignore
+            stepper.selected.completed = true;
+            stepper.next();
+          }
+        );
+    }
   }
 
   btnAddDetalle(): void {
@@ -407,5 +434,13 @@ export class Step2DatosSolicitudComponent implements OnInit {
         }
       }
     );
+  }
+
+  get isExternal(): boolean {
+    return !this.seguridadService.getUserInternal();
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 }
