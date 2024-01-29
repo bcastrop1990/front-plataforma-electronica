@@ -38,6 +38,7 @@ import {
   Archivo,
   DetalleSolicitud,
   RegistroFirmaIn,
+  RegistroFirmaInternaIn,
   RegistroFirmaOut,
   Sustento,
 } from '../../models/firmas.model';
@@ -89,6 +90,8 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
   registroFirmaIn!: RegistroFirmaIn;
   registroFirmaOut!: RegistroFirmaOut;
+
+  registroFirmaInternaIn!: RegistroFirmaInternaIn;
 
   oficinaDetalleOut!: OficinaDetalleOut;
   oficinaDetalle!: OficinaDetalle;
@@ -169,26 +172,39 @@ export class Step2DatosSolicitudComponent implements OnInit {
       this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR
     );
     this.listarOficinaDetalle();
+    this.datosDelLs();
+  }
+
+  datosDelLs() {
+    const userDataString = localStorage.getItem('user');
+    const userData = JSON.parse(userDataString!);
+    console.log(userData);
   }
 
   listarOficinaDetalle(): void {
-    this.oficinaService.listOficinaDetalle().subscribe(
-      (data: OficinaDetalleOut) => {
-        this.oficinaDetalleOut = data;
-      },
-      (error) => {},
-      () => {
-        if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.oficinaDetalleOut.message}`
-          );
-          return;
+    //OBTENIENDO DATA DE LS
+    const userDataString = localStorage.getItem('user');
+    const userData = JSON.parse(userDataString!);
+
+    this.oficinaService
+      .listOficinaDetalleInterno(userData.codigoOrec)
+      .subscribe(
+        (data: OficinaDetalleOut) => {
+          this.oficinaDetalleOut = data;
+        },
+        (error) => {},
+        () => {
+          if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.oficinaDetalleOut.message}`
+            );
+            return;
+          }
+          this.oficinaDetalle = this.oficinaDetalleOut.data;
+          this.formDetalle.patchValue(this.oficinaDetalle);
         }
-        this.oficinaDetalle = this.oficinaDetalleOut.data;
-        this.formDetalle.patchValue(this.oficinaDetalle);
-      }
-    );
+      );
   }
 
   btnNext(stepper: MatStepper) {
@@ -307,7 +323,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
     // MAPPER ARCHIVO SUSTENTO
 
-    // MAPPER REGISTRO
+    // MAPPER REGISTRO - EXTERNO
     this.registroFirmaIn = new RegistroFirmaIn();
     const archivoSustento = new Array<Sustento>();
     this.arrayFilesSustento.forEach((x) => {
@@ -323,8 +339,30 @@ export class Step2DatosSolicitudComponent implements OnInit {
     this.registroFirmaIn.codigoModoRegistro = 'E';
     this.registroFirmaIn.detalleSolicitud = arrayDetalle;
 
-    //Cambio
-    console.log('detalle de la Solicitud: ' + arrayDetalle);
+    //MAPPER REGISTRO - INTERNO
+    this.registroFirmaInternaIn = new RegistroFirmaInternaIn();
+    const archivoSustento2 = new Array<Sustento>();
+    this.arrayFilesSustento.forEach((x) => {
+      archivoSustento2.push({
+        codigoNombre: x.idFile,
+        tipoCodigoNombre: x.fileTypeId,
+      });
+    });
+
+    this.registroFirmaInternaIn.listArchivoSustento = archivoSustento;
+    this.registroFirmaInternaIn.email = this.requestPaso1.email;
+    this.registroFirmaInternaIn.celular = this.requestPaso1.celular;
+    this.registroFirmaInternaIn.codigoModoRegistro = 'E';
+    this.registroFirmaInternaIn.detalleSolicitud = arrayDetalle;
+
+    const userDataString = localStorage.getItem('user');
+    const userData = JSON.parse(userDataString!);
+
+    this.registroFirmaInternaIn.dniSolicitante = userData.dni;
+    this.registroFirmaInternaIn.preNombreSolicitante = userData.preNombre;
+    this.registroFirmaInternaIn.primerApeSolicitante = userData.primerApellido;
+    this.registroFirmaInternaIn.segundoApeSolicitante =
+      userData.segundoApellido;
 
     if (this.isExternal) {
       this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
@@ -349,7 +387,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
     }
     if (this.isInternal) {
       this.registroFirmasService
-        .registroFirmaInterno(this.registroFirmaIn)
+        .registroFirmaInterno(this.registroFirmaInternaIn)
         .subscribe(
           (data: RegistroFirmaOut) => {
             this.registroFirmaOut = data;

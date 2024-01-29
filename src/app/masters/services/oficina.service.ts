@@ -23,4 +23,8 @@ export class OficinaService {
   listOficinaDetalle() {
     return this.http.get<OficinaDetalleOut>(`${this.url}/orec/detalle`);
   }
+
+  listOficinaDetalleInterno(orec: string) {
+    return this.http.get<OficinaDetalleOut>(`${this.url}/orec/detalle/${orec}`);
+  }
 }

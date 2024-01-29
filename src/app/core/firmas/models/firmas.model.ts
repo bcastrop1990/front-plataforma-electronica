@@ -61,18 +61,43 @@ export class RegistroFirmaOut extends Result {
   }
 }
 
-export class RegistroFirmaIn {
+export class RegistroFirmaInternaIn {
   listArchivoSustento: Sustento[];
   email: string;
   celular: string;
   codigoModoRegistro: string;
   detalleSolicitud: DetalleSolicitud[];
+  dniSolicitante: string;
+  preNombreSolicitante: string;
+  primerApeSolicitante: string;
+  segundoApeSolicitante: string;
   constructor() {
     this.listArchivoSustento = new Array<Sustento>();
     this.email = '';
     this.celular = '';
     this.codigoModoRegistro = '';
     this.detalleSolicitud = new Array<DetalleSolicitud>();
+    this.dniSolicitante = '';
+    this.preNombreSolicitante = '';
+    this.primerApeSolicitante = '';
+    this.segundoApeSolicitante = '';
+  }
+}
+
+export class RegistroFirmaIn {
+  listArchivoSustento: Sustento[];
+  email: string;
+  celular: string;
+  codigoModoRegistro: string;
+  detalleSolicitud: DetalleSolicitud[];
+  dniSolicitante: string;
+  constructor() {
+    this.listArchivoSustento = new Array<Sustento>();
+    this.email = '';
+    this.celular = '';
+    this.codigoModoRegistro = '';
+    this.detalleSolicitud = new Array<DetalleSolicitud>();
+    this.dniSolicitante = '';
   }
 }
 
