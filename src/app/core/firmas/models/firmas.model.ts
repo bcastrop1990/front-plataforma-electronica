@@ -68,6 +68,7 @@ export class RegistroFirmaInternaIn {
   codigoModoRegistro: string;
   detalleSolicitud: DetalleSolicitud[];
   dniSolicitante: string;
+  codigoOrecSolicitante: string;
   preNombreSolicitante: string;
   primerApeSolicitante: string;
   segundoApeSolicitante: string;
@@ -81,6 +82,7 @@ export class RegistroFirmaInternaIn {
     this.preNombreSolicitante = '';
     this.primerApeSolicitante = '';
     this.segundoApeSolicitante = '';
+    this.codigoOrecSolicitante = '';
   }
 }
 

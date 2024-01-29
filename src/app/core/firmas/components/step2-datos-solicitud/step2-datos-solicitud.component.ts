@@ -363,6 +363,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
     this.registroFirmaInternaIn.primerApeSolicitante = userData.primerApellido;
     this.registroFirmaInternaIn.segundoApeSolicitante =
       userData.segundoApellido;
+    this.registroFirmaInternaIn.codigoOrecSolicitante = userData.codigoOrec;
 
     if (this.isExternal) {
       this.registroFirmasService.registroFirma(this.registroFirmaIn).subscribe(
