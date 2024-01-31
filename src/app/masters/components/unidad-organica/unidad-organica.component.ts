@@ -2,23 +2,22 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UtilService } from 'src/app/shared/services/util.service';
 import { environment } from 'src/environments/environment';
-import { UtilService } from '../../../shared/services/util.service';
+import { UbigeoOut, Ubigeo } from '../../models/ubigeo.model';
 import { UbigeoService } from '../../services/ubigeo.service';
-import { Ubigeo, UbigeoOut } from '../../models/ubigeo.model';
 
 @Component({
-  selector: 'app-centro-problado',
-  templateUrl: './centro-problado.component.html',
-  styleUrls: ['./centro-problado.component.scss'],
+  selector: 'app-unidad-organica',
+  templateUrl: './unidad-organica.component.html',
+  styleUrls: ['./unidad-organica.component.scss'],
 })
-export class CentroProbladoComponent implements OnInit, OnChanges {
+export class UnidadOrganicaComponent implements OnInit {
   environment: any;
   form!: FormGroup;
 
@@ -26,7 +25,6 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
   ubigeo!: Ubigeo[];
 
   @Input() encontrado: boolean = false;
-  @Input() exComunidadNativa: boolean = false;
 
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
@@ -39,7 +37,6 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
   @Input() centroEncontrado: string = '';
 
   @Output() ubigeoSelected: EventEmitter<string> = new EventEmitter();
-  @Output() selected: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -109,11 +106,6 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
           });
         }
       );
-  }
-
-  emitSelected() {
-    this.selected.emit(true);
-    localStorage.setItem('comunidad', '01');
   }
 
   emitCentroPoblado(value: string) {

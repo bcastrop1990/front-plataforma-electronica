@@ -74,6 +74,8 @@ export class Step2DatosSolicitudComponent implements OnInit {
   form!: FormGroup;
   formDetalle!: FormGroup;
 
+  tipoNombreOficina: string = '';
+
   arrayDetalle: number[] = [];
 
   tipoSolicitudOut!: TipoSolicitudOut;
@@ -173,6 +175,13 @@ export class Step2DatosSolicitudComponent implements OnInit {
     );
     this.listarOficinaDetalle();
     this.datosDelLs();
+    this.tipoOficina();
+  }
+
+  tipoOficina() {
+    const tipo = localStorage.getItem('comunidad');
+    this.tipoNombreOficina =
+      tipo! === '02' ? 'Comunidad Nativa' : 'Centro Poblado';
   }
 
   datosDelLs() {

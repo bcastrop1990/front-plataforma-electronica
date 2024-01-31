@@ -37,6 +37,7 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   @Input() idProvincia: string = '';
   @Input() idDistrito: string = '';
   @Input() idCentroPoblado: string = '';
+  @Input() idComunidadNativa: string = '';
 
   @Input() departamentoEncontrado: string = '';
   @Input() provinciaEncontrado: string = '';
@@ -69,6 +70,9 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   }
 
   validate(): void {
+    if (this.idComunidadNativa) {
+      this.idCentroPoblado = this.idComunidadNativa;
+    }
     if (this.oficinaEncontrado) {
       this.requestMapper(
         this.departamentoEncontrado,

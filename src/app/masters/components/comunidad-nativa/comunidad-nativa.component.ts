@@ -2,23 +2,22 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UtilService } from 'src/app/shared/services/util.service';
 import { environment } from 'src/environments/environment';
-import { UtilService } from '../../../shared/services/util.service';
+import { UbigeoOut, Ubigeo } from '../../models/ubigeo.model';
 import { UbigeoService } from '../../services/ubigeo.service';
-import { Ubigeo, UbigeoOut } from '../../models/ubigeo.model';
 
 @Component({
-  selector: 'app-centro-problado',
-  templateUrl: './centro-problado.component.html',
-  styleUrls: ['./centro-problado.component.scss'],
+  selector: 'app-comunidad-nativa',
+  templateUrl: './comunidad-nativa.component.html',
+  styleUrls: ['./comunidad-nativa.component.scss'],
 })
-export class CentroProbladoComponent implements OnInit, OnChanges {
+export class ComunidadNativaComponent implements OnInit {
   environment: any;
   form!: FormGroup;
 
@@ -26,7 +25,7 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
   ubigeo!: Ubigeo[];
 
   @Input() encontrado: boolean = false;
-  @Input() exComunidadNativa: boolean = false;
+  @Input() exCentroPoblado: boolean = false;
 
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
@@ -65,7 +64,7 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
 
   validate(): void {
     if (this.centroEncontrado) {
-      this.listarCentroPoblado(
+      this.listarComunidadNativa(
         this.departamentoEncontrado,
         this.provinciaEncontrado,
         this.distritoEncontrado
@@ -74,7 +73,7 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
       this.encontrado = true;
     } else {
       if (this.idDepartamento && this.idProvincia && this.idDistrito) {
-        this.listarCentroPoblado(
+        this.listarComunidadNativa(
           this.idDepartamento,
           this.idProvincia,
           this.idDistrito
@@ -86,7 +85,7 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
     }
   }
 
-  listarCentroPoblado(
+  listarComunidadNativa(
     idDepartamento: string,
     idProvincia: string,
     idDistrito: string
@@ -103,9 +102,8 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
             this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
             return;
           }
-
           this.ubigeo = this.ubigeoOut.data.filter((centro) => {
-            return centro.coDeno !== '02';
+            return centro.coDeno === '02';
           });
         }
       );
@@ -113,7 +111,7 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
 
   emitSelected() {
     this.selected.emit(true);
-    localStorage.setItem('comunidad', '01');
+    localStorage.setItem('comunidad', '02');
   }
 
   emitCentroPoblado(value: string) {

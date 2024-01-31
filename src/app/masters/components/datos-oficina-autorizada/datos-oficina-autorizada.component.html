@@ -43,6 +43,7 @@
           <div class="col-sm-12 col-md-4 mb-2">
             <app-centro-problado
               [encontrado]="registroLibro"
+              [exComunidadNativa]="exCentroPoblado"
               #cboCentroPoblado
               [departamentoEncontrado]="departamento"
               [provinciaEncontrado]="provincia"
@@ -52,6 +53,7 @@
               [idProvincia]="form.controls['ubigeoProvincia'].value"
               [idDistrito]="form.controls['ubigeoDistrito'].value"
               (ubigeoSelected)="getCentroPoblado($event)"
+              (selected)="existsCentroPoblado($event)"
             ></app-centro-problado>
           </div>
           <div class="col-sm-12 col-md-8 mb-2">
@@ -68,27 +70,30 @@
               [idProvincia]="form.controls['ubigeoProvincia'].value"
               [idDistrito]="form.controls['ubigeoDistrito'].value"
               [idCentroPoblado]="form.controls['centroPoblado'].value"
+              [idComunidadNativa]="form.controls['comunidadNativa'].value"
               (oficinaOrecSelected)="getOficinaAutorizada($event)"
             ></app-oficina-autorizada>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 col-md-4 mb-2">
-            <app-agencia>
-              <!-- #cboAgencia
-                                    [required]="true"
-                                    [idDepartamento]="form.controls['ubigeoDepartamento'].value"
-                                    [idProvincia]="form.controls['ubigeoProvincia'].value"
-                                    [idDistrito]="form.controls['ubigeoDistrito'].value"
-                                    [idCentroPoblado]="form.controls['centroPoblado'].value"--
-                                    (oficinaOrecSelected)="getOficinaAutorizada($event)">--></app-agencia
-            >
+            <app-comunidad-nativa
+              [exCentroPoblado]="exComunidadNativa"
+              [encontrado]="registroLibro"
+              #cboComunidadNativa
+              [departamentoEncontrado]="departamento"
+              [provinciaEncontrado]="provincia"
+              [distritoEncontrado]="distrito"
+              [centroEncontrado]="centroPoblado"
+              [idDepartamento]="form.controls['ubigeoDepartamento'].value"
+              [idProvincia]="form.controls['ubigeoProvincia'].value"
+              [idDistrito]="form.controls['ubigeoDistrito'].value"
+              (ubigeoSelected)="getComunidadNativa($event)"
+              (selected)="existsComunidadNativa($event)"
+            ></app-comunidad-nativa>
           </div>
           <div class="col-sm-12 col-md-4 mb-2">
-            <app-comunidad></app-comunidad>
-          </div>
-          <div class="col-sm-12 col-md-4 mb-2">
-            <app-oficina-auxiliar></app-oficina-auxiliar>
+            <app-unidad-organica></app-unidad-organica>
           </div>
         </div>
 

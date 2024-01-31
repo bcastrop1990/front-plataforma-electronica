@@ -5,10 +5,8 @@ import { environment } from 'src/environments/environment';
 import { UtilService } from '../../../shared/services/util.service';
 import { UbigeoComponent } from '../ubigeo/ubigeo.component';
 import { CentroProbladoComponent } from '../centro-problado/centro-problado.component';
-import { ComunidadComponent } from '../comunidad/comunidad.component';
-import { OficinaAuxiliarComponent } from '../oficina-auxiliar/oficina-auxiliar.component';
 import { OficinaAutorizadaComponent } from '../oficina-autorizada/oficina-autorizada.component';
-import { AgenciaComponent } from '../agencia/agencia.component';
+import { ComunidadNativaComponent } from '../comunidad-nativa/comunidad-nativa.component';
 
 @Component({
   selector: 'app-datos-oficina-autorizada',
@@ -26,16 +24,17 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
   centroPoblado!: string;
   ofiAutorizada!: string;
 
+  exCentroPoblado: boolean = false;
+  exComunidadNativa: boolean = false;
+
   @Input() registroLibro: boolean = false;
 
   @ViewChild('cboUbigeo') cboUbigeo!: UbigeoComponent;
   @ViewChild('cboCentroPoblado') cboCentroPoblado!: CentroProbladoComponent;
-  @ViewChild('cboComunidad') cboComunidad!: ComunidadComponent;
-  @ViewChild('cboOficinaAuxiliar')
-  cboOficinaAuxiliar!: OficinaAuxiliarComponent;
+  @ViewChild('cboComunidadNativa')
+  cboComunidadNativa!: ComunidadNativaComponent;
   @ViewChild('cboOficinaAutorizada')
   cboOficinaAutorizada!: OficinaAutorizadaComponent;
-  @ViewChild('cboAgencia') cboAgencia!: AgenciaComponent;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,6 +50,7 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
       ubigeoProvincia: [''],
       ubigeoDistrito: [''],
       centroPoblado: [''],
+      comunidadNativa: [''],
       oficinaAutorizada: ['', [Validators.required]],
     });
   }
@@ -80,7 +80,19 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
     this.form.controls['centroPoblado'].setValue(ubigeo);
   }
 
+  getComunidadNativa(ubigeo: string) {
+    this.form.controls['comunidadNativa'].setValue(ubigeo);
+  }
+
   getOficinaAutorizada(idOficinaOrec: string) {
     this.form.controls['oficinaAutorizada'].setValue(idOficinaOrec);
+  }
+
+  existsCentroPoblado(value: boolean) {
+    this.exComunidadNativa = value;
+  }
+
+  existsComunidadNativa(value: boolean) {
+    this.exCentroPoblado = value;
   }
 }

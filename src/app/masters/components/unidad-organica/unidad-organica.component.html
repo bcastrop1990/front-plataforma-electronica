@@ -1,14 +1,12 @@
 <form [formGroup]="form">
-  <label>Centro Poblado:</label>
+  <label>Unidad Organica:</label>
   <mat-form-field appearance="outline" class="w-100">
     <mat-select
       formControlName="sUbigeo"
       #cbo
       (selectionChange)="emitCentroPoblado(cbo.value)"
-      (selectionChange)="emitSelected()"
       placeholder="-- Seleccione --"
       [disabled]="encontrado"
-      [disabled]="exComunidadNativa"
     >
       <mat-option [value]="">-- Seleccione --</mat-option>
       <mat-option *ngFor="let item of ubigeo" [value]="item.codigo.trim()">
