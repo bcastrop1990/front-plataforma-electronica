@@ -89,21 +89,22 @@ export class UnidadOrganicaComponent implements OnInit {
     idDistrito: string
   ): void {
     this.ubigeoService
-      .listCentroPoblado(idDepartamento, idProvincia, idDistrito)
+      .listUnidadOrganica(idDepartamento, idProvincia, idDistrito)
       .subscribe(
         (data: UbigeoOut) => {
           this.ubigeoOut = data;
+          console.log(idDepartamento, idProvincia, idDistrito);
         },
         (error) => {},
         () => {
           if (this.ubigeoOut.code !== this.environment.CODE_000) {
-            this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+            console.log(this.ubigeoOut.message);
+            // this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
+            this.encontrado = true;
             return;
           }
-
-          this.ubigeo = this.ubigeoOut.data.filter((centro) => {
-            return centro.coDeno !== '02';
-          });
+          this.ubigeo = this.ubigeoOut.data;
+          this.encontrado = false;
         }
       );
   }

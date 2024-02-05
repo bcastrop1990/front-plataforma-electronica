@@ -7,6 +7,7 @@ import { UbigeoComponent } from '../ubigeo/ubigeo.component';
 import { CentroProbladoComponent } from '../centro-problado/centro-problado.component';
 import { OficinaAutorizadaComponent } from '../oficina-autorizada/oficina-autorizada.component';
 import { ComunidadNativaComponent } from '../comunidad-nativa/comunidad-nativa.component';
+import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 
 @Component({
   selector: 'app-datos-oficina-autorizada',
@@ -39,7 +40,8 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private spinner: NgxSpinnerService,
-    public utilService: UtilService
+    public utilService: UtilService,
+    private seguridadService: SeguridadService
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +53,7 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
       ubigeoDistrito: [''],
       centroPoblado: [''],
       comunidadNativa: [''],
+      unidadOrganica: [''],
       oficinaAutorizada: ['', [Validators.required]],
     });
   }
@@ -84,6 +87,10 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
     this.form.controls['comunidadNativa'].setValue(ubigeo);
   }
 
+  getUnidadOrganica(ubigeo: string) {
+    this.form.controls['unidadOrganica'].setValue(ubigeo);
+  }
+
   getOficinaAutorizada(idOficinaOrec: string) {
     this.form.controls['oficinaAutorizada'].setValue(idOficinaOrec);
   }
@@ -94,5 +101,9 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
 
   existsComunidadNativa(value: boolean) {
     this.exCentroPoblado = value;
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 }

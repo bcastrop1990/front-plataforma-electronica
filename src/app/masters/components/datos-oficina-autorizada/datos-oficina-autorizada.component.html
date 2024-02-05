@@ -75,7 +75,7 @@
             ></app-oficina-autorizada>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="isInternal">
           <div class="col-sm-12 col-md-4 mb-2">
             <app-comunidad-nativa
               [exCentroPoblado]="exComunidadNativa"
@@ -93,7 +93,17 @@
             ></app-comunidad-nativa>
           </div>
           <div class="col-sm-12 col-md-4 mb-2">
-            <app-unidad-organica></app-unidad-organica>
+            <app-unidad-organica
+              [encontrado]="registroLibro"
+              [departamentoEncontrado]="departamento"
+              [provinciaEncontrado]="provincia"
+              [distritoEncontrado]="distrito"
+              [centroEncontrado]="centroPoblado"
+              [idDepartamento]="form.controls['ubigeoDepartamento'].value"
+              [idProvincia]="form.controls['ubigeoProvincia'].value"
+              [idDistrito]="form.controls['ubigeoDistrito'].value"
+              (ubigeoSelected)="getUnidadOrganica($event)"
+            ></app-unidad-organica>
           </div>
         </div>
 
