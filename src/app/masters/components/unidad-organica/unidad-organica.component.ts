@@ -109,8 +109,13 @@ export class UnidadOrganicaComponent implements OnInit {
   }
 
   emitSelected() {
-    this.selected.emit(true);
-    localStorage.setItem('unidadOr', '02');
+    if(this.form.controls['sUbigeo'].value === 0){
+      return;
+    }else{
+      this.selected.emit(true);
+      localStorage.setItem('unidadOr', '02');
+    }
+
   }
 
   emitCentroPoblado(value: string) {

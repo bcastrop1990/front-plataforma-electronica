@@ -137,8 +137,12 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   }
 
   emitSelected() {
+    if(this.form.controls['idOficinaAutorizada'].value === 0){
+      return;
+    }else{
     this.selected.emit(true);
     localStorage.setItem('unidadOr', '01');
+  }
   }
 
   emitOficinaAutorizada(value: string) {
