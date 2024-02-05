@@ -10,7 +10,6 @@
       [disabled]="encontrado"
       [disabled]="exUnidad"
     >
-      <mat-option [value]="">-- Seleccione --</mat-option>
       <mat-option
         *ngFor="let item of oficinasOrec"
         [value]="item.codigo.trim()"

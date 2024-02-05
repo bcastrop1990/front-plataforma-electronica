@@ -10,7 +10,6 @@
       [disabled]="encontrado"
       [disabled]="exOfa"
     >
-      <mat-option [value]="">-- Seleccione --</mat-option>
       <mat-option *ngFor="let item of ubigeo" [value]="item.codigo.trim()">
         {{ item.descripcion | uppercase }}
       </mat-option>
