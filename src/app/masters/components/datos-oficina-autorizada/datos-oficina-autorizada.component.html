@@ -59,6 +59,7 @@
           <div class="col-sm-12 col-md-8 mb-2">
             <app-oficina-autorizada
               [encontrado]="registroLibro"
+              [exUnidad]="exOfa"
               #cboOficinaAutorizada
               [required]="true"
               [departamentoEncontrado]="departamento"
@@ -72,6 +73,7 @@
               [idCentroPoblado]="form.controls['centroPoblado'].value"
               [idComunidadNativa]="form.controls['comunidadNativa'].value"
               (oficinaOrecSelected)="getOficinaAutorizada($event)"
+              (selected)="existsOficinaAutorizada($event)"
             ></app-oficina-autorizada>
           </div>
         </div>
@@ -95,6 +97,7 @@
           <div class="col-sm-12 col-md-4 mb-2">
             <app-unidad-organica
               [encontrado]="registroLibro"
+              [exOfa]="exUnidad"
               [departamentoEncontrado]="departamento"
               [provinciaEncontrado]="provincia"
               [distritoEncontrado]="distrito"
@@ -103,6 +106,7 @@
               [idProvincia]="form.controls['ubigeoProvincia'].value"
               [idDistrito]="form.controls['ubigeoDistrito'].value"
               (ubigeoSelected)="getUnidadOrganica($event)"
+              (selected)="existsUnidadOrganica($event)"
             ></app-unidad-organica>
           </div>
         </div>

@@ -45,6 +45,7 @@ export class OficinaDetalle {
   nombreDepartamento: string;
   nombreDistrito: string;
   nombreProvincia: string;
+  oraf: string;
   constructor() {
     this.codigoOrec = '';
     this.descripcionCentroPoblado = '';
@@ -52,5 +53,6 @@ export class OficinaDetalle {
     this.nombreDepartamento = '';
     this.nombreDistrito = '';
     this.nombreProvincia = '';
+    this.oraf = '';
   }
 }

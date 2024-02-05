@@ -1,12 +1,14 @@
 <form [formGroup]="form">
-  <label>Oficina Autorizada: <span *ngIf="required">(*)</span></label>
+  <label>Oficina Autorizada:</label>
   <mat-form-field appearance="outline" class="w-100">
     <mat-select
       formControlName="idOficinaAutorizada"
       #cbo
       (selectionChange)="emitOficinaAutorizada(cbo.value)"
+      (selectionChange)="emitSelected()"
       placeholder="-- Seleccione --"
       [disabled]="encontrado"
+      [disabled]="exUnidad"
     >
       <mat-option [value]="">-- Seleccione --</mat-option>
       <mat-option

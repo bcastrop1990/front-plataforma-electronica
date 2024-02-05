@@ -44,7 +44,6 @@ export class FirmaValidacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
-    this.estadoUser();
   }
 
   start(): void {
@@ -80,7 +79,12 @@ export class FirmaValidacionComponent implements OnInit {
 
     // MAPPER OF OFFICE DATA
     this.datosOficina = new DatosOficina();
-    this.datosOficina.codigoOrec = formDatosOficina.oficinaAutorizada;
+
+    if (formDatosOficina.oficinaAutorizada) {
+      this.datosOficina.codigoOrec = formDatosOficina.oficinaAutorizada;
+    } else {
+      this.datosOficina.codigoOrec = formDatosOficina.unidadOrganica;
+    }
 
     // MAPPER OF REQUEST OF VALIDATE DATA
     this.validarDatosIn = new ValidarDatosIn();
@@ -152,6 +156,7 @@ export class FirmaValidacionComponent implements OnInit {
     this.noSoyRobot = resolved;
   }
 
+  /*
   estadoUser() {
     if (this.isExternal) {
       console.log('Estamos como usuarios externos');
@@ -160,6 +165,7 @@ export class FirmaValidacionComponent implements OnInit {
       console.log('Estamos como usuarios internos');
     }
   }
+  */
 
   //Validadores de estado del usuario
 

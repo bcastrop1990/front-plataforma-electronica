@@ -25,6 +25,7 @@ export class UnidadOrganicaComponent implements OnInit {
   ubigeo!: Ubigeo[];
 
   @Input() encontrado: boolean = false;
+  @Input() exOfa: boolean = false;
 
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
@@ -37,6 +38,7 @@ export class UnidadOrganicaComponent implements OnInit {
   @Input() centroEncontrado: string = '';
 
   @Output() ubigeoSelected: EventEmitter<string> = new EventEmitter();
+  @Output() selected: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -93,20 +95,22 @@ export class UnidadOrganicaComponent implements OnInit {
       .subscribe(
         (data: UbigeoOut) => {
           this.ubigeoOut = data;
-          console.log(idDepartamento, idProvincia, idDistrito);
+          console.log(this.exOfa);
         },
         (error) => {},
         () => {
           if (this.ubigeoOut.code !== this.environment.CODE_000) {
-            console.log(this.ubigeoOut.message);
             // this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
-            this.encontrado = true;
             return;
           }
           this.ubigeo = this.ubigeoOut.data;
-          this.encontrado = false;
         }
       );
+  }
+
+  emitSelected() {
+    this.selected.emit(true);
+    localStorage.setItem('unidadOr', '02');
   }
 
   emitCentroPoblado(value: string) {

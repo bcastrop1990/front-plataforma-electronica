@@ -27,6 +27,8 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
 
   exCentroPoblado: boolean = false;
   exComunidadNativa: boolean = false;
+  exOfa: boolean = false;
+  exUnidad: boolean = false;
 
   @Input() registroLibro: boolean = false;
 
@@ -54,7 +56,7 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
       centroPoblado: [''],
       comunidadNativa: [''],
       unidadOrganica: [''],
-      oficinaAutorizada: ['', [Validators.required]],
+      oficinaAutorizada: [''],
     });
   }
 
@@ -101,6 +103,14 @@ export class DatosOficinaAutorizadaComponent implements OnInit {
 
   existsComunidadNativa(value: boolean) {
     this.exCentroPoblado = value;
+  }
+
+  existsOficinaAutorizada(value: boolean) {
+    this.exUnidad = value;
+  }
+
+  existsUnidadOrganica(value: boolean) {
+    this.exOfa = value;
   }
 
   get isInternal(): boolean {

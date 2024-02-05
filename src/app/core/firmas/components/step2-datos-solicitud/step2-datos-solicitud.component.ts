@@ -75,6 +75,9 @@ export class Step2DatosSolicitudComponent implements OnInit {
   formDetalle!: FormGroup;
 
   tipoNombreOficina: string = '';
+  tipoNombreOficina2: string = '';
+
+  esObligatorio: string = '';
 
   arrayDetalle: number[] = [];
 
@@ -180,8 +183,14 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
   tipoOficina() {
     const tipo = localStorage.getItem('comunidad');
+    const tipo2 = localStorage.getItem('unidadOr');
     this.tipoNombreOficina =
       tipo! === '02' ? 'Comunidad Nativa' : 'Centro Poblado';
+    this.tipoNombreOficina2 =
+      tipo2! === '02' ? 'Unidad Organica' : 'Oficina Autorizada';
+
+    localStorage.removeItem('comunidad');
+    localStorage.removeItem('unidadOr');
   }
 
   datosDelLs() {
@@ -193,6 +202,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
   listarOficinaDetalle(): void {
     //OBTENIENDO DATA DE LS
     const userDataString = localStorage.getItem('user');
+    localStorage.setItem('user_solicitante', userDataString!);
     const userData = JSON.parse(userDataString!);
 
     this.oficinaService
@@ -211,6 +221,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
             return;
           }
           this.oficinaDetalle = this.oficinaDetalleOut.data;
+          this.esObligatorio = this.oficinaDetalle.oraf;
           this.formDetalle.patchValue(this.oficinaDetalle);
         }
       );
@@ -263,7 +274,11 @@ export class Step2DatosSolicitudComponent implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ALTA
       ) {
-        const arrAltaRequired = ['03', '04'];
+        console.log(this.esObligatorio);
+        let arrAltaRequired = ['03', '04'];
+        if (this.esObligatorio === '1') {
+          arrAltaRequired = ['03', '04', '08'];
+        }
         const result = arrAltaRequired.filter(
           (value) =>
             !x.detalleSolicitud.detalleArchivo.some(
@@ -364,7 +379,10 @@ export class Step2DatosSolicitudComponent implements OnInit {
     this.registroFirmaInternaIn.codigoModoRegistro = 'E';
     this.registroFirmaInternaIn.detalleSolicitud = arrayDetalle;
 
-    const userDataString = localStorage.getItem('user');
+    let userDataString = localStorage.getItem('user');
+    if (this.isInternal) {
+      userDataString = localStorage.getItem('user_solicitante');
+    }
     const userData = JSON.parse(userDataString!);
 
     this.registroFirmaInternaIn.dniSolicitante = userData.dni;
@@ -418,6 +436,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
           }
         );
     }
+    localStorage.removeItem('user_solicitante');
   }
 
   btnAddDetalle(): void {

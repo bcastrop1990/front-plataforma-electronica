@@ -31,6 +31,7 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   oficinasOrec!: OficinaOrec[];
 
   @Input() encontrado: boolean = false;
+  @Input() exUnidad: boolean = false;
 
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
@@ -46,6 +47,7 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   @Input() oficinaEncontrado: string = '';
 
   @Output() oficinaOrecSelected: EventEmitter<string> = new EventEmitter();
+  @Output() selected: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -132,6 +134,11 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
         this.oficinasOrec = this.oficinaOrecOut.data;
       }
     );
+  }
+
+  emitSelected() {
+    this.selected.emit(true);
+    localStorage.setItem('unidadOr', '01');
   }
 
   emitOficinaAutorizada(value: string) {
