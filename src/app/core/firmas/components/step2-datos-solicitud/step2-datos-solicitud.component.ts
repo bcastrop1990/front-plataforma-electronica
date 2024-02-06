@@ -201,8 +201,10 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
   listarOficinaDetalle(): void {
     //OBTENIENDO DATA DE LS
-    const userDataString = localStorage.getItem('user');
-    localStorage.setItem('user_solicitante', userDataString!);
+    let userDataString = localStorage.getItem('user');
+    if (this.isInternal) {
+      userDataString = localStorage.getItem('user_solicitante');
+    }
     const userData = JSON.parse(userDataString!);
 
     this.oficinaService
