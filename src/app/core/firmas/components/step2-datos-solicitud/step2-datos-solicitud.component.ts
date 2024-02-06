@@ -240,7 +240,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
     //LISTA DE DETALLES
     arrayDetalle.forEach((item) => {
-      console.log('detalle: ' + item.idTipoSolicitud);
+      console.log('detalle: ' + JSON.stringify(item));
     });
 
     // VALIDACION 1
@@ -256,6 +256,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
     let cumpleValidaciones = true;
     component.forEach((x) => {
       if (x.form.invalid) {
+        console.log(x.form.invalid);
         x.setValidatorRequired();
         this.utilService.getAlert(
           'Aviso',

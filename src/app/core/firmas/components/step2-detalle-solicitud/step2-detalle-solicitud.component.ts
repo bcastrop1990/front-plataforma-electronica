@@ -101,10 +101,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
           ),
         ],
       ],
-      validarPrimerApellido: [
-        '',
-        [Validators.required, Validators.maxLength(40)],
-      ],
+      validarPrimerApellido: [''],
       preNombres: ['', [Validators.required, Validators.maxLength(60)]],
       primerApellido: ['', [Validators.required, Validators.maxLength(40)]],
       segundoApellido: ['', [Validators.required, Validators.maxLength(40)]],
