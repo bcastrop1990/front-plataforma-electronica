@@ -77,6 +77,7 @@ export class Step1DatosSolicitanteComponent implements OnInit {
   }
 
   lsUserExternal() {
+    if (localStorage.getItem('user_solicitante')) return;
     const userDataString = localStorage.getItem('user');
     localStorage.setItem('user_solicitante', userDataString!);
   }

@@ -101,6 +101,10 @@ export class Step2DetalleSolicitudComponent implements OnInit {
           ),
         ],
       ],
+      validarPrimerApellido: [
+        '',
+        [Validators.required, Validators.maxLength(40)],
+      ],
       preNombres: ['', [Validators.required, Validators.maxLength(60)]],
       primerApellido: ['', [Validators.required, Validators.maxLength(40)]],
       segundoApellido: ['', [Validators.required, Validators.maxLength(40)]],
@@ -266,14 +270,11 @@ export class Step2DetalleSolicitudComponent implements OnInit {
           let persona = data.data;
           // Convertir ambos apellidos a mayúsculas antes de comparar
 
-            this.form.controls['preNombres'].setValue(persona.preNombre);
-            this.form.controls['segundoApellido'].setValue(
-              persona.segundoApellido
-            );
-            this.form.controls['primerApellido'].setValue(
-              persona.primerApellido
-            );
-
+          this.form.controls['preNombres'].setValue(persona.preNombre);
+          this.form.controls['segundoApellido'].setValue(
+            persona.segundoApellido
+          );
+          this.form.controls['primerApellido'].setValue(persona.primerApellido);
         });
     }
   }
@@ -281,10 +282,11 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   validateDNI(): void {
     const dialogRef = this.dialog.open(this.dniApellidoModal);
     const dni = this.form.controls['numeroDocumento'].value;
-    const apellidoPaternoIngresado = this.form.controls['primerApellido'].value;
+    const apellidoPaternoIngresado =
+      this.form.controls['validarPrimerApellido'].value;
     const datosPersona = new PersonaIn();
     datosPersona.dni = dni;
-    console.log('ESTE ES EL DNI 2:'+ datosPersona.dni)
+    console.log('ESTE ES EL DNI 2:' + datosPersona.dni);
     datosPersona.primerApellido = apellidoPaternoIngresado.toUpperCase();
     if (dni && apellidoPaternoIngresado) {
       this.registroFirmasService
@@ -310,7 +312,12 @@ export class Step2DetalleSolicitudComponent implements OnInit {
             this.form.controls['primerApellido'].setValue(
               persona.primerApellido
             );
+
+            this.form.controls['preNombres'].disable();
+            this.form.controls['segundoApellido'].disable();
+            this.form.controls['primerApellido'].disable();
             this.dialog.closeAll();
+            this.form.controls['validarPrimerApellido'].setValue('');
           } else {
             this.utilService.getAlert(
               'Aviso',
@@ -323,6 +330,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   }
 
   openDNIValidationModal(): void {
+    if (this.form.controls['numeroDocumento'].value === '') return;
     const dialogRef = this.dialog.open(this.dniApellidoModal);
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -334,5 +342,6 @@ export class Step2DetalleSolicitudComponent implements OnInit {
 
   onNoClick(): void {
     this.dialog.closeAll();
+    this.form.controls['validarPrimerApellido'].setValue('');
   }
 }

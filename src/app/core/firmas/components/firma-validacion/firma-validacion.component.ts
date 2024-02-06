@@ -44,6 +44,12 @@ export class FirmaValidacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
+    this.removeLs();
+  }
+
+  removeLs() {
+    localStorage.removeItem('user_solicitante');
+    localStorage.removeItem('access_token_external');
   }
 
   start(): void {
