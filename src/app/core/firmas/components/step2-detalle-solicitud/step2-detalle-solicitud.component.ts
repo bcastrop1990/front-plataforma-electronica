@@ -283,7 +283,6 @@ export class Step2DetalleSolicitudComponent implements OnInit {
       this.form.controls['validarPrimerApellido'].value;
     const datosPersona = new PersonaIn();
     datosPersona.dni = dni;
-    console.log('ESTE ES EL DNI 2:' + datosPersona.dni);
     datosPersona.primerApellido = apellidoPaternoIngresado.toUpperCase();
     if (dni && apellidoPaternoIngresado) {
       this.registroFirmasService

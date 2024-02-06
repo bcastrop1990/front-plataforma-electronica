@@ -80,9 +80,7 @@ export class SeguimientoValidacionComponent implements OnInit {
     // CALL SERVICE
     this.seguimientoService.validarDatos(this.validarDatosIn).subscribe(
       (data: ValidarDatosOut) => {
-        console.log('request' + this.validarDatosIn);
         this.validarDatosOut = data;
-        console.log('response: ' + this.validarDatosOut.data);
       },
       (error) => {},
       () => {

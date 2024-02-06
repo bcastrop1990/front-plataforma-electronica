@@ -176,7 +176,6 @@ export class SeguimientoBusquedaComponent implements OnInit {
 
     this.seguimientoService.listSolicitudes(busquedaIn).subscribe(
       (data: BusquedaOut) => {
-        console.log(busquedaIn);
         this.busquedaOut = data;
       },
       (error) => {},
@@ -186,7 +185,6 @@ export class SeguimientoBusquedaComponent implements OnInit {
           return;
         }
         this.lista = this.busquedaOut.data;
-        console.log(this.lista);
         this.dataResult = new MatTableDataSource<BusquedaData>(this.lista);
         this.dataResult.sort = this.sort;
         this.length = this.busquedaOut.totalElements;

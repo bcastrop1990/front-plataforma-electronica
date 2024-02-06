@@ -95,7 +95,6 @@ export class UnidadOrganicaComponent implements OnInit {
       .subscribe(
         (data: UbigeoOut) => {
           this.ubigeoOut = data;
-          console.log(this.exOfa);
         },
         (error) => {},
         () => {
@@ -109,13 +108,12 @@ export class UnidadOrganicaComponent implements OnInit {
   }
 
   emitSelected() {
-    if(this.form.controls['sUbigeo'].value === 0){
+    if (this.form.controls['sUbigeo'].value === 0) {
       return;
-    }else{
+    } else {
       this.selected.emit(true);
       localStorage.setItem('unidadOr', '02');
     }
-
   }
 
   emitCentroPoblado(value: string) {

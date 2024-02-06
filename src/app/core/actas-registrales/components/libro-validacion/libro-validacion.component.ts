@@ -60,15 +60,13 @@ export class LibroValidacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
+    this.removeLs();
   }
 
-  //crear el token y luego evalua
-  // verificar() {
-  //   this.start();
-  //   setTimeout(() => {
-  //     this.consultarPorReg();
-  //   }, 1000);
-  // }
+  removeLs() {
+    localStorage.removeItem('user_solicitante');
+    localStorage.removeItem('access_token_external');
+  }
 
   start(): void {
     // ACCESS TO DATA OF COMPONENTS CHILDS
@@ -97,7 +95,6 @@ export class LibroValidacionComponent implements OnInit {
 
     // MAPPER OF OFFICE DATA
     this.datosOficina = new DatosOficina();
-    console.log('codigo oficina: ' + this.oficinaAutorizadaL);
     this.datosOficina.codigoOrec = this.oficinaAutorizadaL;
 
     // this.datosOficina.codigoOrec = '505120';

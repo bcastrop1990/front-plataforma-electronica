@@ -196,7 +196,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
   datosDelLs() {
     const userDataString = localStorage.getItem('user');
     const userData = JSON.parse(userDataString!);
-    console.log(userData);
   }
 
   listarOficinaDetalle(): void {
@@ -238,11 +237,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
       value.setDetalleSolicitud()
     );
 
-    //LISTA DE DETALLES
-    arrayDetalle.forEach((item) => {
-      console.log('detalle: ' + JSON.stringify(item));
-    });
-
     // VALIDACION 1
     if (arrayDetalle.length <= 0) {
       this.utilService.getAlert(
@@ -256,7 +250,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
     let cumpleValidaciones = true;
     component.forEach((x) => {
       if (x.form.invalid) {
-        console.log(x.form.invalid);
         x.setValidatorRequired();
         this.utilService.getAlert(
           'Aviso',
@@ -277,7 +270,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ALTA
       ) {
-        console.log(this.esObligatorio);
         let arrAltaRequired = ['03', '04'];
         if (this.esObligatorio === '1') {
           arrAltaRequired = ['03', '04', '08'];

@@ -45,6 +45,13 @@ export class RegistroLibroService {
     return this.http.post<RegistroLibroOut>(`${this.url}`, request);
   }
 
+  registroLibroInterno(request: RegistroLibroIn) {
+    return this.http.post<RegistroLibroOut>(
+      `${this.url}/usuario-interno`,
+      request
+    );
+  }
+
   ofinaAutorizada(dni: string, digitoVerifica: string, fechaEmision: string) {
     return this.http.get<OficinaOut>(
       `${this.url3}/?dni=${dni}&digitoVerifica=${digitoVerifica}&fechaEmision=${fechaEmision}`

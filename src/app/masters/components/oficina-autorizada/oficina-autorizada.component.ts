@@ -74,6 +74,7 @@ export class OficinaAutorizadaComponent implements OnInit, OnChanges {
   validate(): void {
     if (this.idComunidadNativa) {
       this.idCentroPoblado = this.idComunidadNativa;
+      this.encontrado = true;
     }
     if (this.oficinaEncontrado) {
       this.requestMapper(

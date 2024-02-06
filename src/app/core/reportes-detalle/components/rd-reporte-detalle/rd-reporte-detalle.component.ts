@@ -205,8 +205,6 @@ export class RdReporteDetalleComponent implements OnInit {
         //ASIGNAR VALORES
         this.listaEstadoSolicitud = this.busquedaOut.data;
 
-        console.log(this.listaEstadoSolicitud);
-
         //Validando Plazos
         this.listaEstadoSolicitud.forEach((item) => {
           if (item.fechaRecepcion && item.fechaAsignacion) {

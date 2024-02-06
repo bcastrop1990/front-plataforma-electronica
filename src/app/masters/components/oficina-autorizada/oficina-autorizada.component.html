@@ -7,8 +7,7 @@
       (selectionChange)="emitOficinaAutorizada(cbo.value)"
       (selectionChange)="emitSelected()"
       placeholder="-- Seleccione --"
-      [disabled]="encontrado"
-      [disabled]="exUnidad"
+      [disabled]="encontrado || exUnidad"
     >
       <mat-option [value]="0">-- Seleccione --</mat-option>
       <mat-option

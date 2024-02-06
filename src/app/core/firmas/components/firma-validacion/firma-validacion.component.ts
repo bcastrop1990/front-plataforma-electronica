@@ -162,17 +162,6 @@ export class FirmaValidacionComponent implements OnInit {
     this.noSoyRobot = resolved;
   }
 
-  /*
-  estadoUser() {
-    if (this.isExternal) {
-      console.log('Estamos como usuarios externos');
-    }
-    if (this.isInternal) {
-      console.log('Estamos como usuarios internos');
-    }
-  }
-  */
-
   //Validadores de estado del usuario
 
   get isExternal(): boolean {

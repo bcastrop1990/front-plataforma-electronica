@@ -48,10 +48,12 @@ import { Step2LibroDetalleComponent } from '../step2-libro-detalle/step2-libro-d
 import {
   DetalleSolicitudLibro,
   RegistroLibroIn,
+  RegistroLibroInternaIn,
   RegistroLibroOut,
   Sustento,
 } from '../../models/libro.model';
 import { RegistroLibroService } from '../../services/registro-libro.service';
+import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 
 @Component({
   selector: 'app-step2-libro-solicitud',
@@ -80,6 +82,8 @@ export class Step2LibroSolicitudComponent implements OnInit {
 
   registroLibroIn!: RegistroLibroIn;
   registroLibroOut!: RegistroLibroOut;
+
+  registroLibroIntenoIn!: RegistroLibroInternaIn;
 
   oficinaDetalleOut!: OficinaDetalleOut;
   oficinaDetalle!: OficinaDetalle;
@@ -113,7 +117,8 @@ export class Step2LibroSolicitudComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private registroLibroService: RegistroLibroService,
     private maestroService: MaestrosService,
-    private oficinaService: OficinaService
+    private oficinaService: OficinaService,
+    private seguridadService: SeguridadService
   ) {}
 
   ngOnInit(): void {
@@ -145,33 +150,40 @@ export class Step2LibroSolicitudComponent implements OnInit {
   }
 
   listarOficinaDetalle(): void {
-    this.oficinaService.listOficinaDetalle().subscribe(
-      (data: OficinaDetalleOut) => {
-        this.oficinaDetalleOut = data;
-      },
-      (error) => {},
-      () => {
-        if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.oficinaDetalleOut.message}`
+    let userDataString = localStorage.getItem('user');
+    if (this.isInternal) {
+      userDataString = localStorage.getItem('user_solicitante');
+    }
+    const userData = JSON.parse(userDataString!);
+    this.oficinaService
+      .listOficinaDetalleInterno(userData.codigoOrec)
+      .subscribe(
+        (data: OficinaDetalleOut) => {
+          this.oficinaDetalleOut = data;
+        },
+        (error) => {},
+        () => {
+          if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.oficinaDetalleOut.message}`
+            );
+            return;
+          }
+          this.oficinaDetalle = this.oficinaDetalleOut.data;
+          this.listarLenguas(this.oficinaDetalle.codigoOrec);
+          this.formDetalle.patchValue(this.oficinaDetalle);
+          this.formDetalle.controls['ubigeo'].setValue(
+            `${this.oficinaDetalle.nombreDepartamento} / ${
+              this.oficinaDetalle.nombreProvincia
+            } / ${this.oficinaDetalle.nombreDistrito} ${
+              this.oficinaDetalle?.descripcionCentroPoblado.trim()
+                ? '/ (CENTRO POBLADO)'
+                : ''
+            } ${this.oficinaDetalle.descripcionCentroPoblado}`
           );
-          return;
         }
-        this.oficinaDetalle = this.oficinaDetalleOut.data;
-        this.listarLenguas(this.oficinaDetalle.codigoOrec);
-        this.formDetalle.patchValue(this.oficinaDetalle);
-        this.formDetalle.controls['ubigeo'].setValue(
-          `${this.oficinaDetalle.nombreDepartamento} / ${
-            this.oficinaDetalle.nombreProvincia
-          } / ${this.oficinaDetalle.nombreDistrito} ${
-            this.oficinaDetalle?.descripcionCentroPoblado.trim()
-              ? '/ (CENTRO POBLADO)'
-              : ''
-          } ${this.oficinaDetalle.descripcionCentroPoblado}`
-        );
-      }
-    );
+      );
   }
 
   listarLenguas(codigo: string): void {
@@ -259,26 +271,80 @@ export class Step2LibroSolicitudComponent implements OnInit {
     this.registroLibroIn.codigoModoRegistro = 'E';
     this.registroLibroIn.detalleSolicitud = arrayDetalle;
 
-    this.registroLibroService.registroLibro(this.registroLibroIn).subscribe(
-      (data: RegistroLibroOut) => {
-        this.registroLibroOut = data;
-      },
-      (error) => {},
-      () => {
-        if (this.registroLibroOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.registroLibroOut.message}`
-          );
-          this.bolProccessing = false;
-          return;
+    //MAPPER REGISTRO - INTERNO
+    this.registroLibroIntenoIn = new RegistroLibroInternaIn();
+    const archivoSustento2 = new Array<Sustento>();
+    this.arrayFilesSustento.forEach((x) => {
+      archivoSustento2.push({
+        codigoNombre: x.idFile,
+        tipoCodigoNombre: x.fileTypeId,
+      });
+    });
+    this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
+    this.registroLibroIntenoIn.email = this.requestPaso1.email;
+    this.registroLibroIntenoIn.celular = this.requestPaso1.celular;
+    this.registroLibroIntenoIn.codigoModoRegistro = 'E';
+    this.registroLibroIntenoIn.detalleSolicitud = arrayDetalle;
+
+    let userDataString = localStorage.getItem('user');
+    if (this.isInternal) {
+      userDataString = localStorage.getItem('user_solicitante');
+    }
+    const userData = JSON.parse(userDataString!);
+
+    this.registroLibroIntenoIn.dniSolicitante = userData.dni;
+    this.registroLibroIntenoIn.preNombreSolicitante = userData.preNombre;
+    this.registroLibroIntenoIn.primerApeSolicitante = userData.primerApellido;
+    this.registroLibroIntenoIn.segundoApeSolicitante = userData.segundoApellido;
+    this.registroLibroIntenoIn.codigoOrecSolicitante = userData.codigoOrec;
+
+    if (this.isExternal) {
+      this.registroLibroService.registroLibro(this.registroLibroIn).subscribe(
+        (data: RegistroLibroOut) => {
+          this.registroLibroOut = data;
+        },
+        (error) => {},
+        () => {
+          if (this.registroLibroOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.registroLibroOut.message}`
+            );
+            this.bolProccessing = false;
+            return;
+          }
+          this.doEmmitRequestPaso2.emit(this.registroLibroOut.data);
+          // @ts-ignore
+          stepper.selected.completed = true;
+          stepper.next();
         }
-        this.doEmmitRequestPaso2.emit(this.registroLibroOut.data);
-        // @ts-ignore
-        stepper.selected.completed = true;
-        stepper.next();
-      }
-    );
+      );
+    }
+    if (this.isInternal) {
+      this.registroLibroService
+        .registroLibroInterno(this.registroLibroIntenoIn)
+        .subscribe(
+          (data: RegistroLibroOut) => {
+            this.registroLibroOut = data;
+          },
+          (error) => {},
+          () => {
+            if (this.registroLibroOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.registroLibroOut.message}`
+              );
+              this.bolProccessing = false;
+              return;
+            }
+            this.doEmmitRequestPaso2.emit(this.registroLibroOut.data);
+            // @ts-ignore
+            stepper.selected.completed = true;
+            stepper.next();
+          }
+        );
+    }
+    localStorage.removeItem('user_solicitante');
   }
 
   btnAddDetalle(): void {
@@ -317,7 +383,6 @@ export class Step2LibroSolicitudComponent implements OnInit {
     this.maestroService.listTipoArchivos(idTipoUso).subscribe(
       (data: TipoArchivoOut) => {
         this.tipoArchivoOut = data;
-        console.log(this.tipoArchivoOut);
       },
       (error) => {},
       () => {
@@ -328,5 +393,13 @@ export class Step2LibroSolicitudComponent implements OnInit {
         this.tipoArchivoSustento = this.tipoArchivoOut.data;
       }
     );
+  }
+
+  get isExternal(): boolean {
+    return !this.seguridadService.getUserInternal();
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 }

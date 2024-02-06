@@ -92,6 +92,31 @@ export class RegistroLibroIn {
   }
 }
 
+export class RegistroLibroInternaIn {
+  listArchivoSustento: Sustento[];
+  email: string;
+  celular: string;
+  codigoModoRegistro: string;
+  detalleSolicitud: DetalleSolicitudLibro[];
+  dniSolicitante: string;
+  codigoOrecSolicitante: string;
+  preNombreSolicitante: string;
+  primerApeSolicitante: string;
+  segundoApeSolicitante: string;
+  constructor() {
+    this.listArchivoSustento = new Array<Sustento>();
+    this.email = '';
+    this.celular = '';
+    this.codigoModoRegistro = '';
+    this.detalleSolicitud = new Array<DetalleSolicitudLibro>();
+    this.dniSolicitante = '';
+    this.preNombreSolicitante = '';
+    this.primerApeSolicitante = '';
+    this.segundoApeSolicitante = '';
+    this.codigoOrecSolicitante = '';
+  }
+}
+
 export class Sustento {
   codigoNombre: string;
   tipoCodigoNombre: string;
