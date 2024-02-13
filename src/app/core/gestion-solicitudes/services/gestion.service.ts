@@ -84,6 +84,12 @@ export class GestionService {
     );
   }
 
+  getDeleteFirma(nroSolicitud: string) {
+    return this.http.get<ObtenerDetalleFirmaOut>(
+      `${this.url}/solicitudes/${nroSolicitud}/firmaDelete`
+    );
+  }
+
   getAtencionSolicitud(nroSolicitud: string) {
     return this.http.get<ObtenerAtencionOut>(
       `${this.url}/solicitudes/${nroSolicitud}/atencion`

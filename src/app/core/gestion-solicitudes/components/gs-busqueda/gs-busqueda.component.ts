@@ -38,6 +38,7 @@ import { Subscription } from 'rxjs';
 import { SeguridadService } from '../../../../shared/services/seguridad.service';
 import { GsReasignarComponent } from '../gs-reasignar/gs-reasignar.component';
 import { GsModificarComponent } from '../gs-modificar/gs-modificar.component';
+import { ConfirmationModalComponent } from 'src/app/core/firmas/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-gs-busqueda',
@@ -441,6 +442,126 @@ export class GsBusquedaComponent implements OnInit {
     }
   }
 
+  btnEdit(row: BusquedaData): void {
+    if (!row.tipoRegistro) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se ha obtenido el tipo de registro.'
+      );
+      return;
+    }
+
+    // LIBRO
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
+      this.spinner.show();
+      this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleLibroOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleLibroOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleLibroOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleLibroOut.message}`
+            );
+            return;
+          }
+          this.detalleLibro = this.obtenerDetalleLibroOut.data;
+          // ENVIAR RESPONSE A MODAL DETALLE
+          this.getDetalle(
+            'Detalle de Solicitud',
+            this.detalleLibro,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+
+    // FIRMA - Muestra fomatos - FORMATO A SEGUIR
+    if (row.tipoRegistro === this.environment.TIPO_REGISTRO_FIRMA) {
+      this.spinner.show();
+      this.gestionService.getDetailFirma(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleFirmaOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleFirmaOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleFirmaOut.message}`
+            );
+            return;
+          }
+          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+
+          // ENVIAR RESPONSE A MODAL DETALLE
+          this.getDetalle(
+            'Detalle de Solicitud',
+            this.detalleFirma,
+            row.tipoRegistro
+          );
+        }
+      );
+    }
+  }
+
+  abrirModalConfirmacion(row: BusquedaData) {
+    const dialogRef = this.dialog.open(ConfirmationModalComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+
+        this.btnDeleteServicio(row);
+      } else {
+       }
+    });
+  }
+
+  //MODELO
+  btnDeleteServicio(row: BusquedaData): void {
+    if (!row.tipoRegistro) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se ha obtenido el tipo de registro.'
+      );
+
+      return;
+    }
+      this.gestionService.getDeleteFirma(row.numeroSolicitud).subscribe(
+        (data: ObtenerDetalleFirmaOut) => {
+          this.spinner.hide();
+          this.obtenerDetalleFirmaOut = data;
+        },
+        (error) => {
+          this.spinner.hide();
+        },
+        () => {
+          this.spinner.hide();
+          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+            this.utilService.getAlert(
+              `Aviso:`,
+              `${this.obtenerDetalleFirmaOut.message}`
+            );
+            return;
+          }else{
+            this.getListaBusqueda();
+          }
+          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+
+
+        }
+      );
+  }
   getDetalle(title: string, detalle: any, tipo: string) {
     return this.dialog.open(GsDetalleComponent, {
       width: '1100px',

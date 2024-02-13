@@ -315,6 +315,32 @@
                       <mat-icon fontSet="fas" fontIcon="fa-eye"></mat-icon>
                       <span class="text-button-table">Ver Detalle</span>
                     </button>
+
+                    <button
+                    tabindex="-1"
+                    mat-icon-button
+                    color="accent"
+                    title="Ver Detalle"
+                    (click)="abrirModalConfirmacion(element)"
+                    [hidden]="form.controls['codigoEstado'].value !== '1'"
+                    >
+                      <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>
+                      <span class="text-button-table">Eliminar Solicitud</span>
+                    </button>
+
+
+                    <button
+                    tabindex="-1"
+                    mat-icon-button
+                    color="accent"
+                    title="Ver Detalle"
+                    (click)="btnEdit(element)"
+                    [hidden]="form.controls['codigoEstado'].value !== '1'"
+                    >
+                      <mat-icon fontSet="fas" fontIcon="fa-pencil"></mat-icon>
+                      <span class="text-button-table">Eliminar Solicitud</span>
+                    </button>
+
                   </mat-cell>
                 </ng-container>
 
@@ -361,7 +387,7 @@
               <button
                 mat-flat-button
                 color="accent"
-                [disabled]="
+                [hidden]="
                   form.controls['codigoEstado'].value !== '3' &&
                   form.controls['codigoEstado'].value !== '5'
                 "
