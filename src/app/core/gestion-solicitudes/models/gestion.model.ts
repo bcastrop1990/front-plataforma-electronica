@@ -74,10 +74,12 @@ export class ArchivoSustento {
   codigo: string;
   nombreOriginal: string;
   tipoArchivo: string;
+  idArchivo: string;
   constructor() {
     this.codigo = '';
     this.nombreOriginal = '';
     this.tipoArchivo = '';
+    this.idArchivo = '';
   }
 }
 
@@ -159,9 +161,12 @@ export class Archivos {
   codigo: string;
   nombreOriginal: string;
   tipoArchivo: string;
+  idArchivo: string;
+
   constructor() {
     this.codigo = '';
     this.nombreOriginal = '';
     this.tipoArchivo = '';
+    this.idArchivo = '';
   }
 }

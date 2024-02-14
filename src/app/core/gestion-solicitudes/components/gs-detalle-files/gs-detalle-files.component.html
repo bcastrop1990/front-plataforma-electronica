@@ -10,7 +10,7 @@
           <div class="col-sm-12 col-md-2">Formato</div>
         </div>
         <div class="row mb-2" *ngFor="let file of dataDialog.files">
-          <div class="col-sm-12 col-md-6">
+          <div class="col-sm-12 col-md-4">
             <div class="custom-cell">{{ file.tipoArchivo }}</div>
           </div>
           <div class="col-sm-12 col-md-6">
@@ -21,6 +21,19 @@
                 >{{ file.nombreOriginal }}</a
               >
             </div>
+          </div>
+          <div
+            class="col-sm-12 col-md-2 mt-1"
+            *ngIf="dataDialog.editar == '01'"
+          >
+            <button
+              tabindex="-1"
+              mat-flat-button
+              color="accent"
+              (click)="btnBorrarDetalle(file.idArchivo)"
+            >
+              X
+            </button>
           </div>
         </div>
       </ng-container>

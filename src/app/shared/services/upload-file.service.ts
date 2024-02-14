@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DeleteOut, GetFileOut, UploadOut } from '../models/upload-file.model';
+import {
+  DeleteOut,
+  GetFileOut,
+  RemoveOut,
+  UploadOut,
+} from '../models/upload-file.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +28,17 @@ export class UploadFileService {
 
   getFile(codigo: string) {
     return this.http.get<GetFileOut>(`${this.url}/${codigo}`);
+  }
+
+  removeSustento(codigo: string) {
+    return this.http.get<RemoveOut>(
+      `${this.url}/eliminarArchivoSustento/${codigo}/firma`
+    );
+  }
+
+  removeDetalle(codigo: string) {
+    return this.http.get<RemoveOut>(
+      `${this.url}/eliminarArchivoDetalle/${codigo}/firma`
+    );
   }
 }

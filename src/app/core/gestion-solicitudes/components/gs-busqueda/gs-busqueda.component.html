@@ -317,30 +317,28 @@
                     </button>
 
                     <button
-                    tabindex="-1"
-                    mat-icon-button
-                    color="accent"
-                    title="Ver Detalle"
-                    (click)="abrirModalConfirmacion(element)"
-                    [hidden]="form.controls['codigoEstado'].value !== '1'"
+                      tabindex="-1"
+                      mat-icon-button
+                      color="accent"
+                      title="Eliminar"
+                      (click)="abrirModalConfirmacion(element)"
+                      [hidden]="form.controls['codigoEstado'].value !== '1'"
                     >
                       <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>
-                      <span class="text-button-table">Eliminar Solicitud</span>
+                      <span class="text-button-table">Eliminar</span>
                     </button>
-
 
                     <button
-                    tabindex="-1"
-                    mat-icon-button
-                    color="accent"
-                    title="Ver Detalle"
-                    (click)="btnEdit(element)"
-                    [hidden]="form.controls['codigoEstado'].value !== '1'"
+                      tabindex="-1"
+                      mat-icon-button
+                      color="accent"
+                      title="Editar"
+                      (click)="btnEdit(element)"
+                      [hidden]="form.controls['codigoEstado'].value !== '1'"
                     >
                       <mat-icon fontSet="fas" fontIcon="fa-pencil"></mat-icon>
-                      <span class="text-button-table">Eliminar Solicitud</span>
+                      <span class="text-button-table">Editar</span>
                     </button>
-
                   </mat-cell>
                 </ng-container>
 

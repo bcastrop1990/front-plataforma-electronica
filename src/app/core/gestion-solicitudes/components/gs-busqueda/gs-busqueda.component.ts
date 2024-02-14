@@ -39,6 +39,7 @@ import { SeguridadService } from '../../../../shared/services/seguridad.service'
 import { GsReasignarComponent } from '../gs-reasignar/gs-reasignar.component';
 import { GsModificarComponent } from '../gs-modificar/gs-modificar.component';
 import { ConfirmationModalComponent } from 'src/app/core/firmas/components/confirmation-modal/confirmation-modal.component';
+import { GsEditarSolicitudComponent } from '../gs-editar-solicitud/gs-editar-solicitud.component';
 
 @Component({
   selector: 'app-gs-busqueda',
@@ -442,6 +443,8 @@ export class GsBusquedaComponent implements OnInit {
     }
   }
 
+  //!! ANALIZAR BTN
+
   btnEdit(row: BusquedaData): void {
     if (!row.tipoRegistro) {
       this.utilService.getAlert(
@@ -473,10 +476,11 @@ export class GsBusquedaComponent implements OnInit {
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
           // ENVIAR RESPONSE A MODAL DETALLE
-          this.getDetalle(
+          this.getEditarDetalle(
             'Detalle de Solicitud',
             this.detalleLibro,
-            row.tipoRegistro
+            row.tipoRegistro,
+            row.numeroSolicitud
           );
         }
       );
@@ -505,10 +509,11 @@ export class GsBusquedaComponent implements OnInit {
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
 
           // ENVIAR RESPONSE A MODAL DETALLE
-          this.getDetalle(
+          this.getEditarDetalle(
             'Detalle de Solicitud',
             this.detalleFirma,
-            row.tipoRegistro
+            row.tipoRegistro,
+            row.numeroSolicitud
           );
         }
       );
@@ -520,10 +525,9 @@ export class GsBusquedaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-
         this.btnDeleteServicio(row);
       } else {
-       }
+      }
     });
   }
 
@@ -537,35 +541,45 @@ export class GsBusquedaComponent implements OnInit {
 
       return;
     }
-      this.gestionService.getDeleteFirma(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleFirmaOut) => {
-          this.spinner.hide();
-          this.obtenerDetalleFirmaOut = data;
-        },
-        (error) => {
-          this.spinner.hide();
-        },
-        () => {
-          this.spinner.hide();
-          if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
-            this.utilService.getAlert(
-              `Aviso:`,
-              `${this.obtenerDetalleFirmaOut.message}`
-            );
-            return;
-          }else{
-            this.getListaBusqueda();
-          }
-          this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-
-
+    this.gestionService.getDeleteFirma(row.numeroSolicitud).subscribe(
+      (data: ObtenerDetalleFirmaOut) => {
+        this.spinner.hide();
+        this.obtenerDetalleFirmaOut = data;
+      },
+      (error) => {
+        this.spinner.hide();
+      },
+      () => {
+        this.spinner.hide();
+        if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.obtenerDetalleFirmaOut.message}`
+          );
+          return;
+        } else {
+          this.getListaBusqueda();
         }
-      );
+        this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+      }
+    );
   }
   getDetalle(title: string, detalle: any, tipo: string) {
     return this.dialog.open(GsDetalleComponent, {
       width: '1100px',
       data: { title: title, detalle: detalle, tipo: tipo },
+    });
+  }
+
+  getEditarDetalle(title: string, detalle: any, tipo: string, numero: string) {
+    return this.dialog.open(GsEditarSolicitudComponent, {
+      width: '1100px',
+      data: {
+        title: title,
+        detalle: detalle,
+        tipo: tipo,
+        nroSolicitud: numero,
+      },
     });
   }
 

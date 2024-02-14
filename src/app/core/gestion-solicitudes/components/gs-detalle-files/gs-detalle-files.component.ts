@@ -7,6 +7,7 @@ import {
 import {
   GetFileData,
   GetFileOut,
+  RemoveOut,
 } from '../../../../shared/models/upload-file.model';
 import { UtilService } from '../../../../shared/services/util.service';
 import { UploadFileService } from '../../../../shared/services/upload-file.service';
@@ -21,6 +22,8 @@ export class GsDetalleFilesComponent implements OnInit {
   environment: any;
   getFileOut!: GetFileOut;
   getFileData!: GetFileData;
+
+  removeArchivoOut!: RemoveOut;
 
   constructor(
     public dialog: MatDialogRef<GsDetalleFilesComponent>,
@@ -87,6 +90,25 @@ export class GsDetalleFilesComponent implements OnInit {
       window.URL.revokeObjectURL(linkSource);
       link.remove();
     }, 100);
+  }
+
+  btnBorrarDetalle(codigo: string) {
+    console.log(codigo);
+    this.uploadService.removeDetalle(codigo).subscribe(
+      (data: RemoveOut) => {
+        this.removeArchivoOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.removeArchivoOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.removeArchivoOut.message}`
+          );
+          return;
+        }
+      }
+    );
   }
 
   @HostListener('window:keyup.esc') onKeyUp() {

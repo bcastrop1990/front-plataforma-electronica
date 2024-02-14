@@ -1,6 +1,6 @@
-import {Result} from "../../masters/models/result.model";
+import { Result } from '../../masters/models/result.model';
 
-export class GetFileOut extends  Result {
+export class GetFileOut extends Result {
   data: GetFileData;
   constructor() {
     super();
@@ -50,5 +50,14 @@ export class FileT01 {
     this.uriDownload = '';
     this.uuidFile = '';
     // this.file = undefined;
+  }
+}
+
+export class RemoveOut {
+  code: string;
+  message: string;
+  constructor() {
+    this.code = '';
+    this.message = '';
   }
 }
