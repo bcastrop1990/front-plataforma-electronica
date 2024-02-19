@@ -90,10 +90,7 @@
                 #cboTipoRegistro
                 [label]="'Tipo de Registro'"
                 [options]="tipoRegistro"
-                [optionSelect]="!esAnalista()"
-                [select]="
-                  esAnalista() ? environment.TIPO_REGISTRO_LIBRO_ID : ''
-                "
+                [optionSelect]="esAnalista()"
                 (selected)="setTipoRegistro($event)"
               ></app-options>
             </div>
@@ -145,6 +142,7 @@
                 [optionSelect]="!esAnalista()"
                 [select]="esAnalista() ? user!.dni : ''"
                 (selected)="setAnalista($event)"
+                [hidden]="esAnalista()"
               ></app-options>
             </div>
 
@@ -280,6 +278,7 @@
                       (click)="$event.stopPropagation()"
                       (change)="$event ? selection.toggle(row) : null"
                       [checked]="selection.isSelected(row)"
+                      [hidden]="esAnalista()"
                     >
                     </mat-checkbox>
                   </mat-cell>
@@ -369,6 +368,7 @@
                 mat-flat-button
                 color="accent"
                 [disabled]="form.controls['codigoEstado'].value !== '1'"
+                [hidden]="esAnalista()"
                 (click)="btnRecepcionar()"
               >
                 Recepcionar
@@ -378,6 +378,7 @@
                 color="accent"
                 [disabled]="form.controls['codigoEstado'].value !== '2'"
                 class="ml-2"
+                [hidden]="esAnalista()"
                 (click)="btnAsignar()"
               >
                 Asignar

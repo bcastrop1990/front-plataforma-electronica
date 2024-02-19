@@ -182,6 +182,7 @@ export class GsBusquedaComponent implements OnInit {
     this.getTipoRegistro();
     this.getListaBusqueda();
     this.validarCoordinador();
+    this.habilitado();
   }
 
   validarCoordinador() {
@@ -194,6 +195,10 @@ export class GsBusquedaComponent implements OnInit {
       this.coordinador = false;
     }
     return this.user?.perfil.codigo === this.environment.PERFIL_ANALISTA;
+  }
+
+  habilitado() {
+    console.log(this.esAnalista());
   }
 
   btnClean() {
@@ -779,13 +784,8 @@ export class GsBusquedaComponent implements OnInit {
           );
           return;
         }
-        if (this.esAnalista()) {
-          this.tipoRegistro = this.tipoRegistroOut.data.filter(
-            (x) => x.codigo === this.environment.TIPO_REGISTRO_LIBRO_ID
-          );
-        } else {
-          this.tipoRegistro = this.tipoRegistroOut.data;
-        }
+
+        this.tipoRegistro = this.tipoRegistroOut.data;
       }
     );
   }
