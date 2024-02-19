@@ -128,3 +128,14 @@ button.button-custom-search {
   mat-cell:nth-of-type(10):before {content: "Seleccionar";}
   mat-cell:nth-of-type(11):before {content: "";}
 }
+
+
+.acciones-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-button-table {
+  margin-left: 8px; /* Ajusta el margen según sea necesario */
+}
