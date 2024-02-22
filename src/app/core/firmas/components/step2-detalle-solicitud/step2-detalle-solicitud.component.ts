@@ -69,6 +69,8 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.environment = environment;
 
+
+
     this.form = this.formBuilder.group({
       index: [this.index],
       idTipoSolicitud: ['', [Validators.required]],
@@ -106,6 +108,8 @@ export class Step2DetalleSolicitudComponent implements OnInit {
       primerApellido: ['', [Validators.required, Validators.maxLength(40)]],
       segundoApellido: ['', [Validators.required, Validators.maxLength(40)]],
     });
+
+
   }
 
   setValidatorRequired() {

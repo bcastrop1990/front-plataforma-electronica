@@ -7,7 +7,7 @@
         #cbo
         (selectionChange)="emitUbigeo(cbo.value)"
         placeholder="-- Seleccione --"
-        [disabled]="encontrado"
+        [disabled]="false"
       >
         <mat-option [value]="">-- Seleccione --</mat-option>
         <mat-option *ngFor="let item of ubigeo" [value]="item.codigo.trim()">

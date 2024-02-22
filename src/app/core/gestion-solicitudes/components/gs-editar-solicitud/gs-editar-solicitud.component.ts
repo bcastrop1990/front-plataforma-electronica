@@ -38,7 +38,7 @@ import { GestionService } from '../../services/gestion.service';
 })
 export class GsEditarSolicitudComponent implements OnInit {
   environment: any;
-
+  title!: string;
   form!: FormGroup;
 
   getFileOut!: GetFileOut;
@@ -82,7 +82,7 @@ export class GsEditarSolicitudComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
-
+this.title='titulo prueba';
     this.form = this.formBuilder.group({
       cantidad: ['', [Validators.required]],
       codigoLengua: ['', [Validators.required]],

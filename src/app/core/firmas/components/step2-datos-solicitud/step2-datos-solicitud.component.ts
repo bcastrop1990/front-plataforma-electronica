@@ -24,6 +24,7 @@ import {
   TipoSolicitud,
   TipoSolicitudOut,
 } from '../../models/tipo-solicitud.model';
+
 import { RegistroFirmasService } from '../../services/registro-firmas.service';
 import {
   TipoArchivo,
@@ -122,6 +123,8 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
   @ViewChildren(Step2DetalleSolicitudComponent)
   components!: QueryList<Step2DetalleSolicitudComponent>;
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -266,13 +269,18 @@ export class Step2DatosSolicitudComponent implements OnInit {
     // VALIDACIÓN 3 - ARCHIVOS POR TIPO DE SOLICITUD
     let cumpleValidacionesArchivos = true;
     component.forEach((x) => {
+    const userDataString = localStorage.getItem('user');
+    const userData = JSON.parse(userDataString!);
+
       if (
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ALTA
       ) {
         let arrAltaRequired = ['03', '04'];
-        if (this.esObligatorio === '1') {
-          arrAltaRequired = ['03', '04', '08'];
+        if (userData?.perfil !== null) {
+          if (this.esObligatorio === '1') {
+            arrAltaRequired = ['03', '04', '08'];
+          }
         }
         const result = arrAltaRequired.filter(
           (value) =>

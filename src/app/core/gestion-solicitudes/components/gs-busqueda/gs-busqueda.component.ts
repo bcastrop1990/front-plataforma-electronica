@@ -181,8 +181,8 @@ export class GsBusquedaComponent implements OnInit {
     this.getEstadosSolicitud();
     this.getTipoRegistro();
     this.getListaBusqueda();
-    this.validarCoordinador();
-    this.habilitado();
+   // this.validarCoordinador();
+    //this.habilitado();
   }
 
   validarCoordinador() {
@@ -210,9 +210,9 @@ export class GsBusquedaComponent implements OnInit {
     // this.form.controls['fechaIni'].setValue('');
     // this.form.controls['fechaFin'].setValue('');
     // this.form.controls['codigoTipoRegistro'].setValue('');
-    // this.form.controls['codigoDepartamento'].setValue('');
-    // this.form.controls['codigoProvincia'].setValue('');
-    // this.form.controls['codigoDistrito'].setValue('');
+     this.form.controls['codigoDepartamento'].setValue('');
+     this.form.controls['codigoProvincia'].setValue('');
+     this.form.controls['codigoDistrito'].setValue('');
     // this.form.controls['codigoOrec'].setValue('');
     // this.form.controls['codigoAnalistaAsignado'].setValue('');
     if (!this.esAnalista()) {
@@ -291,6 +291,21 @@ export class GsBusquedaComponent implements OnInit {
 
     this.utilService.link(
       this.environment.URL_MOD_GESTION_SOLICITUDES_ATENCION,
+      row.numeroSolicitud
+    );
+  }
+
+  btnEditar(row: BusquedaData): void {
+    if (!row.numeroSolicitud) {
+      this.utilService.getAlert(
+        'Aviso',
+        'No se ha obtenido el número de solicitud.'
+      );
+      return;
+    }
+
+    this.utilService.link(
+      this.environment.URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA,
       row.numeroSolicitud
     );
   }

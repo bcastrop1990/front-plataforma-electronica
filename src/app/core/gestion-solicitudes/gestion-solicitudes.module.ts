@@ -13,10 +13,12 @@ import { GsAnalistaComponent } from './components/gs-analista/gs-analista.compon
 import { GsDetalleComponent } from './components/gs-detalle/gs-detalle.component';
 import { GsDetalleFilesComponent } from './components/gs-detalle-files/gs-detalle-files.component';
 import { GsAtencionComponent } from './components/gs-atencion/gs-atencion.component';
+import { GsEdicionFirma2Component } from './components/gs-edicion-firma/gs-edicion-firma.component';
 import {ActasRegistralesModule} from "../actas-registrales/actas-registrales.module";
 import { GsReasignarComponent } from './components/gs-reasignar/gs-reasignar.component';
 import { GsModificarComponent } from './components/gs-modificar/gs-modificar.component';
 import { GsEditarSolicitudComponent } from './components/gs-editar-solicitud/gs-editar-solicitud.component';
+import { FirmasModule } from '../firmas/firmas.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { GsEditarSolicitudComponent } from './components/gs-editar-solicitud/gs-
     GsDetalleComponent,
     GsDetalleFilesComponent,
     GsAtencionComponent,
+    GsEdicionFirma2Component,
     GsReasignarComponent,
     GsModificarComponent,
     GsEditarSolicitudComponent,
@@ -38,7 +41,8 @@ import { GsEditarSolicitudComponent } from './components/gs-editar-solicitud/gs-
     NgxSpinnerModule,
     SharedModule,
     MastersModule,
-    ActasRegistralesModule
+    ActasRegistralesModule,
+    FirmasModule
   ],
   exports: [
     GsAnalistaComponent

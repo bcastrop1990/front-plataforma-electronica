@@ -197,7 +197,7 @@
 
                 <ng-container matColumnDef="fechaRegistro">
                   <mat-header-cell *matHeaderCellDef>
-                    Fecha Trámite
+                    Fecha Trámiteee
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">
                     {{ element?.fechaSolicitud }}
@@ -304,6 +304,22 @@
                       ></mat-icon>
                       <span class="text-button-table">Atender</span>
                     </button>
+
+
+
+                    <button
+                      tabindex="-1"
+                      mat-icon-button
+                      color="accent"
+                      title="Editar2"
+                      (click)="btnEditar(element)"
+                      [hidden]="form.controls['codigoEstado'].value !== '1'"
+                    >
+                      <mat-icon fontSet="fas" fontIcon="fa-pencil"></mat-icon>
+                      <span class="text-button-table">Editar</span>
+                    </button>
+
+
                     <button
                       tabindex="-1"
                       mat-icon-button

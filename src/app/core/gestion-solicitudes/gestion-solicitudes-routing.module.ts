@@ -4,6 +4,7 @@ import { GsBusquedaComponent } from './components/gs-busqueda/gs-busqueda.compon
 import { GsDashboardComponent } from './components/gs-dashboard/gs-dashboard.component';
 import { GuardianUserInternalGuard } from '../../shared/guards/guardian-user-internal.guard';
 import { GsAtencionComponent } from './components/gs-atencion/gs-atencion.component';
+import { GsEdicionFirma2Component } from './components/gs-edicion-firma/gs-edicion-firma.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,11 @@ const routes: Routes = [
       {
         path: 'atencion/:id',
         component: GsAtencionComponent,
+        canActivate: [GuardianUserInternalGuard],
+      },
+      {
+        path: 'edicion-firma/:id',
+        component: GsEdicionFirma2Component,
         canActivate: [GuardianUserInternalGuard],
       },
     ],

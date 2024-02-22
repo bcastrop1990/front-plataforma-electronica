@@ -1,0 +1,30 @@
+<app-heading [title]="title"></app-heading>
+
+<div class="row mt-3">
+  <div class="col-12">
+
+  </div>
+</div>
+
+<ng-container *ngFor="let item of arrayDetalle; let i = index">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 custom-card-relative">
+      <button mat-mini-fab color="accent" class="custom-button-delete" (click)="btnDeleteDetalle(item)">
+        <mat-icon fontSet="fas" fontIcon="fa-times" matTooltip="Eliminar"></mat-icon>
+      </button>
+      <app-step2-detalle-solicitud
+      [index]="i + 1"
+      #components
+      [arrayTipoSolicitud]="tiposolicitud"
+      [arrayTipoArchivoAlta]="tipoArchivoDetalleAlta"
+      [arrayTipoArchivoActualizar]="tipoArchivoDetalleActualizar"
+      ></app-step2-detalle-solicitud>
+    </div>
+  </div>
+</ng-container>
+
+<div class="row custom-padding-bottom">
+  <div class="col-sm-12 col-md-12 mt-3 d-flex justify-content-end">
+    <button mat-stroked-button color="accent" (click)="btnCancelar()">Cancelar</button>
+   </div>
+</div>
