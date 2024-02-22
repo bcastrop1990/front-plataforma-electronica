@@ -31,8 +31,6 @@ import { ValidacionRegCivilModalComponent } from './components/validacion-reg-ci
   ],
   exports: [
     Step1DatosSolicitanteComponent,
-    Step3SolicitudGeneradaComponent,
-    Step2DatosSolicitudComponent,
     Step2DetalleSolicitudComponent
   ],
   imports: [

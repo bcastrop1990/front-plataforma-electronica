@@ -15,7 +15,7 @@ export class FirmaDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
-    this.title = 'Registro de Firmassss';
+    this.title = 'Registro de Firmas';
   }
 
 }

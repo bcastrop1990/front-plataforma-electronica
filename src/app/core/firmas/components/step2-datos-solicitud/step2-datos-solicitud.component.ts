@@ -24,7 +24,6 @@ import {
   TipoSolicitud,
   TipoSolicitudOut,
 } from '../../models/tipo-solicitud.model';
-
 import { RegistroFirmasService } from '../../services/registro-firmas.service';
 import {
   TipoArchivo,
@@ -123,8 +122,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
 
   @ViewChildren(Step2DetalleSolicitudComponent)
   components!: QueryList<Step2DetalleSolicitudComponent>;
-
-
 
   constructor(
     private formBuilder: FormBuilder,
