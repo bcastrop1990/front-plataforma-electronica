@@ -71,6 +71,8 @@ this.formDetalle = this.formBuilder.group({
     this.listarTipoSolicitud();
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA);
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR);
+    this.formDetalle.disable();
+
   }
 
 
@@ -182,5 +184,7 @@ this.formDetalle = this.formBuilder.group({
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
-
+  btnAddDetalle(): void {
+    this.arrayDetalle.push(new DetalleSolicitudFirma());
+  }
 }

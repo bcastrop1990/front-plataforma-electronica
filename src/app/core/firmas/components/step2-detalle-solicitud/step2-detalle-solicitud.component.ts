@@ -1,3 +1,4 @@
+import { DetalleSolicitudFirma } from './../../../seguimiento/models/seguimiento.model';
 import {
   Component,
   EventEmitter,
@@ -55,6 +56,10 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   @Input() arrayTipoArchivoAlta!: TipoArchivo[] | [];
   @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
+
+  //bcastro:  se agrega el array para llenar el detalle de la firma
+  @Input() detalleSolicitudFirma!: DetalleSolicitudFirma;
+
   @ViewChild('filesTipoSolicitud')
   uploadFileTipoSolicitud!: UploadFileComponent;
   @ViewChild('dniApellidoModal') dniApellidoModal!: TemplateRef<any>;
@@ -106,6 +111,16 @@ export class Step2DetalleSolicitudComponent implements OnInit {
       primerApellido: ['', [Validators.required, Validators.maxLength(40)]],
       segundoApellido: ['', [Validators.required, Validators.maxLength(40)]],
     });
+
+    //bcastro - inicio: se agrega el detalle de la firma, que llega desde la edicion de firma
+    if(this.detalleSolicitudFirma){
+       this.form.patchValue(this.detalleSolicitudFirma);
+       this.form.controls['idTipoSolicitud'].setValue(Number(
+        this.detalleSolicitudFirma.idTipoSolicitud.trim())
+      );    }
+    //bcastro- fin: se agrega el detalle de la firma, que llega desde la edicion de firma
+
+
   }
 
   setValidatorRequired() {
