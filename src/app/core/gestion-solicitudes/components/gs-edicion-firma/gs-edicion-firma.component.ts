@@ -13,6 +13,9 @@ import { RegistroFirmasService } from 'src/app/core/firmas/services/registro-fir
 import { TipoArchivo, TipoArchivoOut } from 'src/app/masters/models/maestro.model';
 import { MaestrosService } from 'src/app/masters/services/maestros.service';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
+import {
+  List,
+} from '../../../../shared/components/upload-file/upload-file.component';  //bcastro- inicio: se agrego para el sustento del detalle
 
 @Component({
   selector: 'app-gs-edicion-firma',
@@ -40,6 +43,10 @@ export class GsEdicionFirma2Component implements OnInit{
   tipoArchivoOut!: TipoArchivoOut;
   tipoArchivoSustento!: TipoArchivo[];
   tipoArchivoDetalleActualizar!: TipoArchivo[];
+  //bcastro- inicio: se agrego para el sustento del detalle
+  typesAllowed = ['pdf'];
+  arrayFilesSustento!: List[];
+  //bcastro- fin: se agrego para el sustento del detalle
 
 constructor(
   public utilService: UtilService,
@@ -69,12 +76,22 @@ this.formDetalle = this.formBuilder.group({
   }
 });
     this.listarTipoSolicitud();
+    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_SUSTENTO);
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA);
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR);
     this.formDetalle.disable();
 
   }
 
+  //bcastro- inicio: se agrego para el sustento del detalle
+  showResponse(message: string) {
+    this.utilService.getAlert('Aviso', message);
+  }
+  getFilesArray(arr: List[]): void {
+    //RECIBIENDO ARCHIVO
+    this.arrayFilesSustento = arr;
+  }
+  //bcastro - fin: se agrego para el sustento del detalle
 
   btnDeleteDetalle(item: DetalleSolicitudFirma): void {
     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);

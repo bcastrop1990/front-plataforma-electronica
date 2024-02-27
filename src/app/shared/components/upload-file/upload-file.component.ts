@@ -95,6 +95,16 @@ export class UploadFileComponent implements OnInit, OnChanges {
     }
     this.setActivateValidation();
     this.lastAttachUplaoding = false;
+
+    if(this.arrayTipoArchivo){
+      console.log('entro aquiiiiiieee: ');
+
+      this.arrayTipoArchivo.forEach((item) => {
+        console.log('arrayTipoArchivo.codigo: '+item.codigo);
+        console.log('arrayTipoArchivo.descripcion: '+item.descripcion);
+
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

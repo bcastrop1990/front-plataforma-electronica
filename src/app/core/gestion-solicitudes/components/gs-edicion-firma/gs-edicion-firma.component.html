@@ -65,6 +65,33 @@
         </button>
       </div>
     </div>
+
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <h2>Detalle de Sustento</h2>
+      </div>
+    </div>
+
+    <app-upload-file
+      #fileSustento
+      [addLabel]="'Agregar archivo'"
+      [textHelp]="
+        'Peso máximo de archivo 1 mb - Formatos: ' + typesAllowed.toString()
+      "
+      [minRequired]="1"
+      [maxPermitted]="3"
+      [fileMaxSize]="1050000"
+      [fileTypeAllowed]="typesAllowed"
+      [textRequired]="'Debe adjuntar mínimo 1 archivo'"
+      [requiredTipoArchivo]="true"
+      [arrayTipoArchivo]="tipoArchivoSustento"
+      (doResponseMaxAllowed)="showResponse($event)"
+      (doRefreshData)="getFilesArray($event)"
+    >
+    </app-upload-file>
+
+
 </mat-card-content>
 </mat-card>
 
