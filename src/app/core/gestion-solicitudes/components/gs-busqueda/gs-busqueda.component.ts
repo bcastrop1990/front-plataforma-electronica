@@ -799,8 +799,7 @@ export class GsBusquedaComponent implements OnInit {
           );
           return;
         }
-
-        this.tipoRegistro = this.tipoRegistroOut.data;
+         this.tipoRegistro = this.tipoRegistroOut.data;
       }
     );
   }

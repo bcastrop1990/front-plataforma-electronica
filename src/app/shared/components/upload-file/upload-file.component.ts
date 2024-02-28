@@ -71,7 +71,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
   inputDisable: boolean = true;
 
   lastAttachUplaoding!: boolean;
-
+  arrayArchivoDetalleEliminar!: Archivos[];
   constructor(
     private formBuilder: FormBuilder,
     private storageService: UploadFileService,
@@ -311,7 +311,15 @@ export class UploadFileComponent implements OnInit, OnChanges {
       '¿Desea eliminar el archivo?'
     );
     if(this.arrayArchivoDetalle){
-      modalChangePassword.afterClosed().subscribe((result) => {
+
+      for (let i = 0; i < this.arrayArchivoDetalle.length; i++) {
+         if (this.arrayArchivoDetalle[i].idArchivo === file.idFile) {
+           this.arrayArchivoDetalleEliminar.push(this.arrayArchivoDetalle[i]);
+           break;
+        }
+      }
+
+      /*modalChangePassword.afterClosed().subscribe((result) => {
         if (result) {
           let deleteResponse: RemoveOut;
           this.storageService.removeDetalle(file.idFile).subscribe(
@@ -330,9 +338,15 @@ export class UploadFileComponent implements OnInit, OnChanges {
             }
           );
         }
-      });
+      }); */
     }else if(this.arrayArchivoSustento){
-      modalChangePassword.afterClosed().subscribe((result) => {
+      for (let i = 0; i < this.arrayArchivoSustento.length; i++) {
+        if (this.arrayArchivoSustento[i].idArchivo === file.idFile) {
+          this.arrayArchivoDetalleEliminar.push(this.arrayArchivoSustento[i]);
+          break;
+       }
+     }
+     /* modalChangePassword.afterClosed().subscribe((result) => {
         if (result) {
           let deleteResponse: RemoveOut;
           this.storageService.removeSustento(file.idFile).subscribe(
@@ -351,7 +365,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
             }
           );
         }
-      });
+      }); */
     }
      else{
       modalChangePassword.afterClosed().subscribe((result) => {
