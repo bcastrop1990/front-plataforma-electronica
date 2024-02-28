@@ -75,11 +75,14 @@ export class ArchivoSustento {
   nombreOriginal: string;
   tipoArchivo: string;
   idArchivo: string;
+  idTipoArchivo: string;
   constructor() {
     this.codigo = '';
     this.nombreOriginal = '';
     this.tipoArchivo = '';
     this.idArchivo = '';
+    this.idTipoArchivo = '';
+
   }
 }
 
@@ -97,10 +100,10 @@ export class Detalle {
 }
 
 export class Detalle2 {
-  archivoSustento: ArchivoSustento;
+  archivoSustento: ArchivoSustento[];
   ubigeo: string;
   constructor() {
-    this.archivoSustento = new ArchivoSustento();
+    this.archivoSustento = new Array<ArchivoSustento>();
     this.ubigeo = '';
   }
 }
@@ -162,11 +165,12 @@ export class Archivos {
   nombreOriginal: string;
   tipoArchivo: string;
   idArchivo: string;
-
+  idTipoArchivo: string;
   constructor() {
     this.codigo = '';
     this.nombreOriginal = '';
     this.tipoArchivo = '';
     this.idArchivo = '';
+    this.idTipoArchivo = '';
   }
 }

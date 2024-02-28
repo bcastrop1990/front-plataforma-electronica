@@ -11,18 +11,20 @@ import { FileInput, FileValidator } from 'ngx-material-file-input';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { requiredFileMinSize } from '../../helpers/requiredFileMinContentSize';
 import { requiredFileType } from '../../helpers/requireFileTypeValidator';
-import { DeleteOut, UploadOut } from '../../models/upload-file.model';
+import { DeleteOut, RemoveOut, UploadOut } from '../../models/upload-file.model';
 import { UploadFileService } from '../../services/upload-file.service';
 import { UtilService } from '../../services/util.service';
 import { environment } from '../../../../environments/environment';
 import { TipoArchivo } from '../../../masters/models/maestro.model';
+import { ArchivoSustento, Archivos } from 'src/app/core/gestion-solicitudes/models/gestion.model';
+import { ArchivoDetalle } from 'src/app/core/actas-registrales/models/libro.model';
 
 export interface List {
   idFile: string;
   fileName: string;
   fileTypeId: string;
   fileTypeDesc: string;
-  file: File;
+  file?: File;
 }
 
 @Component({
@@ -52,6 +54,12 @@ export class UploadFileComponent implements OnInit, OnChanges {
 
   @Output() doRefreshData: EventEmitter<List[]> = new EventEmitter();
   @Output() doResponseMaxAllowed: EventEmitter<string> = new EventEmitter();
+  @Input() arrayArchivoSustento!: ArchivoSustento[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
+  @Input() arrayArchivoDetalle!: Archivos[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
+
+
+  @Input() arrayTipoArchivoAlta!: TipoArchivo[] | [];
+  @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
   form!: FormGroup;
   data: List[] = [];
@@ -96,15 +104,64 @@ export class UploadFileComponent implements OnInit, OnChanges {
     this.setActivateValidation();
     this.lastAttachUplaoding = false;
 
-    if(this.arrayTipoArchivo){
-      console.log('entro aquiiiiiieee: ');
+    if(this.arrayArchivoDetalle){
+      this.arrayArchivoDetalle.forEach((item)=>{
+        this.arrayTipoArchivoAlta.forEach((tipo)=>{
+          if (item.idTipoArchivo === tipo.codigo) {
+        this.arrayTipoArchivo
+            let item2: List;
+            const fileTypeSelected =
+            this.form.controls['idTipoArchivo'].value;
+            item2 = {
+              idFile: item.idArchivo,
+              fileName: item.nombreOriginal,
+              fileTypeId: this.requiredTipoArchivo ? fileTypeSelected : '',
+              fileTypeDesc: tipo.descripcion,
+             };
+            this.postUploadSuccess(item2);
+          }
+        });
 
-      this.arrayTipoArchivo.forEach((item) => {
-        console.log('arrayTipoArchivo.codigo: '+item.codigo);
-        console.log('arrayTipoArchivo.descripcion: '+item.descripcion);
+        this.arrayTipoArchivoActualizar.forEach((tipo)=>{
+          if (item.idTipoArchivo === tipo.codigo) {
+        this.arrayTipoArchivo
+            let item2: List;
+            const fileTypeSelected =
+            this.form.controls['idTipoArchivo'].value;
+            item2 = {
+              idFile: item.idArchivo,
+              fileName: item.nombreOriginal,
+              fileTypeId: this.requiredTipoArchivo ? fileTypeSelected : '',
+              fileTypeDesc: tipo.descripcion,
+             };
+            this.postUploadSuccess(item2);
+          }
+        });
 
       });
     }
+
+    if(this.arrayArchivoSustento){
+      let descripcion
+      this.arrayArchivoSustento.forEach((item)=>{
+         this.arrayTipoArchivo.forEach((tipo)=>{
+           if (item.idTipoArchivo === tipo.codigo) {
+            let item2: List;
+            const fileTypeSelected =
+            this.form.controls['idTipoArchivo'].value;
+            item2 = {
+              idFile: item.idArchivo,
+              fileName: item.nombreOriginal,
+              fileTypeId: this.requiredTipoArchivo ? fileTypeSelected : '',
+              fileTypeDesc: tipo.descripcion,
+             };
+            this.postUploadSuccess(item2);
+          }
+        });
+
+      });
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -249,34 +306,82 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   delete(file: List) {
-    const modalChangePassword = this.utilService.getConfirmation(
+     const modalChangePassword = this.utilService.getConfirmation(
       'Eliminar',
       '¿Desea eliminar el archivo?'
     );
-    modalChangePassword.afterClosed().subscribe((result) => {
-      if (result) {
-        let deleteResponse: DeleteOut;
-        this.storageService.delete(file.idFile).subscribe(
-          (data: DeleteOut) => {
-            deleteResponse = data;
-          },
-          (error) => {},
-          () => {
-            if (deleteResponse.code !== environment.CODE_000) {
-              this.utilService.getAlert('Aviso', deleteResponse.message);
-              return;
+    if(this.arrayArchivoDetalle){
+      modalChangePassword.afterClosed().subscribe((result) => {
+        if (result) {
+          let deleteResponse: RemoveOut;
+          this.storageService.removeDetalle(file.idFile).subscribe(
+            (data: RemoveOut) => {
+              deleteResponse = data;
+            },
+            (error) => {},
+            () => {
+              if (deleteResponse.code !== environment.CODE_000) {
+                this.utilService.getAlert('Aviso', deleteResponse.message);
+                return;
+              }
+              this.data.splice(this.data.indexOf(file, 0), 1);
+              this.setActivateValidation();
+              this.emitRefreshData();
             }
-            this.data.splice(this.data.indexOf(file, 0), 1);
-            this.setActivateValidation();
-            this.emitRefreshData();
-          }
-        );
-      }
-    });
+          );
+        }
+      });
+    }else if(this.arrayArchivoSustento){
+      modalChangePassword.afterClosed().subscribe((result) => {
+        if (result) {
+          let deleteResponse: RemoveOut;
+          this.storageService.removeSustento(file.idFile).subscribe(
+            (data: RemoveOut) => {
+              deleteResponse = data;
+            },
+            (error) => {},
+            () => {
+              if (deleteResponse.code !== environment.CODE_000) {
+                this.utilService.getAlert('Aviso', deleteResponse.message);
+                return;
+              }
+              this.data.splice(this.data.indexOf(file, 0), 1);
+              this.setActivateValidation();
+              this.emitRefreshData();
+            }
+          );
+        }
+      });
+    }
+     else{
+      modalChangePassword.afterClosed().subscribe((result) => {
+        if (result) {
+          let deleteResponse: DeleteOut;
+          this.storageService.delete(file.idFile).subscribe(
+            (data: DeleteOut) => {
+              deleteResponse = data;
+            },
+            (error) => {},
+            () => {
+              if (deleteResponse.code !== environment.CODE_000) {
+                this.utilService.getAlert('Aviso', deleteResponse.message);
+                return;
+              }
+              this.data.splice(this.data.indexOf(file, 0), 1);
+              this.setActivateValidation();
+              this.emitRefreshData();
+            }
+          );
+        }
+      });
+    }
+
   }
 
   downloadFile(index: number, item: List) {
-    this.genera(item.file, item.fileName);
+    if(item.file){
+      this.genera(item.file, item.fileName);
+    }
   }
 
   genera(blob: Blob, name: string) {

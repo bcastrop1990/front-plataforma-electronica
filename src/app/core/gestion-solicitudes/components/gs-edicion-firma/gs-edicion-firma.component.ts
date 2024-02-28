@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Step2DetalleSolicitudComponent } from '../../../firmas/components/step2-detalle-solicitud/step2-detalle-solicitud.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GestionService } from '../../services/gestion.service';
-import { DetalleFirma, DetalleSolicitudFirma, ObtenerDetalleFirmaOut } from '../../models/gestion.model';
+import { ArchivoSustento, Archivos, DetalleFirma, DetalleSolicitudFirma, ObtenerDetalleFirmaOut } from '../../models/gestion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Step2LibroDetalleComponent } from '../../../actas-registrales/components/step2-libro-detalle/step2-libro-detalle.component';
 import { TipoSolicitud, TipoSolicitudOut } from '../../../firmas/models/tipo-solicitud.model';
@@ -47,6 +47,11 @@ export class GsEdicionFirma2Component implements OnInit{
   typesAllowed = ['pdf'];
   arrayFilesSustento!: List[];
   //bcastro- fin: se agrego para el sustento del detalle
+  arrayArchivoSustento!: ArchivoSustento[];
+  arrayArchivoDetalle!: Archivos[];
+
+
+
 
 constructor(
   public utilService: UtilService,
@@ -72,7 +77,7 @@ this.formDetalle = this.formBuilder.group({
     this.activatedRoute.params.subscribe((params) => {
     if (params['id']) {
     this.numeroSolicitud = params['id'];
-    this.getAtender(this.numeroSolicitud);
+    this.getSolcitudFirma(this.numeroSolicitud);
   }
 });
     this.listarTipoSolicitud();
@@ -94,15 +99,15 @@ this.formDetalle = this.formBuilder.group({
   //bcastro - fin: se agrego para el sustento del detalle
 
   btnDeleteDetalle(item: DetalleSolicitudFirma): void {
-    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
+    console.log('item'+item);
+     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
     this.detalleFirma.detalleSolicitudFirma.splice(
       this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),
       1
     );
   }
 
-  getAtender(numeroSolicitud: string): void {
-    console.log('getAtender-numeroSolicitud: '+numeroSolicitud)
+  getSolcitudFirma(numeroSolicitud: string): void {
     this.spinner.show();
     this.gestionService.getDetailFirma(numeroSolicitud).subscribe(
       (data: ObtenerDetalleFirmaOut) => {
@@ -114,7 +119,6 @@ this.formDetalle = this.formBuilder.group({
       },
       () => {
         this.spinner.hide();
-        console.log('codigo servicio: '+this.obtenerDetalleFirmaOut.code);
         if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
           this.utilService.getAlert(
             `Aviso:`,
@@ -126,9 +130,8 @@ this.formDetalle = this.formBuilder.group({
         this.detalleFirma = this.obtenerDetalleFirmaOut.data;
 
         this.formDetalle.patchValue(this.detalleFirma);
-
+        this.arrayArchivoSustento=this.detalleFirma.archivoSustento
         this.detalleFirma.detalleSolicitudFirma.forEach((item) => {
-           console.log('detalleFirma.detalleSolicitudFirma: '+item);
         });
 
         if (this.detalleFirma.detalleSolicitudFirma.length > 0) {

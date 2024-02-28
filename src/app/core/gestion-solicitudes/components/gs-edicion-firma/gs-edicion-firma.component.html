@@ -53,10 +53,15 @@
           [arrayTipoArchivoAlta]="tipoArchivoDetalleAlta"
           [arrayTipoArchivoActualizar]="tipoArchivoDetalleActualizar"
           [detalleSolicitudFirma]="detalleFirma.detalleSolicitudFirma[i]"
-          ></app-step2-detalle-solicitud>
+          [arrayArchivoDetalle]="detalleFirma.detalleSolicitudFirma[i].archivos"
+          >
+        </app-step2-detalle-solicitud>
         </div>
       </div>
     </ng-container>
+
+
+
     <div class="row mb-3">
       <div class="col-sm-12 col-md-12 d-flex justify-content-end">
         <button mat-stroked-button color="accent" class="custom-button-add" (click)="btnAddDetalle()">
@@ -73,6 +78,9 @@
       </div>
     </div>
 
+
+    <ng-container *ngIf="arrayArchivoSustento">
+
     <app-upload-file
       #fileSustento
       [addLabel]="'Agregar archivo'"
@@ -88,8 +96,10 @@
       [arrayTipoArchivo]="tipoArchivoSustento"
       (doResponseMaxAllowed)="showResponse($event)"
       (doRefreshData)="getFilesArray($event)"
+      [arrayArchivoSustento]="arrayArchivoSustento"
     >
     </app-upload-file>
+  </ng-container>
 
 
 </mat-card-content>

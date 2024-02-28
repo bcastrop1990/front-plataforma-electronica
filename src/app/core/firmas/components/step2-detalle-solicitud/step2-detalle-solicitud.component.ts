@@ -29,6 +29,7 @@ import { Persona, PersonaIn, PersonaOut } from '../../models/persona.model';
 import { ValidacionRegCivilModalComponent } from '../validacion-reg-civil-modal/validacion-reg-civil-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DatosPersona } from '../../../actas-registrales/models/libro.model';
+import { Archivos as ArchivosDetalle} from 'src/app/core/gestion-solicitudes/models/gestion.model';
 
 @Component({
   selector: 'app-step2-detalle-solicitud',
@@ -59,6 +60,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
 
   //bcastro:  se agrega el array para llenar el detalle de la firma
   @Input() detalleSolicitudFirma!: DetalleSolicitudFirma;
+  @Input() arrayArchivoDetalle!: ArchivosDetalle[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
 
   @ViewChild('filesTipoSolicitud')
   uploadFileTipoSolicitud!: UploadFileComponent;
@@ -117,7 +119,9 @@ export class Step2DetalleSolicitudComponent implements OnInit {
        this.form.patchValue(this.detalleSolicitudFirma);
        this.form.controls['idTipoSolicitud'].setValue(Number(
         this.detalleSolicitudFirma.idTipoSolicitud.trim())
-      );    }
+      );
+
+    }
     //bcastro- fin: se agrega el detalle de la firma, que llega desde la edicion de firma
 
 
