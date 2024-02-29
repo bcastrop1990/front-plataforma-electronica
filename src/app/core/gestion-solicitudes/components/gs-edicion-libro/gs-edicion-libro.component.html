@@ -46,20 +46,16 @@
           <button mat-mini-fab color="accent" class="custom-button-delete" (click)="btnDeleteDetalle(item)">
             <mat-icon fontSet="fas" fontIcon="fa-times" matTooltip="Eliminar"></mat-icon>
           </button>
-          <app-step2-detalle-solicitud-editar
-          [index]="i + 1"
-          #components
-          [arrayTipoSolicitud]="tiposolicitud"
-          [arrayTipoArchivoAlta]="tipoArchivoDetalleAlta"
-          [arrayTipoArchivoActualizar]="tipoArchivoDetalleActualizar"
-          [detalleSolicitudFirma]="detalleFirma.detalleSolicitudFirma[i]"
-          >
-        </app-step2-detalle-solicitud-editar>
+          <app-step2-libro-detalle
+                [index]="i + 1"
+                [arrayLenguas]="lengua"
+                [arrayArticulos]="articulo"
+                [setDetalle]="obtenerAtencion.detalleSolicitudLibro[i]"></app-step2-libro-detalle>
         </div>
       </div>
     </ng-container>
 
-<!--[arrayArchivoDetalle]="detalleFirma.detalleSolicitudFirma[i].archivos"-->
+
 
     <div class="row mb-3">
       <div class="col-sm-12 col-md-12 d-flex justify-content-end">
@@ -104,11 +100,11 @@
 </mat-card-content>
 </mat-card>
 
+
+
 <div class="row custom-padding-bottom">
   <div class="col-sm-12 col-md-12 mt-3 d-flex justify-content-end">
     <button mat-stroked-button color="accent" (click)="btnCancelar()">Cancelar</button>
     <button mat-flat-button color="accent" class="ml-2" (click)="abrirModalConfirmacion()">Actualizar</button>
   </div>
 </div>
-
-

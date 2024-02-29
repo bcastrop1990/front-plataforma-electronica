@@ -76,6 +76,7 @@ export const environment = {
   URL_MOD_GESTION_SOLICITUDES: '/gestion-solicitudes',
   URL_MOD_GESTION_SOLICITUDES_ATENCION: '/gestion-solicitudes/atencion',
   URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA: '/gestion-solicitudes/edicion-firma',
+  URL_MOD_GESTION_SOLICITUDES_EDICION_LIBRO: '/gestion-solicitudes/edicion-libro',
   URL_MOD_REPORTES: '/reportes',
   URL_MOD_REPORTES_EXCEL: '/reportes/excel',
   URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes-excel',

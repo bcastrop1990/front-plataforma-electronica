@@ -7,19 +7,45 @@ export class ObtenerAtencionOut extends Result {
     this.data = new ObtenerAtencion();
   }
 }
+export class Detalle2 {
+  archivoSustento: ArchivoSustento[];
+  constructor() {
+    this.archivoSustento = new Array<ArchivoSustento>();
+  }
+}
 
-export class ObtenerAtencion {
+export class ArchivoSustento {
+  codigo: string;
+  nombreOriginal: string;
+  tipoArchivo: string;
+  idArchivo: string;
+  idTipoArchivo: string;
+  constructor() {
+    this.codigo = '';
+    this.nombreOriginal = '';
+    this.tipoArchivo = '';
+    this.idArchivo = '';
+    this.idTipoArchivo = '';
+
+  }
+}
+
+export class ObtenerAtencion extends Detalle2{
   codigoOrec: string;
   descripcionOrecLarga: string;
   ubigeo: string;
   detalleSolicitudLibro: DetalleSolicitudLibroRegistro[];
   constructor() {
+    super();
     this.codigoOrec = ''
     this.descripcionOrecLarga = ''
     this.ubigeo = ''
     this.detalleSolicitudLibro = new Array<DetalleSolicitudLibroRegistro>();
   }
 }
+
+
+
 
 // export class DetalleSolicitudLibro {
 //   cantidad: number;

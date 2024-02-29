@@ -4,37 +4,41 @@ import { environment } from 'src/environments/environment';
 import { Step2DetalleSolicitudComponent } from '../../../firmas/components/step2-detalle-solicitud/step2-detalle-solicitud.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GestionService } from '../../services/gestion.service';
-import { ArchivoSustento, Archivos, DetalleFirma, DetalleSolicitudFirma, ObtenerDetalleFirmaOut } from '../../models/gestion.model';
+import { ArchivoSustento, Archivos, ObtenerDetalleFirmaOut } from '../../models/gestion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Step2LibroDetalleComponent } from '../../../actas-registrales/components/step2-libro-detalle/step2-libro-detalle.component';
 import { TipoSolicitud, TipoSolicitudOut } from '../../../firmas/models/tipo-solicitud.model';
 import { ActivatedRoute } from '@angular/router';
 import { RegistroFirmasService } from 'src/app/core/firmas/services/registro-firmas.service';
-import { TipoArchivo, TipoArchivoOut } from 'src/app/masters/models/maestro.model';
+import { TipoArchivo, TipoArchivoOut,
+  Lengua,
+  LenguaOut,
+  Articulo,
+  ArticuloOut, } from 'src/app/masters/models/maestro.model';
 import { MaestrosService } from 'src/app/masters/services/maestros.service';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 import {
   List,
 } from '../../../../shared/components/upload-file/upload-file.component';  //bcastro- inicio: se agrego para el sustento del detalle
-import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { DetalleSolicitudLibroRegistro, ObtenerAtencion, ObtenerAtencionOut } from '../../models/atencion.model';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 @Component({
-  selector: 'app-gs-edicion-firma',
-  styleUrls: ['./gs-edicion-firma.component.css'],
-  templateUrl: './gs-edicion-firma.component.html',
+  selector: 'app-gs-edicion-libro',
+  styleUrls: ['./gs-edicion-libro.component.css'],
+  templateUrl: './gs-edicion-libro.component.html',
 
 })
-export class GsEdicionFirma2Component implements OnInit{
+export class GsEdicionLibroComponent implements OnInit{
   formDetalle!: FormGroup;
-  arrayDetalle :DetalleSolicitudFirma [] = [];
+  arrayDetalle: DetalleSolicitudLibroRegistro[] = [];
   tipoArchivoDetalleAlta!: TipoArchivo[];
 
   title!: string;
   environment: any;
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
-  detalleFirma!: DetalleFirma;
-  tiposolicitud!: TipoSolicitud[];
+   tiposolicitud!: TipoSolicitud[];
   @ViewChildren(Step2DetalleSolicitudComponent)
   components2!: QueryList<Step2DetalleSolicitudComponent>;
   tipoSolicitudOut!: TipoSolicitudOut;
@@ -51,10 +55,17 @@ export class GsEdicionFirma2Component implements OnInit{
   //bcastro- fin: se agrego para el sustento del detalle
   arrayArchivoSustento!: ArchivoSustento[];
   arrayArchivoDetalle!: Archivos[];
-  esNuevoDetalle!: boolean;
-  listIdDetalleSolicitudFirmaEliminar!: string[]; //lista de detalles fimas que se eliminaran
 
 
+  lenguaOut!: LenguaOut;
+  lengua!: Lengua[];
+
+  articuloOut!: ArticuloOut;
+  articulo!: Articulo[];
+
+    // ATENCION SOLICITUDES
+    obtenerAtencionOut!: ObtenerAtencionOut;
+    obtenerAtencion!: ObtenerAtencion;
 constructor(
   public utilService: UtilService,
   private spinner: NgxSpinnerService,
@@ -69,10 +80,7 @@ constructor(
 ){}
 
   ngOnInit(): void {
-
-    console.log('detalle firmas bruno 2');
-
-     this.title = 'Edición de Firma';
+     this.title = 'Edición de Libro';
 this.environment = environment;
 this.formDetalle = this.formBuilder.group({
   codigoOrec: [''],
@@ -80,18 +88,52 @@ this.formDetalle = this.formBuilder.group({
   ubigeo: [''],
 });
 
+this.formDetalle.disable;
+
+
     this.activatedRoute.params.subscribe((params) => {
     if (params['id']) {
     this.numeroSolicitud = params['id'];
-    this.getSolcitudFirma(this.numeroSolicitud);
+    this.getAtender(this.numeroSolicitud);
   }
 });
     this.listarTipoSolicitud();
-    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_SUSTENTO);
-    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA);
-    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR);
-    this.formDetalle.disable();
+    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
+    this.listarLenguas();
+    this.listarArticulos();
 
+  }
+
+  listarLenguas(): void {
+    this.maestroService.listLenguas().subscribe(
+      (data: LenguaOut) => {
+        this.lenguaOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.lenguaOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.lenguaOut.message}`);
+          return;
+        }
+        this.lengua = this.lenguaOut.data;
+      }
+    );
+  }
+
+  listarArticulos(): void {
+    this.maestroService.listArticulos().subscribe(
+      (data: ArticuloOut) => {
+        this.articuloOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.articuloOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(`Aviso:`, `${this.articuloOut.message}`);
+          return;
+        }
+        this.articulo = this.articuloOut.data;
+      }
+    );
   }
 
   //bcastro- inicio: se agrego para el sustento del detalle
@@ -104,48 +146,52 @@ this.formDetalle = this.formBuilder.group({
   }
   //bcastro - fin: se agrego para el sustento del detalle
 
-  btnDeleteDetalle(item: DetalleSolicitudFirma): void {
-    this.listIdDetalleSolicitudFirmaEliminar.push(item.idTipoSolicitud);
-    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    this.detalleFirma.detalleSolicitudFirma.splice(this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),1);
-
+  btnDeleteDetalle(item: DetalleSolicitudLibroRegistro): void {
+    console.log('item'+item);
+     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
+    this.obtenerAtencion.detalleSolicitudLibro.splice(
+      this.obtenerAtencion.detalleSolicitudLibro.indexOf(item, 0),
+      1
+    );
   }
-
-  getSolcitudFirma(numeroSolicitud: string): void {
+  getAtender(numeroSolicitud: string): void {
     this.spinner.show();
-    this.gestionService.getDetailFirma(numeroSolicitud).subscribe(
-      (data: ObtenerDetalleFirmaOut) => {
+    this.gestionService.getAtencionSolicitud(numeroSolicitud).subscribe(
+      (data: ObtenerAtencionOut) => {
         this.spinner.hide();
-        this.obtenerDetalleFirmaOut = data;
+        this.obtenerAtencionOut = data;
       },
       (error) => {
         this.spinner.hide();
       },
       () => {
         this.spinner.hide();
-        if (this.obtenerDetalleFirmaOut.code !== this.environment.CODE_000) {
+        if (this.obtenerAtencionOut.code !== this.environment.CODE_000) {
           this.utilService.getAlert(
             `Aviso:`,
-            `${this.obtenerDetalleFirmaOut.message}`
+            `${this.obtenerAtencionOut.message}`
           );
           return;
         }
+        this.obtenerAtencion = this.obtenerAtencionOut.data;
 
-        this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+        this.formDetalle.patchValue(this.obtenerAtencion);
 
-        this.formDetalle.patchValue(this.detalleFirma);
-        this.arrayArchivoSustento=this.detalleFirma.archivoSustento
-        this.detalleFirma.detalleSolicitudFirma.forEach((item) => {
+        this.obtenerAtencion.detalleSolicitudLibro.forEach((item) => {
+          console.log(item);
         });
+        this.arrayArchivoSustento=this.obtenerAtencion.archivoSustento
 
-        if (this.detalleFirma.detalleSolicitudFirma.length > 0) {
-          this.detalleFirma.detalleSolicitudFirma.forEach((x, i) => {
+        if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
+          this.obtenerAtencion.detalleSolicitudLibro.forEach((x, i) => {
             this.arrayDetalle.push(x);
           });
         }
       }
     );
   }
+
+
 
   listarTipoSolicitud(): void {
     this.registroFirmasService.listTipoSolicitud().subscribe(
@@ -208,6 +254,10 @@ this.formDetalle = this.formBuilder.group({
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
+  btnAddDetalle(): void {
+    this.arrayDetalle.push(new DetalleSolicitudLibroRegistro());
+  }
+
   abrirModalConfirmacion() {
     const dialogRef = this.dialog.open(ConfirmationModalComponent);
 
@@ -228,11 +278,5 @@ this.formDetalle = this.formBuilder.group({
 
     //servicio Eliminar detalle, archvios y sustentos
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
-  }
-
-  btnAddDetalle(): void {
-    this.esNuevoDetalle = true;
-    this.arrayDetalle.push(new DetalleSolicitudFirma());
-
   }
 }

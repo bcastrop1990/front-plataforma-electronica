@@ -14,6 +14,7 @@ import { Step1DatosSolicitanteComponent } from './components/step1-datos-solicit
 import { Step2DatosSolicitudComponent } from './components/step2-datos-solicitud/step2-datos-solicitud.component';
 import { Step3SolicitudGeneradaComponent } from './components/step3-solicitud-generada/step3-solicitud-generada.component';
 import { Step2DetalleSolicitudComponent } from './components/step2-detalle-solicitud/step2-detalle-solicitud.component';
+import { Step2DetalleSolicitudEditarComponent } from './components/step2-detalle-solicitud-editar/step2-detalle-solicitud.editar.component';
 import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
 import { ValidacionRegCivilModalComponent } from './components/validacion-reg-civil-modal/validacion-reg-civil-modal.component';
 
@@ -26,12 +27,14 @@ import { ValidacionRegCivilModalComponent } from './components/validacion-reg-ci
     Step2DatosSolicitudComponent,
     Step3SolicitudGeneradaComponent,
     Step2DetalleSolicitudComponent,
+    Step2DetalleSolicitudEditarComponent,
     ConfirmationModalComponent,
     ValidacionRegCivilModalComponent
   ],
   exports: [
     Step1DatosSolicitanteComponent,
-    Step2DetalleSolicitudComponent
+    Step2DetalleSolicitudComponent,
+    Step2DetalleSolicitudEditarComponent
   ],
   imports: [
     CommonModule,

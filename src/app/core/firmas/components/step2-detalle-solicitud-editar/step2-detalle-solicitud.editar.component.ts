@@ -1,4 +1,4 @@
-import { DetalleSolicitudFirma } from './../../../seguimiento/models/seguimiento.model';
+import { DetalleSolicitudFirma } from '../../../seguimiento/models/seguimiento.model';
 import {
   Component,
   EventEmitter,
@@ -32,11 +32,11 @@ import { DatosPersona } from '../../../actas-registrales/models/libro.model';
 import { Archivos as ArchivosDetalle} from 'src/app/core/gestion-solicitudes/models/gestion.model';
 
 @Component({
-  selector: 'app-step2-detalle-solicitud',
-  templateUrl: './step2-detalle-solicitud.component.html',
-  styleUrls: ['./step2-detalle-solicitud.component.scss'],
+  selector: 'app-step2-detalle-solicitud-editar',
+  templateUrl: './step2-detalle-solicitud-editar.component.html',
+  styleUrls: ['./step2-detalle-solicitud-editar.component.scss'],
 })
-export class Step2DetalleSolicitudComponent implements OnInit {
+export class Step2DetalleSolicitudEditarComponent implements OnInit {
   environment: any;
   form!: FormGroup;
 
@@ -60,7 +60,7 @@ export class Step2DetalleSolicitudComponent implements OnInit {
 
   //bcastro:  se agrega el array para llenar el detalle de la firma
   @Input() detalleSolicitudFirma!: DetalleSolicitudFirma;
-   arrayArchivoDetalle!: ArchivosDetalle[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
+  @Input() arrayArchivoDetalle!: ArchivosDetalle[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
 
   @ViewChild('filesTipoSolicitud')
   uploadFileTipoSolicitud!: UploadFileComponent;
@@ -118,15 +118,17 @@ export class Step2DetalleSolicitudComponent implements OnInit {
 
     //bcastro - inicio: se agrega el detalle de la firma, que llega desde la edicion de firma
     if(this.detalleSolicitudFirma){
-        this.arrayArchivoDetalle=this.detalleSolicitudFirma.archivos;
+      this.arrayArchivoDetalle=this.detalleSolicitudFirma.archivos;
 
-       this.form.patchValue(this.detalleSolicitudFirma);
-       this.form.controls['idTipoSolicitud'].setValue(Number(
-        this.detalleSolicitudFirma.idTipoSolicitud.trim())
-      );
+     this.form.patchValue(this.detalleSolicitudFirma);
+     this.form.controls['idTipoSolicitud'].setValue(Number(
+      this.detalleSolicitudFirma.idTipoSolicitud.trim())
+    );
 
-    }
+  }
     //bcastro- fin: se agrega el detalle de la firma, que llega desde la edicion de firma
+
+
   }
 
   setValidatorRequired() {

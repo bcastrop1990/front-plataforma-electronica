@@ -303,11 +303,18 @@ export class GsBusquedaComponent implements OnInit {
       );
       return;
     }
+     if(row.tipoRegistro === 'FIRMA'){
+      this.utilService.link(
+        this.environment.URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA,
+        row.numeroSolicitud
+      );
+    }else{
+      this.utilService.link(
+        this.environment.URL_MOD_GESTION_SOLICITUDES_EDICION_LIBRO,
+        row.numeroSolicitud
+      );
+    }
 
-    this.utilService.link(
-      this.environment.URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA,
-      row.numeroSolicitud
-    );
   }
 
   //INGRESANDO PARAMETROS PARA MODIFICAR
@@ -800,6 +807,10 @@ export class GsBusquedaComponent implements OnInit {
           return;
         }
          this.tipoRegistro = this.tipoRegistroOut.data;
+         this.tipoRegistro = [
+          { codigo: '', descripcion: '-- Seleccione --' },
+          ...this.tipoRegistroOut.data
+        ];
       }
     );
   }

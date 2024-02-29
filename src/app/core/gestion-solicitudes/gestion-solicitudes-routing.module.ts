@@ -5,6 +5,7 @@ import { GsDashboardComponent } from './components/gs-dashboard/gs-dashboard.com
 import { GuardianUserInternalGuard } from '../../shared/guards/guardian-user-internal.guard';
 import { GsAtencionComponent } from './components/gs-atencion/gs-atencion.component';
 import { GsEdicionFirma2Component } from './components/gs-edicion-firma/gs-edicion-firma.component';
+import { GsEdicionLibroComponent } from './components/gs-edicion-libro/gs-edicion-libro.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,11 @@ const routes: Routes = [
       {
         path: 'edicion-firma/:id',
         component: GsEdicionFirma2Component,
+        canActivate: [GuardianUserInternalGuard],
+      },
+      {
+        path: 'edicion-libro/:id',
+        component: GsEdicionLibroComponent,
         canActivate: [GuardianUserInternalGuard],
       },
     ],

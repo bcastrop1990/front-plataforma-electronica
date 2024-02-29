@@ -146,7 +146,7 @@ export class DetalleSolicitudFirma {
   preNombres: string;
   primerApellido: string;
   segundoApellido: string;
-  archivos: Archivos[];
+  archivos!: Archivos[];
   constructor() {
     this.celular = '';
     this.email = '';
