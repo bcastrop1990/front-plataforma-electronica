@@ -1,13 +1,13 @@
 import {
-  ChangeDetectionStrategy,
   Component,
+  Input,
   OnInit,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { UtilService } from '../../../../shared/services/util.service';
 import { environment } from 'src/environments/environment';
-import { Step2DetalleSolicitudComponent } from '../../../firmas/components/step2-detalle-solicitud/step2-detalle-solicitud.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GestionService } from '../../services/gestion.service';
 import {
@@ -18,7 +18,6 @@ import {
   ObtenerDetalleFirmaOut,
 } from '../../models/gestion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Step2LibroDetalleComponent } from '../../../actas-registrales/components/step2-libro-detalle/step2-libro-detalle.component';
 import {
   TipoSolicitud,
   TipoSolicitudOut,
@@ -33,9 +32,24 @@ import { MaestrosService } from 'src/app/masters/services/maestros.service';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
 import {
   List,
-} from '../../../../shared/components/upload-file/upload-file.component';  //bcastro- inicio: se agrego para el sustento del detalle
+  UploadFileComponent,
+} from '../../../../shared/components/upload-file/upload-file.component'; //bcastro- inicio: se agrego para el sustento del detalle
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Step2DetalleSolicitudEditarComponent } from 'src/app/core/firmas/components/step2-detalle-solicitud-editar/step2-detalle-solicitud.editar.component';
+import {
+  ActualizarFirmaIn,
+  DetalleSolicitud,
+  RegistroFirmaIn,
+  RegistroFirmaInternaIn,
+  RegistroFirmaOut,
+  Sustento,
+} from 'src/app/core/firmas/models/firmas.model';
+import {
+  OficinaDetalleOut,
+  OficinaDetalle,
+} from 'src/app/masters/models/oficina.model';
+import { RequestPaso1 } from 'src/app/core/firmas/components/step1-datos-solicitante/step1-datos-solicitante.component';
 
 @Component({
   selector: 'app-gs-edicion-firma',
@@ -43,80 +57,96 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './gs-edicion-firma.component.html',
 })
 export class GsEdicionFirma2Component implements OnInit {
+  title!: string;
+  environment: any;
   formDetalle!: FormGroup;
+
+  numeroSolicitud: string = '';
+
+  esObligatorio: string = '';
+
+  esNuevoDetalle!: boolean;
+
+  listIdDetalleSolicitudFirmaEliminar: string[] = [];
+
   arrayDetalle: DetalleSolicitudFirma[] = [];
   tipoArchivoDetalleAlta!: TipoArchivo[];
 
-  title!: string;
-  environment: any;
-  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
-  detalleFirma!: DetalleFirma;
-  tiposolicitud!: TipoSolicitud[];
-  @ViewChildren(Step2DetalleSolicitudComponent)
-  components2!: QueryList<Step2DetalleSolicitudComponent>;
-  tipoSolicitudOut!: TipoSolicitudOut;
-  @ViewChildren(Step2LibroDetalleComponent)
-  components!: QueryList<Step2LibroDetalleComponent>;
-
-  numeroSolicitud!: string;
-  tipoArchivoOut!: TipoArchivoOut;
-  tipoArchivoSustento!: TipoArchivo[];
-  tipoArchivoDetalleActualizar!: TipoArchivo[];
-  //bcastro- inicio: se agrego para el sustento del detalle
-  typesAllowed = ['pdf'];
-  arrayFilesSustento!: List[];
-  //bcastro- fin: se agrego para el sustento del detalle
   arrayArchivoSustento!: ArchivoSustento[];
   arrayArchivoDetalle!: Archivos[];
-  esNuevoDetalle!: boolean;
-  listIdDetalleSolicitudFirmaEliminar!: string[]; //lista de detalles fimas que se eliminaran
 
+  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
+  detalleFirma!: DetalleFirma;
 
-constructor(
-  public utilService: UtilService,
-  private spinner: NgxSpinnerService,
-  private gestionService: GestionService,
-  private formBuilder: FormBuilder,
-  private activatedRoute: ActivatedRoute,
-  private registroFirmasService: RegistroFirmasService,
-  private maestroService: MaestrosService,
-  private seguridadService: SeguridadService,
-  public dialog: MatDialog
+  tiposolicitud!: TipoSolicitud[];
+  tipoSolicitudOut!: TipoSolicitudOut;
 
-){}
+  registroFirmaIn!: RegistroFirmaIn;
+  registroFirmaOut!: RegistroFirmaOut;
 
- // ngOnInit(): void {
+  registroFirmaInternaIn!: ActualizarFirmaIn;
 
-   // console.log('detalle firmas bruno 2');
+  oficinaDetalleOut!: OficinaDetalleOut;
+  oficinaDetalle!: OficinaDetalle;
 
-     //this.title = 'Edición de Firma';
-//this.environment = environment;
-//this.formDetalle = this.formBuilder.group({
-  //codigoOrec: [''],
-  //descripcionOrecLarga: [''],
-  //ubigeo: [''],
-//});
+  tipoArchivoOut!: TipoArchivoOut;
+  tipoArchivoSustento!: TipoArchivo[];
 
+  tipoArchivoDetalleActualizar!: TipoArchivo[];
 
- // constructor(
-  //  public utilService: UtilService,
- //   private spinner: NgxSpinnerService,
- //   private gestionService: GestionService,
- //   private formBuilder: FormBuilder,
-  //  private activatedRoute: ActivatedRoute,
- //   private registroFirmasService: RegistroFirmasService,
-  ////  private maestroService: MaestrosService,
- //   private seguridadService: SeguridadService
- // ) {}
+  typesAllowed = ['pdf'];
+
+  arrayFilesSustento!: List[];
+
+  @Input() requestPaso1!: RequestPaso1;
+
+  @ViewChildren(Step2DetalleSolicitudEditarComponent)
+  components!: QueryList<Step2DetalleSolicitudEditarComponent>;
+
+  @ViewChild('fileSustento') uploadFileTipoSolicitud!: UploadFileComponent;
+
+  constructor(
+    public utilService: UtilService,
+    private spinner: NgxSpinnerService,
+    private gestionService: GestionService,
+    private formBuilder: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private registroFirmasService: RegistroFirmasService,
+    private maestroService: MaestrosService,
+    private seguridadService: SeguridadService,
+    public dialog: MatDialog
+  ) {}
+
+  abrirModalConfirmacion() {
+    const dialogRef = this.dialog.open(ConfirmationModalComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.btnActualizar();
+      } else {
+        // El usuario hizo clic en "No", cancelar la acción
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.title = 'Edición de Firma';
     this.environment = environment;
+    this.title = 'Edición de Firma';
+
     this.formDetalle = this.formBuilder.group({
       codigoOrec: [''],
       descripcionOrecLarga: [''],
       ubigeo: [''],
     });
+
+    this.formDetalle.disable();
+
+    this.listarTipoSolicitud();
+    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_SUSTENTO);
+    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA);
+    this.listarTipoArchivo(
+      this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR
+    );
 
     this.activatedRoute.params.subscribe((params) => {
       if (params['id']) {
@@ -124,39 +154,156 @@ constructor(
         this.getSolcitudFirma(this.numeroSolicitud);
       }
     });
-    this.listarTipoSolicitud();
-    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_SUSTENTO);
-    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA);
-    this.listarTipoArchivo(
-      this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR
-    );
-    this.formDetalle.disable();
   }
 
-  //bcastro- inicio: se agrego para el sustento del detalle
-  showResponse(message: string) {
-    this.utilService.getAlert('Aviso', message);
-  }
-  getFilesArray(arr: List[]): void {
-    //RECIBIENDO ARCHIVO
-    this.arrayFilesSustento = arr;
-  }
-  //bcastro - fin: se agrego para el sustento del detalle
+  btnActualizar(): void {
+    // GET ARRAY FROM CHILDREN COMPONENT
+    let component: Step2DetalleSolicitudEditarComponent[] =
+      this.components.toArray();
 
-  btnDeleteDetalle(item: DetalleSolicitudFirma): void {
-
-    this.listIdDetalleSolicitudFirmaEliminar.push(item.idTipoSolicitud);
-    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    this.detalleFirma.detalleSolicitudFirma.splice(this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),1);
-
-
-    console.log('item' + item);
-    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    this.detalleFirma.detalleSolicitudFirma.splice(
-      this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),
-      1
+    // GET ARRAY MAPPER DETALLE SOLICITUD
+    let arrayDetalle: DetalleSolicitud[] = component.map((value) =>
+      value.setDetalleSolicitud()
     );
 
+    // VALIDACION 1
+    if (arrayDetalle.length <= 0) {
+      this.utilService.getAlert(
+        'Aviso',
+        'Debe añadir por lo menos un (1) detalle de solicitud de firma.'
+      );
+      return;
+    }
+
+    // VALIDACIÓN 2 - DETALLE FORM VALID
+    let cumpleValidaciones = true;
+    component.forEach((x) => {
+      if (x.form.invalid) {
+        x.setValidatorRequired();
+        this.utilService.getAlert(
+          'Aviso',
+          `El detalle de solicitud de firma (${x.index}), no cumple con los datos requeridos.`
+        );
+        cumpleValidaciones = false;
+        return;
+      }
+    });
+    if (!cumpleValidaciones) {
+      return;
+    }
+
+    // VALIDACIÓN 3 - ARCHIVOS POR TIPO DE SOLICITUD
+    let cumpleValidacionesArchivos = true;
+    component.forEach((x) => {
+      const userDataString = localStorage.getItem('user');
+      const userData = JSON.parse(userDataString!);
+
+      if (
+        x.detalleSolicitud.idTipoSolicitud ===
+        this.environment.TIPO_SOLICITUD_ALTA
+      ) {
+        let arrAltaRequired = ['03', '04'];
+        if (userData?.perfil !== null) {
+          if (this.esObligatorio === '1') {
+            arrAltaRequired = ['03', '04', '08'];
+          }
+        }
+        const result = arrAltaRequired.filter(
+          (value) =>
+            !x.detalleSolicitud.detalleArchivo.some(
+              (obj) => obj.codigoTipoArchivo === value
+            )
+        );
+        if (result.length > 0) {
+          const missing = this.tipoArchivoDetalleAlta.filter((obj) =>
+            result.some((value) => value === obj.codigo)
+          );
+          const list = missing
+            .map((item) => `<li>${item.descripcion}</li>`)
+            .join('');
+          this.utilService.getAlert(
+            'Tipo solicitud: ALTA',
+            `En el detalle de solicitud de firma (${x.index}), debe añadir los siguientes documentos obligatorios: <ul class="mt-3">${list}</ul>`,
+            'left'
+          );
+          cumpleValidacionesArchivos = false;
+          return;
+        }
+      }
+      if (
+        x.detalleSolicitud.idTipoSolicitud ===
+        this.environment.TIPO_SOLICITUD_ACTUALIZAR
+      ) {
+        const arrActualizarRequired = ['09', '10'];
+        const result = arrActualizarRequired.filter(
+          (value) =>
+            !x.detalleSolicitud.detalleArchivo.some(
+              (obj) => obj.codigoTipoArchivo === value
+            )
+        );
+        if (result.length > 0) {
+          const missing = this.tipoArchivoDetalleActualizar.filter((obj) =>
+            result.some((value) => value === obj.codigo)
+          );
+          const list = missing
+            .map((item) => `<li>${item.descripcion}</li>`)
+            .join('');
+          this.utilService.getAlert(
+            'Tipo solicitud: ACTUALIZAR',
+            `En el detalle de solicitud de firma (${x.index}), debe añadir los siguientes documentos obligatorios: <ul class="mt-3">${list}</ul>`,
+            'left'
+          );
+          cumpleValidacionesArchivos = false;
+          return;
+        }
+      }
+    });
+    if (!cumpleValidacionesArchivos) {
+      return;
+    }
+
+    //MAPPER REGISTRO - INTERNO
+    this.registroFirmaInternaIn = new ActualizarFirmaIn();
+    const archivoSustento2 = new Array<Sustento>();
+    this.arrayFilesSustento.forEach((x) => {
+      archivoSustento2.push({
+        codigoNombre: x.idFile,
+        idArchivo: x.idArchivo,
+        tipoCodigoNombre: x.idTipoArchivo!,
+      });
+    });
+
+    this.registroFirmaInternaIn.listArchivoSustento = archivoSustento2;
+    this.registroFirmaInternaIn.codigoModoRegistro = 'I';
+    this.registroFirmaInternaIn.detalleSolicitud = arrayDetalle;
+    this.registroFirmaInternaIn.numeroSolicitud = this.numeroSolicitud;
+
+    console.log(this.registroFirmaInternaIn);
+
+    if (this.isInternal) {
+      this.registroFirmasService
+        .firmaActualizar(this.registroFirmaInternaIn)
+        .subscribe(
+          (data: RegistroFirmaOut) => {
+            this.registroFirmaOut = data;
+          },
+          (error) => {},
+          () => {
+            if (this.registroFirmaOut.code !== this.environment.CODE_000) {
+              console.log('error', this.registroFirmaOut.message);
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.registroFirmaOut.message}`
+              );
+              return;
+            }
+            // this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
+          }
+        );
+    }
+    localStorage.removeItem('user_solicitante');
+
+    // this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
   getSolcitudFirma(numeroSolicitud: string): void {
@@ -181,13 +328,15 @@ constructor(
 
         this.detalleFirma = this.obtenerDetalleFirmaOut.data;
 
+        console.log(this.detalleFirma);
+
         this.formDetalle.patchValue(this.detalleFirma);
+
         this.arrayArchivoSustento = this.detalleFirma.archivoSustento;
-        this.detalleFirma.detalleSolicitudFirma.forEach((item) => {});
 
         if (this.detalleFirma.detalleSolicitudFirma.length > 0) {
-          this.detalleFirma.detalleSolicitudFirma.forEach((x, i) => {
-            this.arrayDetalle.push(x);
+          this.detalleFirma.detalleSolicitudFirma.forEach((detalle) => {
+            this.arrayDetalle.push(detalle);
           });
         }
       }
@@ -246,39 +395,43 @@ constructor(
     );
   }
 
-  get isExternal(): boolean {
-    return !this.seguridadService.getUserInternal();
-  }
-
   btnCancelar(): void {
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
-  abrirModalConfirmacion() {
-    const dialogRef = this.dialog.open(ConfirmationModalComponent);
+  //Todo: REVISAR LOGICA - BORRA TODO
+  btnDeleteDetalle(item: DetalleSolicitudFirma): void {
+    this.listIdDetalleSolicitudFirmaEliminar.push(item.idTipoSolicitud);
+    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
+    this.detalleFirma.detalleSolicitudFirma.splice(
+      this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),
+      1
+    );
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === true) {
-        // El usuario hizo clic en "Sí", continuar con la acción
-        // ... aquí puedes poner el código para la acción siguiente
-        this.btnActualizar();
-      } else {
-        // El usuario hizo clic en "No", cancelar la acción
-      }
-    });
-  }
-
-
-  btnActualizar(): void {
-
-
-    //servicio Eliminar detalle, archvios y sustentos
-    this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
+    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
+    this.detalleFirma.detalleSolicitudFirma.splice(
+      this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),
+      1
+    );
   }
 
   btnAddDetalle(): void {
     this.esNuevoDetalle = true;
     this.arrayDetalle.push(new DetalleSolicitudFirma());
+  }
 
+  showResponse(message: string) {
+    this.utilService.getAlert('Aviso', message);
+  }
+  getFilesArray(arr: List[]): void {
+    this.arrayFilesSustento = arr;
+  }
+
+  get isExternal(): boolean {
+    return !this.seguridadService.getUserInternal();
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 }

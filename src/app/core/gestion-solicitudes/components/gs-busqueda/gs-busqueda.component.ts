@@ -181,7 +181,7 @@ export class GsBusquedaComponent implements OnInit {
     this.getEstadosSolicitud();
     this.getTipoRegistro();
     this.getListaBusqueda();
-   // this.validarCoordinador();
+    // this.validarCoordinador();
     //this.habilitado();
   }
 
@@ -210,9 +210,9 @@ export class GsBusquedaComponent implements OnInit {
     // this.form.controls['fechaIni'].setValue('');
     // this.form.controls['fechaFin'].setValue('');
     // this.form.controls['codigoTipoRegistro'].setValue('');
-     this.form.controls['codigoDepartamento'].setValue('');
-     this.form.controls['codigoProvincia'].setValue('');
-     this.form.controls['codigoDistrito'].setValue('');
+    this.form.controls['codigoDepartamento'].setValue('');
+    this.form.controls['codigoProvincia'].setValue('');
+    this.form.controls['codigoDistrito'].setValue('');
     // this.form.controls['codigoOrec'].setValue('');
     // this.form.controls['codigoAnalistaAsignado'].setValue('');
     if (!this.esAnalista()) {
@@ -303,18 +303,18 @@ export class GsBusquedaComponent implements OnInit {
       );
       return;
     }
-     if(row.tipoRegistro === 'FIRMA'){
+    if (row.tipoRegistro === 'FIRMA') {
       this.utilService.link(
         this.environment.URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA,
         row.numeroSolicitud
       );
-    }else{
+    }
+    if (row.tipoRegistro === 'LIBRO') {
       this.utilService.link(
         this.environment.URL_MOD_GESTION_SOLICITUDES_EDICION_LIBRO,
         row.numeroSolicitud
       );
     }
-
   }
 
   //INGRESANDO PARAMETROS PARA MODIFICAR
@@ -806,10 +806,10 @@ export class GsBusquedaComponent implements OnInit {
           );
           return;
         }
-         this.tipoRegistro = this.tipoRegistroOut.data;
-         this.tipoRegistro = [
+        this.tipoRegistro = this.tipoRegistroOut.data;
+        this.tipoRegistro = [
           { codigo: '', descripcion: '-- Seleccione --' },
-          ...this.tipoRegistroOut.data
+          ...this.tipoRegistroOut.data,
         ];
       }
     );

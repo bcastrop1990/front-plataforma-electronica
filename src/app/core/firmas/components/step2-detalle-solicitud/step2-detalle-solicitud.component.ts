@@ -1,12 +1,8 @@
 import { DetalleSolicitudFirma } from './../../../seguimiento/models/seguimiento.model';
 import {
   Component,
-  EventEmitter,
   Input,
-  OnChanges,
   OnInit,
-  Output,
-  SimpleChanges,
   ViewChild,
   TemplateRef,
 } from '@angular/core';
@@ -28,8 +24,7 @@ import { RegistroFirmasService } from '../../services/registro-firmas.service';
 import { Persona, PersonaIn, PersonaOut } from '../../models/persona.model';
 import { ValidacionRegCivilModalComponent } from '../validacion-reg-civil-modal/validacion-reg-civil-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { DatosPersona } from '../../../actas-registrales/models/libro.model';
-import { Archivos as ArchivosDetalle} from 'src/app/core/gestion-solicitudes/models/gestion.model';
+import { Archivos as ArchivosDetalle } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 
 @Component({
   selector: 'app-step2-detalle-solicitud',
@@ -57,11 +52,6 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   @Input() arrayTipoArchivoAlta!: TipoArchivo[] | [];
   @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
-
-  //bcastro:  se agrega el array para llenar el detalle de la firma
-  @Input() detalleSolicitudFirma!: DetalleSolicitudFirma;
-   arrayArchivoDetalle!: ArchivosDetalle[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
-
   @ViewChild('filesTipoSolicitud')
   uploadFileTipoSolicitud!: UploadFileComponent;
   @ViewChild('dniApellidoModal') dniApellidoModal!: TemplateRef<any>;
@@ -74,7 +64,6 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     console.log('detalle firmas bruno');
     this.environment = environment;
 
@@ -115,18 +104,6 @@ export class Step2DetalleSolicitudComponent implements OnInit {
       primerApellido: ['', [Validators.required, Validators.maxLength(40)]],
       segundoApellido: ['', [Validators.required, Validators.maxLength(40)]],
     });
-
-    //bcastro - inicio: se agrega el detalle de la firma, que llega desde la edicion de firma
-    if(this.detalleSolicitudFirma){
-        this.arrayArchivoDetalle=this.detalleSolicitudFirma.archivos;
-
-       this.form.patchValue(this.detalleSolicitudFirma);
-       this.form.controls['idTipoSolicitud'].setValue(Number(
-        this.detalleSolicitudFirma.idTipoSolicitud.trim())
-      );
-
-    }
-    //bcastro- fin: se agrega el detalle de la firma, que llega desde la edicion de firma
   }
 
   setValidatorRequired() {

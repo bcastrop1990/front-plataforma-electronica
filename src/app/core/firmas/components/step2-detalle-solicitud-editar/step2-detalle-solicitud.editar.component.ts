@@ -1,12 +1,8 @@
 import { DetalleSolicitudFirma } from '../../../seguimiento/models/seguimiento.model';
 import {
   Component,
-  EventEmitter,
   Input,
-  OnChanges,
   OnInit,
-  Output,
-  SimpleChanges,
   ViewChild,
   TemplateRef,
 } from '@angular/core';
@@ -28,8 +24,7 @@ import { RegistroFirmasService } from '../../services/registro-firmas.service';
 import { Persona, PersonaIn, PersonaOut } from '../../models/persona.model';
 import { ValidacionRegCivilModalComponent } from '../validacion-reg-civil-modal/validacion-reg-civil-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { DatosPersona } from '../../../actas-registrales/models/libro.model';
-import { Archivos as ArchivosDetalle} from 'src/app/core/gestion-solicitudes/models/gestion.model';
+import { Archivos as ArchivosDetalle } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 
 @Component({
   selector: 'app-step2-detalle-solicitud-editar',
@@ -44,6 +39,8 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
 
   arrayFiles!: List[];
 
+  tipoSolicitudSeleccionada: number = 0;
+
   arrayTipoArchivo: TipoArchivo[] = [];
 
   detalleSolicitud!: DetalleSolicitud;
@@ -57,10 +54,8 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   @Input() arrayTipoArchivoAlta!: TipoArchivo[] | [];
   @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
-
-  //bcastro:  se agrega el array para llenar el detalle de la firma
   @Input() detalleSolicitudFirma!: DetalleSolicitudFirma;
-  @Input() arrayArchivoDetalle!: ArchivosDetalle[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
+  arrayArchivoDetalle!: ArchivosDetalle[];
 
   @ViewChild('filesTipoSolicitud')
   uploadFileTipoSolicitud!: UploadFileComponent;
@@ -74,8 +69,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    console.log('detalle firmas bruno');
     this.environment = environment;
 
     this.form = this.formBuilder.group({
@@ -117,18 +110,19 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     });
 
     //bcastro - inicio: se agrega el detalle de la firma, que llega desde la edicion de firma
-    if(this.detalleSolicitudFirma){
-      this.arrayArchivoDetalle=this.detalleSolicitudFirma.archivos;
+    if (this.detalleSolicitudFirma) {
+      this.arrayArchivoDetalle = this.detalleSolicitudFirma.archivos;
 
-     this.form.patchValue(this.detalleSolicitudFirma);
-     this.form.controls['idTipoSolicitud'].setValue(Number(
-      this.detalleSolicitudFirma.idTipoSolicitud.trim())
-    );
-
-  }
+      this.form.patchValue(this.detalleSolicitudFirma);
+      this.form.controls['idTipoSolicitud'].setValue(
+        Number(this.detalleSolicitudFirma.idTipoSolicitud.trim())
+      );
+      this.tipoSolicitudSeleccionada = Number(
+        this.detalleSolicitudFirma.idTipoSolicitud.trim()
+      );
+    }
     //bcastro- fin: se agrega el detalle de la firma, que llega desde la edicion de firma
-
-
+    this.fnLoadTipoArchivo(this.tipoSolicitudSeleccionada);
   }
 
   setValidatorRequired() {
@@ -145,13 +139,17 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
 
     // BLOQUEAR TIPO DE SOLICITUD SI AGREGA 1 ARCHIVO O MÁS
     if (this.arrayFiles.length > 0) {
-      this.form.controls['idTipoSolicitud'].disable();
+      this.form.controls['idTipoSolicitud'].enable();
     } else {
       this.form.controls['idTipoSolicitud'].enable();
     }
   }
 
   fnLoadTipoArchivo(idTipoSolicitud: number): void {
+    if (this.tipoSolicitudSeleccionada !== 0) {
+      idTipoSolicitud = this.tipoSolicitudSeleccionada;
+    }
+
     switch (idTipoSolicitud) {
       case this.environment.TIPO_SOLICITUD_ALTA:
         this.arrayTipoArchivo = this.arrayTipoArchivoAlta;
@@ -225,16 +223,46 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     this.detalleSolicitud.segundoApellido =
       this.form.controls['segundoApellido'].value;
 
+    console.log(this.arrayArchivoDetalle);
+
     const detalleArchivo = new Array<ArchivoDetalle>();
     if (this.arrayFiles && this.arrayFiles.length > 0) {
-      this.arrayFiles.forEach((x) => {
+      this.arrayArchivoDetalle.forEach((detalle) => {
         const archivoModel = new Archivo();
-        archivoModel.codigoNombre = x.idFile;
+        archivoModel.codigoNombre = detalle.codigo;
+        archivoModel.idArchivo = detalle.idArchivo || null!;
+        archivoModel.tipoCodigoNombre = detalle.idTipoArchivo;
+        detalleArchivo.push({
+          codigoTipoArchivo: detalle.idTipoArchivo,
+          archivo: archivoModel,
+        });
+      });
+
+      this.arrayFiles = this.arrayFiles.filter((detalle) => {
+        return detalle.fileTypeId !== '';
+      });
+
+      this.arrayFiles.forEach((detalle) => {
+        const archivoModel = new Archivo();
+        archivoModel.codigoNombre = detalle.idFile;
+        archivoModel.tipoCodigoNombre = detalle.fileTypeId;
+        detalleArchivo.push({
+          codigoTipoArchivo: detalle.fileTypeId,
+          archivo: archivoModel,
+        });
+      });
+
+      /*
+      this.arrayFiles.forEach((x) => {
+        console.log(x);
+        const archivoModel = new Archivo();
+        archivoModel.idArchivo = x.idFile;
         detalleArchivo.push({
           codigoTipoArchivo: x.fileTypeId,
           archivo: archivoModel,
         });
       });
+      */
     }
 
     this.detalleSolicitud.detalleArchivo = detalleArchivo;

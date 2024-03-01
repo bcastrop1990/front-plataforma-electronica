@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  IterableDiffers,
   OnChanges,
   OnInit,
   Output,
@@ -27,6 +28,8 @@ import {
 import { ArchivoDetalle } from 'src/app/core/actas-registrales/models/libro.model';
 
 export interface List {
+  idArchivo?: string;
+  idTipoArchivo?: string;
   idFile: string;
   fileName: string;
   fileTypeId: string;
@@ -146,14 +149,15 @@ export class UploadFileComponent implements OnInit, OnChanges {
     }
 
     if (this.arrayArchivoSustento) {
-      let descripcion;
       this.arrayArchivoSustento.forEach((item) => {
         this.arrayTipoArchivo.forEach((tipo) => {
           if (item.idTipoArchivo === tipo.codigo) {
             let item2: List;
             const fileTypeSelected = this.form.controls['idTipoArchivo'].value;
             item2 = {
-              idFile: item.idArchivo,
+              idArchivo: item.idArchivo,
+              idTipoArchivo: item.idTipoArchivo,
+              idFile: item.codigo,
               fileName: item.nombreOriginal,
               fileTypeId: this.requiredTipoArchivo ? fileTypeSelected : '',
               fileTypeDesc: tipo.descripcion,
@@ -307,7 +311,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   delete(file: List) {
-    console.log(file);
     const modalChangePassword = this.utilService.getConfirmation(
       'Eliminar',
       '¿Desea eliminar el archivo?'
@@ -333,8 +336,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
         this.data.splice(this.data.indexOf(file, 0), 1);
         this.setActivateValidation();
         this.emitRefreshData();
-
-        console.log(this.arrayArchivoDetalleEliminar);
 
         //TODO: mandar array a servicio
       }

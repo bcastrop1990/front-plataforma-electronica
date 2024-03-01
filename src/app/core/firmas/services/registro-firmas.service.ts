@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import {
+  ActualizarFirmaIn,
   RegistroFirmaIn,
   RegistroFirmaOut,
   ValidarDatosIn,
@@ -38,8 +39,14 @@ export class RegistroFirmasService {
     return this.http.get<TipoSolicitudOut>(`${this.url}/tipo-solicitud`);
   }
 
+  //todo: Registrar
   registroFirma(request: RegistroFirmaIn) {
     return this.http.post<RegistroFirmaOut>(`${this.url}`, request);
+  }
+
+  //todo: Actualizar
+  firmaActualizar(request: ActualizarFirmaIn) {
+    return this.http.post<RegistroFirmaOut>(`${this.url}/actualizar`, request);
   }
 
   registroFirmaInterno(request: RegistroFirmaIn) {
@@ -59,6 +66,7 @@ export class RegistroFirmasService {
       request
     );
   }
+
   consultarPersona2(dni: string, pat: string) {
     return this.http.get<PersonaOut>(
       `${this.url}/consultar-por-datos-ruipin?dni=${dni}&apellidopat=${pat}`

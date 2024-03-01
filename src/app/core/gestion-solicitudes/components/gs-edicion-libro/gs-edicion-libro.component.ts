@@ -1,26 +1,44 @@
-import { ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { UtilService } from '../../../../shared/services/util.service';
 import { environment } from 'src/environments/environment';
 import { Step2DetalleSolicitudComponent } from '../../../firmas/components/step2-detalle-solicitud/step2-detalle-solicitud.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GestionService } from '../../services/gestion.service';
-import { ArchivoSustento, Archivos, ObtenerDetalleFirmaOut } from '../../models/gestion.model';
+import {
+  ArchivoSustento,
+  Archivos,
+  ObtenerDetalleFirmaOut,
+} from '../../models/gestion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Step2LibroDetalleComponent } from '../../../actas-registrales/components/step2-libro-detalle/step2-libro-detalle.component';
-import { TipoSolicitud, TipoSolicitudOut } from '../../../firmas/models/tipo-solicitud.model';
+import {
+  TipoSolicitud,
+  TipoSolicitudOut,
+} from '../../../firmas/models/tipo-solicitud.model';
 import { ActivatedRoute } from '@angular/router';
 import { RegistroFirmasService } from 'src/app/core/firmas/services/registro-firmas.service';
-import { TipoArchivo, TipoArchivoOut,
+import {
+  TipoArchivo,
+  TipoArchivoOut,
   Lengua,
   LenguaOut,
   Articulo,
-  ArticuloOut, } from 'src/app/masters/models/maestro.model';
+  ArticuloOut,
+} from 'src/app/masters/models/maestro.model';
 import { MaestrosService } from 'src/app/masters/services/maestros.service';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
+import { List } from '../../../../shared/components/upload-file/upload-file.component'; //bcastro- inicio: se agrego para el sustento del detalle
 import {
-  List,
-} from '../../../../shared/components/upload-file/upload-file.component';  //bcastro- inicio: se agrego para el sustento del detalle
-import { DetalleSolicitudLibroRegistro, ObtenerAtencion, ObtenerAtencionOut } from '../../models/atencion.model';
+  DetalleSolicitudLibroRegistro,
+  ObtenerAtencion,
+  ObtenerAtencionOut,
+} from '../../models/atencion.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
@@ -28,9 +46,8 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
   selector: 'app-gs-edicion-libro',
   styleUrls: ['./gs-edicion-libro.component.css'],
   templateUrl: './gs-edicion-libro.component.html',
-
 })
-export class GsEdicionLibroComponent implements OnInit{
+export class GsEdicionLibroComponent implements OnInit {
   formDetalle!: FormGroup;
   arrayDetalle: DetalleSolicitudLibroRegistro[] = [];
   tipoArchivoDetalleAlta!: TipoArchivo[];
@@ -38,7 +55,7 @@ export class GsEdicionLibroComponent implements OnInit{
   title!: string;
   environment: any;
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
-   tiposolicitud!: TipoSolicitud[];
+  tiposolicitud!: TipoSolicitud[];
   @ViewChildren(Step2DetalleSolicitudComponent)
   components2!: QueryList<Step2DetalleSolicitudComponent>;
   tipoSolicitudOut!: TipoSolicitudOut;
@@ -56,52 +73,48 @@ export class GsEdicionLibroComponent implements OnInit{
   arrayArchivoSustento!: ArchivoSustento[];
   arrayArchivoDetalle!: Archivos[];
 
-
   lenguaOut!: LenguaOut;
   lengua!: Lengua[];
 
   articuloOut!: ArticuloOut;
   articulo!: Articulo[];
 
-    // ATENCION SOLICITUDES
-    obtenerAtencionOut!: ObtenerAtencionOut;
-    obtenerAtencion!: ObtenerAtencion;
-constructor(
-  public utilService: UtilService,
-  private spinner: NgxSpinnerService,
-  private gestionService: GestionService,
-  private formBuilder: FormBuilder,
-  private activatedRoute: ActivatedRoute,
-  private registroFirmasService: RegistroFirmasService,
-  private maestroService: MaestrosService,
-  private seguridadService: SeguridadService,
-  public dialog: MatDialog
-
-){}
+  // ATENCION SOLICITUDES
+  obtenerAtencionOut!: ObtenerAtencionOut;
+  obtenerAtencion!: ObtenerAtencion;
+  constructor(
+    public utilService: UtilService,
+    private spinner: NgxSpinnerService,
+    private gestionService: GestionService,
+    private formBuilder: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private registroFirmasService: RegistroFirmasService,
+    private maestroService: MaestrosService,
+    private seguridadService: SeguridadService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-     this.title = 'Edición de Libro';
-this.environment = environment;
-this.formDetalle = this.formBuilder.group({
-  codigoOrec: [''],
-  descripcionOrecLarga: [''],
-  ubigeo: [''],
-});
+    this.title = 'Edición de Libro';
+    this.environment = environment;
+    this.formDetalle = this.formBuilder.group({
+      codigoOrec: [''],
+      descripcionOrecLarga: [''],
+      ubigeo: [''],
+    });
 
-this.formDetalle.disable;
-
+    this.formDetalle.disable;
 
     this.activatedRoute.params.subscribe((params) => {
-    if (params['id']) {
-    this.numeroSolicitud = params['id'];
-    this.getAtender(this.numeroSolicitud);
-  }
-});
+      if (params['id']) {
+        this.numeroSolicitud = params['id'];
+        this.getAtender(this.numeroSolicitud);
+      }
+    });
     this.listarTipoSolicitud();
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
     this.listarLenguas();
     this.listarArticulos();
-
   }
 
   listarLenguas(): void {
@@ -147,8 +160,8 @@ this.formDetalle.disable;
   //bcastro - fin: se agrego para el sustento del detalle
 
   btnDeleteDetalle(item: DetalleSolicitudLibroRegistro): void {
-    console.log('item'+item);
-     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
+    console.log('item' + item);
+    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
     this.obtenerAtencion.detalleSolicitudLibro.splice(
       this.obtenerAtencion.detalleSolicitudLibro.indexOf(item, 0),
       1
@@ -180,7 +193,7 @@ this.formDetalle.disable;
         this.obtenerAtencion.detalleSolicitudLibro.forEach((item) => {
           console.log(item);
         });
-        this.arrayArchivoSustento=this.obtenerAtencion.archivoSustento
+        this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
 
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
           this.obtenerAtencion.detalleSolicitudLibro.forEach((x, i) => {
@@ -190,8 +203,6 @@ this.formDetalle.disable;
       }
     );
   }
-
-
 
   listarTipoSolicitud(): void {
     this.registroFirmasService.listTipoSolicitud().subscribe(
@@ -208,7 +219,6 @@ this.formDetalle.disable;
           return;
         }
         this.tiposolicitud = this.tipoSolicitudOut.data;
-
       }
     );
   }
@@ -246,10 +256,6 @@ this.formDetalle.disable;
     );
   }
 
-  get isExternal(): boolean {
-    return !this.seguridadService.getUserInternal();
-  }
-
   btnCancelar(): void {
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
@@ -272,11 +278,12 @@ this.formDetalle.disable;
     });
   }
 
-
   btnActualizar(): void {
-
-
     //servicio Eliminar detalle, archvios y sustentos
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
+  }
+
+  get isExternal(): boolean {
+    return !this.seguridadService.getUserInternal();
   }
 }

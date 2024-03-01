@@ -86,6 +86,23 @@ export class RegistroFirmaInternaIn {
   }
 }
 
+export class ActualizarFirmaIn {
+  listArchivoSustento: Sustento[];
+  email?: string;
+  celular?: string;
+  codigoModoRegistro: string;
+  detalleSolicitud: DetalleSolicitud[];
+  numeroSolicitud: string;
+  constructor() {
+    this.listArchivoSustento = new Array<Sustento>();
+    this.email = '';
+    this.celular = '';
+    this.codigoModoRegistro = '';
+    this.detalleSolicitud = new Array<DetalleSolicitud>();
+    this.numeroSolicitud = '';
+  }
+}
+
 export class RegistroFirmaIn {
   listArchivoSustento: Sustento[];
   email: string;
@@ -123,8 +140,12 @@ export class Codigo {
 
 export class Archivo {
   codigoNombre: string;
+  idArchivo?: string;
+  tipoCodigoNombre?: string;
   constructor() {
     this.codigoNombre = '';
+    this.idArchivo = '';
+    this.tipoCodigoNombre = '';
   }
 }
 
