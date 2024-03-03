@@ -107,7 +107,9 @@ export class GsAtencionComponent implements OnInit {
 
     this.formDetalle.disable();
 
-    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
+    this.listarTipoArchivo(
+      this.environment.TIPO_ARCHIVO_LIBRO_ATENCION_SUSTENTO
+    );
     this.listarLenguas();
     this.listarArticulos();
   }

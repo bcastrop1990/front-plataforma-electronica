@@ -141,9 +141,7 @@ export class GsEdicionLibroComponent implements OnInit {
     this.formDetalle.disable;
 
     this.listarTipoSolicitud();
-    this.listarTipoArchivo(
-      this.environment.TIPO_ARCHIVO_LIBRO_ATENCION_SUSTENTO
-    );
+    this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
     this.listarLenguas();
     this.listarArticulos();
 
@@ -309,6 +307,8 @@ export class GsEdicionLibroComponent implements OnInit {
         this.formDetalle.patchValue(this.obtenerAtencion);
 
         this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
+
+        console.log(this.arrayArchivoSustento);
 
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
           this.obtenerAtencion.detalleSolicitudLibro.forEach((x) => {
