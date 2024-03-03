@@ -277,12 +277,13 @@ export class GsEdicionFirma2Component implements OnInit {
     this.registroFirmaInternaIn = new ActualizarFirmaIn();
     const archivoSustento2 = new Array<Sustento>();
     const idNull = -1;
+    console.log(this.arrayArchivoSustento);
     this.arrayFilesSustento.forEach((x) => {
       if (!x.idArchivo) {
         archivoSustento2.push({
           codigoNombre: x.idFile,
           idArchivo: idNull,
-          tipoCodigoNombre: x.idTipoArchivo!,
+          tipoCodigoNombre: x.fileTypeId,
         });
       }
     });
@@ -325,8 +326,8 @@ export class GsEdicionFirma2Component implements OnInit {
               return;
             }
 
-            const archivosSustentos = localStorage.getItem('idFileDetalle');
-            const archivosDetalle = localStorage.getItem('idFileSustento');
+            const archivosSustentos = localStorage.getItem('idFileSustento');
+            const archivosDetalle = localStorage.getItem('idFileDetalle');
             const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
 
             this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
@@ -335,6 +336,7 @@ export class GsEdicionFirma2Component implements OnInit {
 
             if (this.parsedArchivosSustentos) {
               this.parsedArchivosSustentos.forEach((item) => {
+                console.log(item);
                 this.uploadFileService
                   .removeSustento(item)
                   .subscribe((data) => {});
@@ -474,6 +476,7 @@ export class GsEdicionFirma2Component implements OnInit {
     this.utilService.getAlert('Aviso', message);
   }
   getFilesArray(arr: List[]): void {
+    console.log(arr);
     this.arrayFilesSustento = arr;
   }
 

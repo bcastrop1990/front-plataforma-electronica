@@ -58,7 +58,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
   @Input() textResponseMaxFileMessage!: string;
 
   @Input() requiredTipoArchivo: boolean = false;
-  @Input() arrayTipoArchivo!: TipoArchivo[] | [];
+  @Input() arrayTipoArchivo!: TipoArchivo[];
 
   @Input() disabledAll: boolean = false;
 
@@ -82,7 +82,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
 
   lastAttachUplaoding!: boolean;
   arrayArchivoDetalleEliminar: string[] = [];
-  arrayArchivoSustentoEliminar: string[] = [];
+  arrayArchivoSustentoEliminar: number[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private storageService: UploadFileService,
@@ -90,6 +90,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    this.deleteLs();
     this.form = this.formBuilder.group({
       idTipoArchivo: [
         { value: '', disabled: this.disabledAll },
@@ -124,6 +125,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
             const fileTypeSelected = this.form.controls['idTipoArchivo'].value;
             item2 = {
               idFile: item.idArchivo,
+              idTipoArchivo: item.idTipoArchivo,
               fileName: item.nombreOriginal,
               fileTypeId: this.requiredTipoArchivo ? fileTypeSelected : '',
               fileTypeDesc: tipo.descripcion,
@@ -139,6 +141,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
             const fileTypeSelected = this.form.controls['idTipoArchivo'].value;
             item2 = {
               idFile: item.idArchivo,
+              idTipoArchivo: item.idTipoArchivo,
               fileName: item.nombreOriginal,
               fileTypeId: this.requiredTipoArchivo ? fileTypeSelected : '',
               fileTypeDesc: tipo.descripcion,
@@ -150,7 +153,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
     }
 
     if (this.arrayArchivoSustento) {
-      console.log(this.arrayTipoArchivo);
       this.arrayArchivoSustento.forEach((item) => {
         this.arrayTipoArchivo.forEach((tipo) => {
           if (item.idTipoArchivo === tipo.codigo) {
@@ -169,8 +171,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
         });
       });
     }
-
-    this.deleteLs();
   }
 
   deleteLs() {
@@ -299,6 +299,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
                   : '',
                 file: file.files[0],
               };
+              console.log(item);
               this.postUploadSuccess(item);
             },
             (error) => {
@@ -320,7 +321,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   delete(file: List) {
-    console.log(file);
     const modalChangePassword = this.utilService.getConfirmation(
       'Eliminar',
       '¿Desea eliminar el archivo?'
@@ -328,6 +328,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
 
     modalChangePassword.afterClosed().subscribe((result) => {
       if (result) {
+        console.log(this.arrayArchivoSustento);
         if (this.arrayArchivoDetalle) {
           this.arrayArchivoDetalle.forEach((item) => {
             if (item.idArchivo === file.idFile) {
@@ -339,10 +340,13 @@ export class UploadFileComponent implements OnInit, OnChanges {
             }
           });
         }
+
         if (this.arrayArchivoSustento) {
+          console.log('entro aqui');
+          console.log(file.idFile);
           this.arrayArchivoSustento.forEach((item) => {
-            if (item.idArchivo === Number(file.idFile)) {
-              this.arrayArchivoSustentoEliminar.push(file.idFile);
+            if (item.idArchivo === file.idArchivo) {
+              this.arrayArchivoSustentoEliminar.push(file.idArchivo);
               localStorage.setItem(
                 'idFileSustento',
                 JSON.stringify(this.arrayArchivoSustentoEliminar)

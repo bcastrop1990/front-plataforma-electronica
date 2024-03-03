@@ -261,7 +261,7 @@ export class GsEdicionLibroComponent implements OnInit {
         console.log(this.arrayArchivoSustento);
 
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
-          this.obtenerAtencion.detalleSolicitudLibro.forEach((x, i) => {
+          this.obtenerAtencion.detalleSolicitudLibro.forEach((x) => {
             this.arrayDetalle.push(x);
           });
         }
@@ -339,24 +339,7 @@ export class GsEdicionLibroComponent implements OnInit {
           this.utilService.getAlert(`Aviso:`, `${this.tipoArchivoOut.message}`);
           return;
         }
-
-        // SE LLAMA AL SERVICIO PARA OBTENER LA LISTA DE TIPO DE ARCHIVO PARA LOS 3 CASOS
-        switch (idTipoUso) {
-          case this.environment.TIPO_ARCHIVO_FIRMA_SUSTENTO:
-            this.tipoArchivoSustento = this.tipoArchivoOut.data;
-            break;
-          case this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA:
-            this.tipoArchivoDetalleAlta = this.tipoArchivoOut.data;
-            if (this.isExternal) {
-              this.tipoArchivoDetalleAlta = this.tipoArchivoDetalleAlta.filter(
-                (item) => item.codigo !== '08'
-              );
-            }
-            break;
-          case this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR:
-            this.tipoArchivoDetalleActualizar = this.tipoArchivoOut.data;
-            break;
-        }
+        this.tipoArchivoSustento = this.tipoArchivoOut.data;
       }
     );
   }
