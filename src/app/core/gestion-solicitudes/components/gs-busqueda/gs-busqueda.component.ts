@@ -40,6 +40,10 @@ import { GsReasignarComponent } from '../gs-reasignar/gs-reasignar.component';
 import { GsModificarComponent } from '../gs-modificar/gs-modificar.component';
 import { ConfirmationModalComponent } from 'src/app/core/firmas/components/confirmation-modal/confirmation-modal.component';
 import { GsEditarSolicitudComponent } from '../gs-editar-solicitud/gs-editar-solicitud.component';
+import {
+  Libro,
+  ObternerLibroOut,
+} from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-gs-busqueda',
@@ -109,8 +113,8 @@ export class GsBusquedaComponent implements OnInit {
   tipoRegistro: Options[] = [];
 
   // DETALLES LIBRO & FIRMA
-  obtenerDetalleLibroOut!: ObtenerDetalleLibroOut;
-  detalleLibro!: DetalleLibro;
+  obtenerDetalleLibroOut!: ObternerLibroOut;
+  detalleLibro!: Libro;
 
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
   detalleFirma!: DetalleFirma;
@@ -330,7 +334,7 @@ export class GsBusquedaComponent implements OnInit {
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },
@@ -410,7 +414,7 @@ export class GsBusquedaComponent implements OnInit {
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },
@@ -485,7 +489,7 @@ export class GsBusquedaComponent implements OnInit {
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },

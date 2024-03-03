@@ -30,6 +30,10 @@ import {
 import { RpDetalleComponent } from '../rp-detalle/rp-detalle.component';
 import { RpDocumentoComponent } from '../rp-documento/rp-documento.component';
 import { ExcelExportService } from '../../services/reportes.service';
+import {
+  Libro,
+  ObternerLibroOut,
+} from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-rp-reporte',
@@ -68,8 +72,8 @@ export class RpReporteComponent implements OnInit {
   analistas: Options[] = [];
 
   //Model Views
-  obtenerDetalleLibroOut!: ObtenerDetalleLibroOut;
-  detalleLibro!: DetalleLibro;
+  obtenerDetalleLibroOut!: ObternerLibroOut;
+  detalleLibro!: Libro;
 
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
   detalleFirma!: DetalleFirma;
@@ -531,7 +535,7 @@ export class RpReporteComponent implements OnInit {
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },
@@ -635,7 +639,7 @@ export class RpReporteComponent implements OnInit {
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },

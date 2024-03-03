@@ -21,14 +21,14 @@ import { UploadFileService } from '../../services/upload-file.service';
 import { UtilService } from '../../services/util.service';
 import { environment } from '../../../../environments/environment';
 import { TipoArchivo } from '../../../masters/models/maestro.model';
+import { Archivos } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 import {
+  ArchivoDetalle,
   ArchivoSustento,
-  Archivos,
-} from 'src/app/core/gestion-solicitudes/models/gestion.model';
-import { ArchivoDetalle } from 'src/app/core/actas-registrales/models/libro.model';
+} from 'src/app/core/actas-registrales/models/libro.model';
 
 export interface List {
-  idArchivo?: string;
+  idArchivo?: number;
   idTipoArchivo?: string;
   idFile: string;
   fileName: string;
@@ -64,6 +64,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
 
   @Output() doRefreshData: EventEmitter<List[]> = new EventEmitter();
   @Output() doResponseMaxAllowed: EventEmitter<string> = new EventEmitter();
+
   @Input() arrayArchivoSustento!: ArchivoSustento[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
   @Input() arrayArchivoDetalle!: Archivos[]; //bcastro: lista de archivos sustentos: se utiliza desde editar firma
 
@@ -149,6 +150,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
     }
 
     if (this.arrayArchivoSustento) {
+      console.log(this.arrayTipoArchivo);
       this.arrayArchivoSustento.forEach((item) => {
         this.arrayTipoArchivo.forEach((tipo) => {
           if (item.idTipoArchivo === tipo.codigo) {
@@ -167,6 +169,13 @@ export class UploadFileComponent implements OnInit, OnChanges {
         });
       });
     }
+
+    this.deleteLs();
+  }
+
+  deleteLs() {
+    localStorage.removeItem('idFileDetalle');
+    localStorage.removeItem('idFileSustento');
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -311,6 +320,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   delete(file: List) {
+    console.log(file);
     const modalChangePassword = this.utilService.getConfirmation(
       'Eliminar',
       '¿Desea eliminar el archivo?'
@@ -322,13 +332,21 @@ export class UploadFileComponent implements OnInit, OnChanges {
           this.arrayArchivoDetalle.forEach((item) => {
             if (item.idArchivo === file.idFile) {
               this.arrayArchivoDetalleEliminar.push(file.idFile);
+              localStorage.setItem(
+                'idFileDetalle',
+                JSON.stringify(this.arrayArchivoDetalleEliminar)
+              );
             }
           });
         }
         if (this.arrayArchivoSustento) {
           this.arrayArchivoSustento.forEach((item) => {
-            if (item.idArchivo === file.idFile) {
+            if (item.idArchivo === Number(file.idFile)) {
               this.arrayArchivoSustentoEliminar.push(file.idFile);
+              localStorage.setItem(
+                'idFileSustento',
+                JSON.stringify(this.arrayArchivoSustentoEliminar)
+              );
             }
           });
         }

@@ -11,7 +11,6 @@ import { environment } from 'src/environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GestionService } from '../../services/gestion.service';
 import {
-  ArchivoSustento,
   Archivos,
   DetalleFirma,
   DetalleSolicitudFirma,
@@ -50,6 +49,8 @@ import {
   OficinaDetalle,
 } from 'src/app/masters/models/oficina.model';
 import { RequestPaso1 } from 'src/app/core/firmas/components/step1-datos-solicitante/step1-datos-solicitante.component';
+import { UploadFileService } from '../../../../shared/services/upload-file.service';
+import { ArchivoSustento } from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-gs-edicion-firma',
@@ -66,6 +67,10 @@ export class GsEdicionFirma2Component implements OnInit {
   esObligatorio: string = '';
 
   esNuevoDetalle!: boolean;
+
+  parsedIdDetalleCompleto: string[] = [];
+  parsedArchivosDetalle: string[] = [];
+  parsedArchivosSustentos: string[] = [];
 
   listIdDetalleSolicitudFirmaEliminar: string[] = [];
 
@@ -114,7 +119,8 @@ export class GsEdicionFirma2Component implements OnInit {
     private registroFirmasService: RegistroFirmasService,
     private maestroService: MaestrosService,
     private seguridadService: SeguridadService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private uploadFileService: UploadFileService
   ) {}
 
   abrirModalConfirmacion() {
@@ -154,6 +160,11 @@ export class GsEdicionFirma2Component implements OnInit {
         this.getSolcitudFirma(this.numeroSolicitud);
       }
     });
+    this.clearLs();
+  }
+
+  clearLs() {
+    localStorage.removeItem('idDetalleCompleto');
   }
 
   btnActualizar(): void {
@@ -265,12 +276,15 @@ export class GsEdicionFirma2Component implements OnInit {
     //MAPPER REGISTRO - INTERNO
     this.registroFirmaInternaIn = new ActualizarFirmaIn();
     const archivoSustento2 = new Array<Sustento>();
+    const idNull = -1;
     this.arrayFilesSustento.forEach((x) => {
-      archivoSustento2.push({
-        codigoNombre: x.idFile,
-        idArchivo: x.idArchivo,
-        tipoCodigoNombre: x.idTipoArchivo!,
-      });
+      if (!x.idArchivo) {
+        archivoSustento2.push({
+          codigoNombre: x.idFile,
+          idArchivo: idNull,
+          tipoCodigoNombre: x.idTipoArchivo!,
+        });
+      }
     });
 
     this.registroFirmaInternaIn.listArchivoSustento = archivoSustento2;
@@ -279,6 +293,20 @@ export class GsEdicionFirma2Component implements OnInit {
     this.registroFirmaInternaIn.numeroSolicitud = this.numeroSolicitud;
 
     console.log(this.registroFirmaInternaIn);
+
+    this.registroFirmaInternaIn.detalleSolicitud.forEach((detalle) => {
+      detalle.detalleArchivo.forEach((archivo) => {
+        if (!archivo.archivo.idArchivo) {
+          archivo.archivo.idArchivo = -1;
+        }
+      });
+    });
+
+    this.registroFirmaInternaIn.detalleSolicitud.forEach((detalle) => {
+      if (!detalle.idDetalleSolicitud) {
+        detalle.idDetalleSolicitud = -1;
+      }
+    });
 
     if (this.isInternal) {
       this.registroFirmasService
@@ -290,20 +318,50 @@ export class GsEdicionFirma2Component implements OnInit {
           (error) => {},
           () => {
             if (this.registroFirmaOut.code !== this.environment.CODE_000) {
-              console.log('error', this.registroFirmaOut.message);
               this.utilService.getAlert(
                 `Aviso:`,
                 `${this.registroFirmaOut.message}`
               );
               return;
             }
-            // this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
+
+            const archivosSustentos = localStorage.getItem('idFileDetalle');
+            const archivosDetalle = localStorage.getItem('idFileSustento');
+            const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
+
+            this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
+            this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
+            this.parsedIdDetalleCompleto = JSON.parse(idDetalleCompleto!);
+
+            if (this.parsedArchivosSustentos) {
+              this.parsedArchivosSustentos.forEach((item) => {
+                this.uploadFileService
+                  .removeSustento(item)
+                  .subscribe((data) => {});
+              });
+            }
+
+            if (this.parsedArchivosDetalle) {
+              this.parsedArchivosDetalle.forEach((item) => {
+                this.uploadFileService
+                  .removeDetalle(item)
+                  .subscribe((data) => {});
+              });
+            }
+
+            if (this.parsedIdDetalleCompleto) {
+              this.parsedIdDetalleCompleto.forEach((item) => {
+                this.gestionService
+                  .getDeleteDetalleFirma(item)
+                  .subscribe((data) => {});
+              });
+            }
+
+            this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
           }
         );
     }
     localStorage.removeItem('user_solicitante');
-
-    // this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
   getSolcitudFirma(numeroSolicitud: string): void {
@@ -327,8 +385,6 @@ export class GsEdicionFirma2Component implements OnInit {
         }
 
         this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-
-        console.log(this.detalleFirma);
 
         this.formDetalle.patchValue(this.detalleFirma);
 
@@ -401,17 +457,11 @@ export class GsEdicionFirma2Component implements OnInit {
 
   //Todo: REVISAR LOGICA - BORRA TODO
   btnDeleteDetalle(item: DetalleSolicitudFirma): void {
-    this.listIdDetalleSolicitudFirmaEliminar.push(item.idTipoSolicitud);
+    this.listIdDetalleSolicitudFirmaEliminar.push(item.idDetalleSolicitud);
     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    this.detalleFirma.detalleSolicitudFirma.splice(
-      this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),
-      1
-    );
-
-    this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    this.detalleFirma.detalleSolicitudFirma.splice(
-      this.detalleFirma.detalleSolicitudFirma.indexOf(item, 0),
-      1
+    localStorage.setItem(
+      'idDetalleCompleto',
+      JSON.stringify(this.listIdDetalleSolicitudFirmaEliminar)
     );
   }
 

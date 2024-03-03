@@ -34,6 +34,10 @@ import {
   ReporteDetalleExp,
 } from '../../models/rdReporte.model';
 import { RdServiceService } from '../../services/rd-service.service';
+import {
+  Libro,
+  ObternerLibroOut,
+} from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-rd-reporte-detalle',
@@ -74,8 +78,8 @@ export class RdReporteDetalleComponent implements OnInit {
   analistasOut!: OptionsOut;
   analistas: Options[] = [];
 
-  obtenerDetalleLibroOut!: ObtenerDetalleLibroOut;
-  detalleLibro!: DetalleLibro;
+  obtenerDetalleLibroOut!: ObternerLibroOut;
+  detalleLibro!: Libro;
 
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
   detalleFirma!: DetalleFirma;
@@ -566,7 +570,7 @@ export class RdReporteDetalleComponent implements OnInit {
     if (row.tipoRegistro === this.environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(row.numeroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },

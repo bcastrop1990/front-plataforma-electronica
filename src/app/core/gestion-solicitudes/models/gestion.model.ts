@@ -74,25 +74,24 @@ export class ArchivoSustento {
   codigo: string;
   nombreOriginal: string;
   tipoArchivo: string;
-  idArchivo: string;
+  idArchivo: number;
   idTipoArchivo: string;
   constructor() {
     this.codigo = '';
     this.nombreOriginal = '';
     this.tipoArchivo = '';
-    this.idArchivo = '';
+    this.idArchivo = 0;
     this.idTipoArchivo = '';
-
   }
 }
 
 export class Detalle {
-  archivoSustento: ArchivoSustento;
+  archivoSustento: ArchivoSustento[];
   codigoOrec: string;
   descripcionOrecLarga: string;
   ubigeo: string;
   constructor() {
-    this.archivoSustento = new ArchivoSustento();
+    this.archivoSustento = new Array<ArchivoSustento>();
     this.codigoOrec = '';
     this.descripcionOrecLarga = '';
     this.ubigeo = '';
@@ -142,6 +141,7 @@ export class DetalleSolicitudFirma {
   email: string;
   idTipoSolicitud: string;
   tipoSolicitud: string;
+  idDetalleSolicitud: string;
   numeroDocumento: string;
   preNombres: string;
   primerApellido: string;
@@ -156,6 +156,7 @@ export class DetalleSolicitudFirma {
     this.preNombres = '';
     this.primerApellido = '';
     this.segundoApellido = '';
+    this.idDetalleSolicitud = '';
     this.archivos = new Array<Archivos>();
   }
 }

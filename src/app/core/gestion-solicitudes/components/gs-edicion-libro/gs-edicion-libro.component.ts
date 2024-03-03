@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { UtilService } from '../../../../shared/services/util.service';
@@ -10,11 +11,7 @@ import { environment } from 'src/environments/environment';
 import { Step2DetalleSolicitudComponent } from '../../../firmas/components/step2-detalle-solicitud/step2-detalle-solicitud.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GestionService } from '../../services/gestion.service';
-import {
-  ArchivoSustento,
-  Archivos,
-  ObtenerDetalleFirmaOut,
-} from '../../models/gestion.model';
+import { Archivos, ObtenerDetalleFirmaOut } from '../../models/gestion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Step2LibroDetalleComponent } from '../../../actas-registrales/components/step2-libro-detalle/step2-libro-detalle.component';
 import {
@@ -33,7 +30,10 @@ import {
 } from 'src/app/masters/models/maestro.model';
 import { MaestrosService } from 'src/app/masters/services/maestros.service';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
-import { List } from '../../../../shared/components/upload-file/upload-file.component'; //bcastro- inicio: se agrego para el sustento del detalle
+import {
+  List,
+  UploadFileComponent,
+} from '../../../../shared/components/upload-file/upload-file.component'; //bcastro- inicio: se agrego para el sustento del detalle
 import {
   DetalleSolicitudLibroRegistro,
   ObtenerAtencion,
@@ -41,6 +41,17 @@ import {
 } from '../../models/atencion.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import {
+  ArchivoSustento,
+  DetalleLibro,
+  DetalleSolicitudLibro,
+  Libro,
+  ObternerLibroOut,
+  RegistroLibroInternaIn,
+  RegistroLibroOut,
+  Sustento,
+} from 'src/app/core/actas-registrales/models/libro.model';
+import { RegistroLibroService } from 'src/app/core/actas-registrales/services/registro-libro.service';
 
 @Component({
   selector: 'app-gs-edicion-libro',
@@ -48,30 +59,24 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
   templateUrl: './gs-edicion-libro.component.html',
 })
 export class GsEdicionLibroComponent implements OnInit {
-  formDetalle!: FormGroup;
-  arrayDetalle: DetalleSolicitudLibroRegistro[] = [];
-  tipoArchivoDetalleAlta!: TipoArchivo[];
-
   title!: string;
   environment: any;
-  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
-  tiposolicitud!: TipoSolicitud[];
-  @ViewChildren(Step2DetalleSolicitudComponent)
-  components2!: QueryList<Step2DetalleSolicitudComponent>;
-  tipoSolicitudOut!: TipoSolicitudOut;
-  @ViewChildren(Step2LibroDetalleComponent)
-  components!: QueryList<Step2LibroDetalleComponent>;
+  formDetalle!: FormGroup;
 
   numeroSolicitud!: string;
-  tipoArchivoOut!: TipoArchivoOut;
-  tipoArchivoSustento!: TipoArchivo[];
-  tipoArchivoDetalleActualizar!: TipoArchivo[];
-  //bcastro- inicio: se agrego para el sustento del detalle
-  typesAllowed = ['pdf'];
-  arrayFilesSustento!: List[];
-  //bcastro- fin: se agrego para el sustento del detalle
-  arrayArchivoSustento!: ArchivoSustento[];
-  arrayArchivoDetalle!: Archivos[];
+
+  bolProccessing: boolean = false;
+
+  registroLibroIntenoIn!: RegistroLibroInternaIn;
+
+  registroLibroOut!: RegistroLibroOut;
+
+  arrayDetalle: DetalleLibro[] = [];
+
+  tipoArchivoDetalleAlta!: TipoArchivo[];
+
+  obtenerAtencionOut!: ObternerLibroOut;
+  obtenerAtencion!: Libro;
 
   lenguaOut!: LenguaOut;
   lengua!: Lengua[];
@@ -79,9 +84,27 @@ export class GsEdicionLibroComponent implements OnInit {
   articuloOut!: ArticuloOut;
   articulo!: Articulo[];
 
-  // ATENCION SOLICITUDES
-  obtenerAtencionOut!: ObtenerAtencionOut;
-  obtenerAtencion!: ObtenerAtencion;
+  obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
+
+  tiposolicitud!: TipoSolicitud[];
+  tipoSolicitudOut!: TipoSolicitudOut;
+
+  tipoArchivoOut!: TipoArchivoOut;
+  tipoArchivoSustento!: TipoArchivo[];
+
+  arrayArchivoSustento!: ArchivoSustento[];
+  arrayArchivoDetalle!: Archivos[];
+
+  tipoArchivoDetalleActualizar!: TipoArchivo[];
+
+  typesAllowed = ['pdf'];
+  arrayFilesSustento!: List[];
+
+  @ViewChild('fileSustento') uploadFileTipoSolicitud!: UploadFileComponent;
+
+  @ViewChildren(Step2LibroDetalleComponent)
+  components!: QueryList<Step2LibroDetalleComponent>;
+
   constructor(
     public utilService: UtilService,
     private spinner: NgxSpinnerService,
@@ -89,6 +112,7 @@ export class GsEdicionLibroComponent implements OnInit {
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private registroFirmasService: RegistroFirmasService,
+    private registroLibroService: RegistroLibroService,
     private maestroService: MaestrosService,
     private seguridadService: SeguridadService,
     public dialog: MatDialog
@@ -96,25 +120,153 @@ export class GsEdicionLibroComponent implements OnInit {
 
   ngOnInit(): void {
     this.title = 'Edición de Libro';
+
     this.environment = environment;
+
     this.formDetalle = this.formBuilder.group({
       codigoOrec: [''],
       descripcionOrecLarga: [''],
       ubigeo: [''],
     });
-
     this.formDetalle.disable;
 
-    this.activatedRoute.params.subscribe((params) => {
-      if (params['id']) {
-        this.numeroSolicitud = params['id'];
-        this.getAtender(this.numeroSolicitud);
-      }
-    });
     this.listarTipoSolicitud();
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
     this.listarLenguas();
     this.listarArticulos();
+
+    this.activatedRoute.params.subscribe((params) => {
+      if (params['id']) {
+        this.numeroSolicitud = params['id'];
+        this.getLibro(this.numeroSolicitud);
+      }
+    });
+  }
+
+  btnActualizar(): void {
+    this.bolProccessing = true;
+
+    // GET ARRAY FROM CHILDREN COMPONENT
+    let component: Step2LibroDetalleComponent[] = this.components.toArray();
+    // GET ARRAY MAPPER DETALLE SOLICITUD
+    let arrayDetalle: DetalleSolicitudLibro[] = component.map((value) =>
+      value.setDetalleSolicitud()
+    );
+
+    // VALIDACION 1
+    if (arrayDetalle.length <= 0) {
+      this.utilService.getAlert(
+        'Aviso',
+        'Debe añadir por lo menos un (1) detalle de material registral.'
+      );
+      this.bolProccessing = false;
+      return;
+    }
+
+    // VALIDACIÓN 2 - DETALLE FORM VALID
+    let cumpleValidaciones = true;
+    component.forEach((x) => {
+      if (x.form.invalid) {
+        x.setValidatorRequired();
+        this.utilService.getAlert(
+          'Aviso',
+          `El detalle del material registral (${x.index}), no cumple con los datos requeridos.`
+        );
+        cumpleValidaciones = false;
+        this.bolProccessing = false;
+        return;
+      }
+    });
+    if (!cumpleValidaciones) {
+      this.bolProccessing = false;
+      return;
+    }
+
+    //MAPPER REGISTRO - INTERNO
+    this.registroLibroIntenoIn = new RegistroLibroInternaIn();
+    const archivoSustento2 = new Array<Sustento>();
+    this.arrayFilesSustento.forEach((x) => {
+      archivoSustento2.push({
+        codigoNombre: x.idFile,
+        tipoCodigoNombre: x.fileTypeId,
+      });
+    });
+    this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
+    this.registroLibroIntenoIn.codigoModoRegistro = 'E';
+    this.registroLibroIntenoIn.detalleSolicitud = arrayDetalle;
+
+    let userDataString = localStorage.getItem('user');
+    if (this.isInternal) {
+      userDataString = localStorage.getItem('user_solicitante');
+    }
+    const userData = JSON.parse(userDataString!);
+
+    this.registroLibroIntenoIn.dniSolicitante = userData.dni;
+    this.registroLibroIntenoIn.preNombreSolicitante = userData.preNombre;
+    this.registroLibroIntenoIn.primerApeSolicitante = userData.primerApellido;
+    this.registroLibroIntenoIn.segundoApeSolicitante = userData.segundoApellido;
+    this.registroLibroIntenoIn.codigoOrecSolicitante = userData.codigoOrec;
+
+    if (this.isInternal) {
+      this.registroLibroService
+        .registroLibroInterno(this.registroLibroIntenoIn)
+        .subscribe(
+          (data: RegistroLibroOut) => {
+            this.registroLibroOut = data;
+          },
+          (error) => {},
+          () => {
+            if (this.registroLibroOut.code !== this.environment.CODE_000) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `${this.registroLibroOut.message}`
+              );
+              this.bolProccessing = false;
+              return;
+            }
+          }
+        );
+    }
+    localStorage.removeItem('user_solicitante');
+    this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
+  }
+
+  getLibro(numeroSolicitud: string): void {
+    this.spinner.show();
+    this.gestionService.getDetailLibro(numeroSolicitud).subscribe(
+      (data: ObternerLibroOut) => {
+        this.spinner.hide();
+        this.obtenerAtencionOut = data;
+      },
+      (error) => {
+        this.spinner.hide();
+      },
+      () => {
+        this.spinner.hide();
+        if (this.obtenerAtencionOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.obtenerAtencionOut.message}`
+          );
+          return;
+        }
+        this.obtenerAtencion = this.obtenerAtencionOut.data;
+
+        console.log(this.obtenerAtencion);
+
+        this.formDetalle.patchValue(this.obtenerAtencion);
+
+        this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
+
+        console.log(this.arrayArchivoSustento);
+
+        if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
+          this.obtenerAtencion.detalleSolicitudLibro.forEach((x, i) => {
+            this.arrayDetalle.push(x);
+          });
+        }
+      }
+    );
   }
 
   listarLenguas(): void {
@@ -149,59 +301,12 @@ export class GsEdicionLibroComponent implements OnInit {
     );
   }
 
-  //bcastro- inicio: se agrego para el sustento del detalle
-  showResponse(message: string) {
-    this.utilService.getAlert('Aviso', message);
-  }
-  getFilesArray(arr: List[]): void {
-    //RECIBIENDO ARCHIVO
-    this.arrayFilesSustento = arr;
-  }
-  //bcastro - fin: se agrego para el sustento del detalle
-
-  btnDeleteDetalle(item: DetalleSolicitudLibroRegistro): void {
-    console.log('item' + item);
+  btnDeleteDetalle(item: DetalleLibro): void {
     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    this.obtenerAtencion.detalleSolicitudLibro.splice(
-      this.obtenerAtencion.detalleSolicitudLibro.indexOf(item, 0),
-      1
-    );
-  }
-  getAtender(numeroSolicitud: string): void {
-    this.spinner.show();
-    this.gestionService.getAtencionSolicitud(numeroSolicitud).subscribe(
-      (data: ObtenerAtencionOut) => {
-        this.spinner.hide();
-        this.obtenerAtencionOut = data;
-      },
-      (error) => {
-        this.spinner.hide();
-      },
-      () => {
-        this.spinner.hide();
-        if (this.obtenerAtencionOut.code !== this.environment.CODE_000) {
-          this.utilService.getAlert(
-            `Aviso:`,
-            `${this.obtenerAtencionOut.message}`
-          );
-          return;
-        }
-        this.obtenerAtencion = this.obtenerAtencionOut.data;
-
-        this.formDetalle.patchValue(this.obtenerAtencion);
-
-        this.obtenerAtencion.detalleSolicitudLibro.forEach((item) => {
-          console.log(item);
-        });
-        this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
-
-        if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
-          this.obtenerAtencion.detalleSolicitudLibro.forEach((x, i) => {
-            this.arrayDetalle.push(x);
-          });
-        }
-      }
-    );
+    // this.obtenerAtencion.detalleSolicitudLibro.splice(
+    //   this.obtenerAtencion.detalleSolicitudLibro.indexOf(item, 0),
+    //   1
+    // );
   }
 
   listarTipoSolicitud(): void {
@@ -256,12 +361,19 @@ export class GsEdicionLibroComponent implements OnInit {
     );
   }
 
+  showResponse(message: string) {
+    this.utilService.getAlert('Aviso', message);
+  }
+  getFilesArray(arr: List[]): void {
+    this.arrayFilesSustento = arr;
+  }
+
   btnCancelar(): void {
     this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
   btnAddDetalle(): void {
-    this.arrayDetalle.push(new DetalleSolicitudLibroRegistro());
+    this.arrayDetalle.push(new DetalleLibro());
   }
 
   abrirModalConfirmacion() {
@@ -278,12 +390,11 @@ export class GsEdicionLibroComponent implements OnInit {
     });
   }
 
-  btnActualizar(): void {
-    //servicio Eliminar detalle, archvios y sustentos
-    this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
-  }
-
   get isExternal(): boolean {
     return !this.seguridadService.getUserInternal();
+  }
+
+  get isInternal(): boolean {
+    return this.seguridadService.getUserInternal();
   }
 }

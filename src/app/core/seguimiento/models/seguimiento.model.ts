@@ -80,6 +80,7 @@ export class DetalleFirma extends Detalle {
 export class DetalleSolicitudFirma {
   celular: string;
   email: string;
+  idDetalleSolicitud?: string;
   idTipoSolicitud: string;
   tipoSolicitud: string;
   numeroDocumento: string;
@@ -91,6 +92,7 @@ export class DetalleSolicitudFirma {
     this.celular = '';
     this.email = '';
     this.idTipoSolicitud = '';
+    this.idDetalleSolicitud = '';
     this.tipoSolicitud = '';
     this.numeroDocumento = '';
     this.preNombres = '';

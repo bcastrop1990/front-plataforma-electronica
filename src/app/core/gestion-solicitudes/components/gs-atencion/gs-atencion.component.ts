@@ -33,6 +33,11 @@ import {
 } from '../../../../masters/models/maestro.model';
 import { Step2LibroDetalleComponent } from '../../../actas-registrales/components/step2-libro-detalle/step2-libro-detalle.component';
 import { Archivo } from '../../../firmas/models/firmas.model';
+import {
+  DetalleLibro,
+  Libro,
+  ObternerLibroOut,
+} from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-gs-atencion',
@@ -47,7 +52,7 @@ export class GsAtencionComponent implements OnInit {
 
   numeroSolicitud!: string;
 
-  arrayDetalle: DetalleSolicitudLibroRegistro[] = [];
+  arrayDetalle: DetalleLibro[] = [];
 
   lenguaOut!: LenguaOut;
   lengua!: Lengua[];
@@ -56,8 +61,8 @@ export class GsAtencionComponent implements OnInit {
   articulo!: Articulo[];
 
   // ATENCION SOLICITUDES
-  obtenerAtencionOut!: ObtenerAtencionOut;
-  obtenerAtencion!: ObtenerAtencion;
+  obtenerAtencionOut!: ObternerLibroOut;
+  obtenerAtencion!: Libro;
 
   typesAllowed = ['pdf'];
 
@@ -109,8 +114,8 @@ export class GsAtencionComponent implements OnInit {
 
   getAtender(numeroSolicitud: string): void {
     this.spinner.show();
-    this.gestionService.getAtencionSolicitud(numeroSolicitud).subscribe(
-      (data: ObtenerAtencionOut) => {
+    this.gestionService.getDetailLibro(numeroSolicitud).subscribe(
+      (data: ObternerLibroOut) => {
         this.spinner.hide();
         this.obtenerAtencionOut = data;
       },
@@ -204,10 +209,10 @@ export class GsAtencionComponent implements OnInit {
   }
 
   btnAddDetalle(): void {
-    this.arrayDetalle.push(new DetalleSolicitudLibroRegistro());
+    this.arrayDetalle.push(new DetalleLibro());
   }
 
-  btnDeleteDetalle(item: DetalleSolicitudLibroRegistro): void {
+  btnDeleteDetalle(item: DetalleLibro): void {
     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
     this.obtenerAtencion.detalleSolicitudLibro.splice(
       this.obtenerAtencion.detalleSolicitudLibro.indexOf(item, 0),

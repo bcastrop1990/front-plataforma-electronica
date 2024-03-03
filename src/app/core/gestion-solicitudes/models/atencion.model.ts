@@ -1,4 +1,4 @@
-import {Result} from "../../../masters/models/result.model";
+import { Result } from '../../../masters/models/result.model';
 
 export class ObtenerAtencionOut extends Result {
   data: ObtenerAtencion;
@@ -26,26 +26,22 @@ export class ArchivoSustento {
     this.tipoArchivo = '';
     this.idArchivo = '';
     this.idTipoArchivo = '';
-
   }
 }
 
-export class ObtenerAtencion extends Detalle2{
+export class ObtenerAtencion extends Detalle2 {
   codigoOrec: string;
   descripcionOrecLarga: string;
   ubigeo: string;
   detalleSolicitudLibro: DetalleSolicitudLibroRegistro[];
   constructor() {
     super();
-    this.codigoOrec = ''
-    this.descripcionOrecLarga = ''
-    this.ubigeo = ''
+    this.codigoOrec = '';
+    this.descripcionOrecLarga = '';
+    this.ubigeo = '';
     this.detalleSolicitudLibro = new Array<DetalleSolicitudLibroRegistro>();
   }
 }
-
-
-
 
 // export class DetalleSolicitudLibro {
 //   cantidad: number;

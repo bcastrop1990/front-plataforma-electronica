@@ -223,14 +223,16 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     this.detalleSolicitud.segundoApellido =
       this.form.controls['segundoApellido'].value;
 
-    console.log(this.arrayArchivoDetalle);
+    this.detalleSolicitud.idDetalleSolicitud = Number(
+      this.detalleSolicitudFirma.idDetalleSolicitud
+    );
 
     const detalleArchivo = new Array<ArchivoDetalle>();
     if (this.arrayFiles && this.arrayFiles.length > 0) {
       this.arrayArchivoDetalle.forEach((detalle) => {
         const archivoModel = new Archivo();
         archivoModel.codigoNombre = detalle.codigo;
-        archivoModel.idArchivo = detalle.idArchivo || null!;
+        archivoModel.idArchivo = Number(detalle.idArchivo);
         archivoModel.tipoCodigoNombre = detalle.idTipoArchivo;
         detalleArchivo.push({
           codigoTipoArchivo: detalle.idTipoArchivo,
@@ -251,18 +253,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
           archivo: archivoModel,
         });
       });
-
-      /*
-      this.arrayFiles.forEach((x) => {
-        console.log(x);
-        const archivoModel = new Archivo();
-        archivoModel.idArchivo = x.idFile;
-        detalleArchivo.push({
-          codigoTipoArchivo: x.fileTypeId,
-          archivo: archivoModel,
-        });
-      });
-      */
     }
 
     this.detalleSolicitud.detalleArchivo = detalleArchivo;

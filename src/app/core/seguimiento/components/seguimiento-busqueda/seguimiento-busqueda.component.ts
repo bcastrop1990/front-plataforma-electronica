@@ -32,6 +32,10 @@ import {
   ObtenerDetalleLibroOut,
 } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 import { SeguimientoDetalleComponent } from '../seguimiento-detalle/seguimiento-detalle.component';
+import {
+  Libro,
+  ObternerLibroOut,
+} from 'src/app/core/actas-registrales/models/libro.model';
 
 @Component({
   selector: 'app-seguimiento-busqueda',
@@ -71,8 +75,8 @@ export class SeguimientoBusquedaComponent implements OnInit {
 
   lista!: BusquedaData[];
 
-  obtenerDetalleLibroOut!: ObtenerDetalleLibroOut;
-  detalleLibro!: DetalleLibro;
+  obtenerDetalleLibroOut!: ObternerLibroOut;
+  detalleLibro!: Libro;
 
   obtenerDetalleFirmaOut!: ObtenerDetalleFirmaOut;
   detalleFirma!: DetalleFirma;
@@ -313,7 +317,7 @@ export class SeguimientoBusquedaComponent implements OnInit {
     if (tipo == environment.TIPO_REGISTRO_LIBRO) {
       this.spinner.show();
       this.gestionService.getDetailLibro(nroSolicitud).subscribe(
-        (data: ObtenerDetalleLibroOut) => {
+        (data: ObternerLibroOut) => {
           this.spinner.hide();
           this.obtenerDetalleLibroOut = data;
         },

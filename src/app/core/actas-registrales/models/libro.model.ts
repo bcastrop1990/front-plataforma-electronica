@@ -178,4 +178,59 @@ export class Persona {
   }
 }
 
+export class ObternerLibroOut extends Result {
+  data: Libro;
+  constructor() {
+    super();
+    this.data = new Libro();
+  }
+}
+
+export class Libro {
+  codigoOrec: string;
+  descripcionOrecLarga: string;
+  ubigeo: string;
+  archivoSustento: ArchivoSustento[];
+  detalleSolicitudLibro: DetalleLibro[];
+  constructor() {
+    this.codigoOrec = '';
+    this.descripcionOrecLarga = '';
+    this.ubigeo = '';
+    this.archivoSustento = new Array<ArchivoSustento>();
+    this.detalleSolicitudLibro = new Array<DetalleLibro>();
+  }
+}
+
+export class ArchivoSustento {
+  tipoArchivo: string;
+  idTipoArchivo: string;
+  nombreOriginal: string;
+  codigo: string;
+  idArchivo: number;
+  constructor() {
+    this.tipoArchivo = '';
+    this.idTipoArchivo = '';
+    this.nombreOriginal = '';
+    this.codigo = '';
+    this.idArchivo = 0;
+  }
+}
+
+export class DetalleLibro {
+  idDetalleSolicitud: number;
+  articulo: string;
+  idLengua: string;
+  lengua: string;
+  cantidad: number;
+  numeroUltimaActa: string;
+  constructor() {
+    this.idDetalleSolicitud = 0;
+    this.articulo = '';
+    this.idLengua = '';
+    this.lengua = '';
+    this.cantidad = 0;
+    this.numeroUltimaActa = '';
+  }
+}
+
 //Fin de la creacion

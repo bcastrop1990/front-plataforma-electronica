@@ -123,11 +123,11 @@ export class RegistroFirmaIn {
 export class Sustento {
   codigoNombre: string;
   tipoCodigoNombre: string;
-  idArchivo?: string;
+  idArchivo?: number;
   constructor() {
     this.codigoNombre = '';
     this.tipoCodigoNombre = '';
-    this.idArchivo = '';
+    this.idArchivo = 0;
   }
 }
 
@@ -140,11 +140,11 @@ export class Codigo {
 
 export class Archivo {
   codigoNombre: string;
-  idArchivo?: string;
+  idArchivo?: number;
   tipoCodigoNombre?: string;
   constructor() {
     this.codigoNombre = '';
-    this.idArchivo = '';
+    this.idArchivo = 0;
     this.tipoCodigoNombre = '';
   }
 }
@@ -162,12 +162,14 @@ export class DetalleSolicitud {
   idTipoSolicitud: number;
   numeroDocumento: string;
   celular: string;
+  idDetalleSolicitud: number;
   email: string;
   preNombres: string;
   primerApellido: string;
   segundoApellido: string;
   detalleArchivo: ArchivoDetalle[];
   constructor() {
+    this.idDetalleSolicitud = 0;
     this.idTipoSolicitud = 0;
     this.numeroDocumento = '';
     this.celular = '';

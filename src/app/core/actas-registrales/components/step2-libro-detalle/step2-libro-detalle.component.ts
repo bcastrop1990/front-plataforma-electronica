@@ -5,7 +5,7 @@ import { UtilService } from '../../../../shared/services/util.service';
 import { environment } from 'src/environments/environment';
 import { TipoSolicitud } from '../../../firmas/models/tipo-solicitud.model';
 import { Articulo, Lengua } from '../../../../masters/models/maestro.model';
-import { DetalleSolicitudLibro } from '../../models/libro.model';
+import { DetalleLibro, DetalleSolicitudLibro } from '../../models/libro.model';
 import { DetalleSolicitudLibroRegistro } from '../../../gestion-solicitudes/models/atencion.model';
 
 @Component({
@@ -27,7 +27,7 @@ export class Step2LibroDetalleComponent implements OnInit {
   @Input() index: number | undefined;
   @Input() arrayLenguas!: Lengua[] | [];
   @Input() arrayArticulos!: Articulo[] | [];
-  @Input() setDetalle!: DetalleSolicitudLibroRegistro;
+  @Input() setDetalle!: DetalleLibro;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -61,7 +61,7 @@ export class Step2LibroDetalleComponent implements OnInit {
     if (this.setDetalle) {
       this.form.patchValue(this.setDetalle);
       this.form.controls['codigoLengua'].setValue(
-        this.setDetalle.codigoLengua.trim()
+        this.setDetalle.idLengua.trim()
       );
     }
   }
@@ -99,7 +99,7 @@ export class Step2LibroDetalleComponent implements OnInit {
     this.detalleSolicitudLibroRegistro.numeroUltimaActa =
       this.form.controls['numeroUltimaActa'].value;
     this.detalleSolicitudLibroRegistro.idDetalleSolLibro = this.setDetalle
-      ? this.setDetalle.idDetalleSolLibro
+      ? this.setDetalle.idDetalleSolicitud
       : 0;
     // this.detalleSolicitudLibroRegistro.codigoEstadoAtencion = '2';
 

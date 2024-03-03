@@ -19,6 +19,8 @@ import {
 } from '../models/atencion.model';
 import { ReporteOut, ReportesIn } from '../models/busquedaReporte.model';
 import { BusquedaDetalleOut } from '../../reportes-detalle/models/rdReporte.model';
+import { RemoveOut } from 'src/app/shared/models/upload-file.model';
+import { ObternerLibroOut } from '../../actas-registrales/models/libro.model';
 
 @Injectable({
   providedIn: 'root',
@@ -73,7 +75,7 @@ export class GestionService {
   }
 
   getDetailLibro(nroSolicitud: string) {
-    return this.http.get<ObtenerDetalleLibroOut>(
+    return this.http.get<ObternerLibroOut>(
       `${this.url}/solicitudes/${nroSolicitud}/libro`
     );
   }
@@ -87,6 +89,12 @@ export class GestionService {
   getDeleteFirma(nroSolicitud: string) {
     return this.http.get<ObtenerDetalleFirmaOut>(
       `${this.url}/solicitudes/${nroSolicitud}/firmaDelete`
+    );
+  }
+
+  getDeleteDetalleFirma(id: string) {
+    return this.http.get<RemoveOut>(
+      `${this.url}/solicitudes/${id}/deleteDetalleFirma`
     );
   }
 
