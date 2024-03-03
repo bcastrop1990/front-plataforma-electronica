@@ -117,6 +117,23 @@ export class RegistroLibroInternaIn {
   }
 }
 
+export class ActualizarLibroIn {
+  listArchivoSustento: Sustento[];
+  email: string;
+  celular: string;
+  codigoModoRegistro: string;
+  detalleSolicitud: DetalleSolicitudLibro[];
+  numeroSolicitud: string;
+  constructor() {
+    this.listArchivoSustento = new Array<Sustento>();
+    this.email = '';
+    this.celular = '';
+    this.codigoModoRegistro = '';
+    this.detalleSolicitud = new Array<DetalleSolicitudLibro>();
+    this.numeroSolicitud = '';
+  }
+}
+
 export class Sustento {
   codigoNombre: string;
   tipoCodigoNombre: string;
@@ -145,11 +162,13 @@ export class ArchivoDetalle {
 }
 
 export class DetalleSolicitudLibro {
+  idDetalleSolicitud?: number;
   cantidad: number;
   codigoArticulo: string;
   codigoLengua: string;
   numeroUltimaActa: number;
   constructor() {
+    this.idDetalleSolicitud = 0;
     this.cantidad = 0;
     this.codigoArticulo = '';
     this.codigoLengua = '';

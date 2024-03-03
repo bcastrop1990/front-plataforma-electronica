@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import {
+  ActualizarLibroIn,
   ConsultarPorDniOut,
   OficinaOut,
   RegistroLibroIn,
@@ -43,6 +44,10 @@ export class RegistroLibroService {
 
   registroLibro(request: RegistroLibroIn) {
     return this.http.post<RegistroLibroOut>(`${this.url}`, request);
+  }
+
+  actualizarLibro(request: ActualizarLibroIn) {
+    return this.http.post<RegistroLibroOut>(`${this.url}/actualizar`, request);
   }
 
   registroLibroInterno(request: RegistroLibroIn) {

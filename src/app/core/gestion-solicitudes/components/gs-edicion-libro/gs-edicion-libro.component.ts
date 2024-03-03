@@ -42,6 +42,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import {
+  ActualizarLibroIn,
   ArchivoSustento,
   DetalleLibro,
   DetalleSolicitudLibro,
@@ -63,11 +64,11 @@ export class GsEdicionLibroComponent implements OnInit {
   environment: any;
   formDetalle!: FormGroup;
 
-  numeroSolicitud!: string;
+  numeroSolicitud: string = '';
 
   bolProccessing: boolean = false;
 
-  registroLibroIntenoIn!: RegistroLibroInternaIn;
+  registroLibroIntenoIn!: ActualizarLibroIn;
 
   registroLibroOut!: RegistroLibroOut;
 
@@ -183,8 +184,9 @@ export class GsEdicionLibroComponent implements OnInit {
     }
 
     //MAPPER REGISTRO - INTERNO
-    this.registroLibroIntenoIn = new RegistroLibroInternaIn();
+    this.registroLibroIntenoIn = new ActualizarLibroIn();
     const archivoSustento2 = new Array<Sustento>();
+
     this.arrayFilesSustento.forEach((x) => {
       archivoSustento2.push({
         codigoNombre: x.idFile,
@@ -192,24 +194,21 @@ export class GsEdicionLibroComponent implements OnInit {
       });
     });
     this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
-    this.registroLibroIntenoIn.codigoModoRegistro = 'E';
+    this.registroLibroIntenoIn.codigoModoRegistro = 'I';
     this.registroLibroIntenoIn.detalleSolicitud = arrayDetalle;
+    this.registroLibroIntenoIn.numeroSolicitud = this.numeroSolicitud;
 
-    let userDataString = localStorage.getItem('user');
-    if (this.isInternal) {
-      userDataString = localStorage.getItem('user_solicitante');
-    }
-    const userData = JSON.parse(userDataString!);
+    this.registroLibroIntenoIn.detalleSolicitud.forEach((detalle) => {
+      if (!detalle.idDetalleSolicitud) {
+        detalle.idDetalleSolicitud = -1;
+      }
+    });
 
-    this.registroLibroIntenoIn.dniSolicitante = userData.dni;
-    this.registroLibroIntenoIn.preNombreSolicitante = userData.preNombre;
-    this.registroLibroIntenoIn.primerApeSolicitante = userData.primerApellido;
-    this.registroLibroIntenoIn.segundoApeSolicitante = userData.segundoApellido;
-    this.registroLibroIntenoIn.codigoOrecSolicitante = userData.codigoOrec;
+    console.log(this.registroLibroIntenoIn);
 
     if (this.isInternal) {
       this.registroLibroService
-        .registroLibroInterno(this.registroLibroIntenoIn)
+        .actualizarLibro(this.registroLibroIntenoIn)
         .subscribe(
           (data: RegistroLibroOut) => {
             this.registroLibroOut = data;
@@ -224,11 +223,11 @@ export class GsEdicionLibroComponent implements OnInit {
               this.bolProccessing = false;
               return;
             }
+            this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
           }
         );
     }
     localStorage.removeItem('user_solicitante');
-    this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
   }
 
   getLibro(numeroSolicitud: string): void {
