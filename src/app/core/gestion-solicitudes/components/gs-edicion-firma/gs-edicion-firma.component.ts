@@ -52,6 +52,7 @@ import { RequestPaso1 } from 'src/app/core/firmas/components/step1-datos-solicit
 import { UploadFileService } from '../../../../shared/services/upload-file.service';
 import { ArchivoSustento } from 'src/app/core/actas-registrales/models/libro.model';
 import { OficinaService } from 'src/app/masters/services/oficina.service';
+import { DetalleSolicitudLibro } from '../../models/gestion.model';
 
 @Component({
   selector: 'app-gs-edicion-firma',
@@ -223,12 +224,25 @@ export class GsEdicionFirma2Component implements OnInit {
             arrAltaRequired = ['03', '04', '08'];
           }
         }
+        x.detalleSolicitud.detalleArchivo.forEach((item) => {
+          if (item.codigoTipoArchivo === '09') {
+            item.codigoTipoArchivo = '03';
+          }
+          if (item.codigoTipoArchivo === '10') {
+            item.codigoTipoArchivo = '04';
+          }
+          if (item.codigoTipoArchivo === '21') {
+            item.codigoTipoArchivo = '08';
+          }
+        });
+
         const result = arrAltaRequired.filter(
           (value) =>
             !x.detalleSolicitud.detalleArchivo.some(
               (obj) => obj.codigoTipoArchivo === value
             )
         );
+        console.log(result);
         if (result.length > 0) {
           const missing = this.tipoArchivoDetalleAlta.filter((obj) =>
             result.some((value) => value === obj.codigo)
@@ -249,18 +263,32 @@ export class GsEdicionFirma2Component implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ACTUALIZAR
       ) {
-        let arrActualizarRequired = ['03', '04'] || ['09', '10'];
+        let arrActualizarRequired = ['09', '10'];
         if (userData?.perfil !== null) {
           if (this.esObligatorio === '1') {
-            arrActualizarRequired = ['09', '10', '21'] || ['03', '04', '08'];
+            arrActualizarRequired = ['09', '10', '21'];
           }
         }
+        x.detalleSolicitud.detalleArchivo.forEach((item) => {
+          if (item.codigoTipoArchivo === '03') {
+            item.codigoTipoArchivo = '09';
+          }
+          if (item.codigoTipoArchivo === '04') {
+            item.codigoTipoArchivo = '10';
+          }
+          if (item.codigoTipoArchivo === '08') {
+            item.codigoTipoArchivo = '21';
+          }
+        });
+
         const result = arrActualizarRequired.filter(
           (value) =>
             !x.detalleSolicitud.detalleArchivo.some(
               (obj) => obj.codigoTipoArchivo === value
             )
         );
+        console.log(result);
+
         if (result.length > 0) {
           const missing = this.tipoArchivoDetalleActualizar.filter((obj) =>
             result.some((value) => value === obj.codigo)
