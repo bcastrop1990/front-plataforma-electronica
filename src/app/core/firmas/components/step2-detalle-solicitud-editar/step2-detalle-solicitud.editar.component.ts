@@ -120,7 +120,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
       );
 
       if (this.detalleSolicitudFirma.idDetalleSolicitud) {
-        this.form.controls['idTipoSolicitud'].disable();
         this.form.controls['numeroDocumento'].disable();
         this.form.controls['preNombres'].disable();
         this.form.controls['primerApellido'].disable();

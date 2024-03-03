@@ -217,7 +217,7 @@ export class GsEdicionFirma2Component implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ALTA
       ) {
-        let arrAltaRequired = ['03', '04'];
+        let arrAltaRequired = ['03', '04'] || ['09', '10'];
         if (userData?.perfil !== null) {
           if (this.esObligatorio === '1') {
             arrAltaRequired = ['03', '04', '08'];
@@ -249,10 +249,10 @@ export class GsEdicionFirma2Component implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ACTUALIZAR
       ) {
-        let arrActualizarRequired = ['09', '10'];
+        let arrActualizarRequired = ['03', '04'] || ['09', '10'];
         if (userData?.perfil !== null) {
           if (this.esObligatorio === '1') {
-            arrActualizarRequired = ['09', '10', '21'];
+            arrActualizarRequired = ['09', '10', '21'] || ['03', '04', '08'];
           }
         }
         const result = arrActualizarRequired.filter(
