@@ -51,6 +51,7 @@ import {
 import { RequestPaso1 } from 'src/app/core/firmas/components/step1-datos-solicitante/step1-datos-solicitante.component';
 import { UploadFileService } from '../../../../shared/services/upload-file.service';
 import { ArchivoSustento } from 'src/app/core/actas-registrales/models/libro.model';
+import { OficinaService } from 'src/app/masters/services/oficina.service';
 
 @Component({
   selector: 'app-gs-edicion-firma',
@@ -65,6 +66,7 @@ export class GsEdicionFirma2Component implements OnInit {
   numeroSolicitud: string = '';
 
   esObligatorio: string = '';
+  codigoOrec: string = '';
 
   esNuevoDetalle!: boolean;
 
@@ -120,7 +122,8 @@ export class GsEdicionFirma2Component implements OnInit {
     private maestroService: MaestrosService,
     private seguridadService: SeguridadService,
     public dialog: MatDialog,
-    private uploadFileService: UploadFileService
+    private uploadFileService: UploadFileService,
+    private oficinaService: OficinaService
   ) {}
 
   abrirModalConfirmacion() {
@@ -148,6 +151,7 @@ export class GsEdicionFirma2Component implements OnInit {
     this.formDetalle.disable();
 
     this.listarTipoSolicitud();
+
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_SUSTENTO);
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ALTA);
     this.listarTipoArchivo(
@@ -245,7 +249,12 @@ export class GsEdicionFirma2Component implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ACTUALIZAR
       ) {
-        const arrActualizarRequired = ['09', '10'];
+        let arrActualizarRequired = ['09', '10'];
+        if (userData?.perfil !== null) {
+          if (this.esObligatorio === '1') {
+            arrActualizarRequired = ['09', '10', '21'];
+          }
+        }
         const result = arrActualizarRequired.filter(
           (value) =>
             !x.detalleSolicitud.detalleArchivo.some(
@@ -366,6 +375,26 @@ export class GsEdicionFirma2Component implements OnInit {
     localStorage.removeItem('user_solicitante');
   }
 
+  listarOficinaDetalle(codigo: string): void {
+    this.oficinaService.listOficinaDetalleInterno(this.codigoOrec).subscribe(
+      (data: OficinaDetalleOut) => {
+        this.oficinaDetalleOut = data;
+      },
+      (error) => {},
+      () => {
+        if (this.oficinaDetalleOut.code !== this.environment.CODE_000) {
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.oficinaDetalleOut.message}`
+          );
+          return;
+        }
+
+        this.esObligatorio = this.oficinaDetalleOut.data.oraf;
+      }
+    );
+  }
+
   getSolcitudFirma(numeroSolicitud: string): void {
     this.spinner.show();
     this.gestionService.getDetailFirma(numeroSolicitud).subscribe(
@@ -387,6 +416,8 @@ export class GsEdicionFirma2Component implements OnInit {
         }
 
         this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+        this.codigoOrec = this.detalleFirma.codigoOrec;
+        this.listarOficinaDetalle(this.codigoOrec);
 
         this.formDetalle.patchValue(this.detalleFirma);
 

@@ -305,7 +305,12 @@ export class Step2DatosSolicitudComponent implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ACTUALIZAR
       ) {
-        const arrActualizarRequired = ['09', '10'];
+        let arrActualizarRequired = ['09', '10'];
+        if (userData?.perfil !== null) {
+          if (this.esObligatorio === '1') {
+            arrActualizarRequired = ['09', '10', '21'];
+          }
+        }
         const result = arrActualizarRequired.filter(
           (value) =>
             !x.detalleSolicitud.detalleArchivo.some(

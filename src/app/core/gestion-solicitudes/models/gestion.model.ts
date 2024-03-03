@@ -129,9 +129,11 @@ export class DetalleSolicitudLibro {
 }
 
 export class DetalleFirma extends Detalle2 {
+  codigoOrec: string;
   detalleSolicitudFirma: DetalleSolicitudFirma[];
   constructor() {
     super();
+    this.codigoOrec = '';
     this.detalleSolicitudFirma = new Array<DetalleSolicitudFirma>();
   }
 }
