@@ -414,6 +414,7 @@ export class Step2DatosSolicitudComponent implements OnInit {
       );
     }
     if (this.isInternal) {
+      console.log(this.registroFirmaInternaIn);
       this.registroFirmasService
         .registroFirmaInterno(this.registroFirmaInternaIn)
         .subscribe(
@@ -433,10 +434,10 @@ export class Step2DatosSolicitudComponent implements OnInit {
             // @ts-ignore
             stepper.selected.completed = true;
             stepper.next();
+            localStorage.removeItem('user_solicitante');
           }
         );
     }
-    localStorage.removeItem('user_solicitante');
   }
 
   btnAddDetalle(): void {
