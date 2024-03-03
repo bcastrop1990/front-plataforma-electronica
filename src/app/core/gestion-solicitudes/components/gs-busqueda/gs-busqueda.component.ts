@@ -185,8 +185,14 @@ export class GsBusquedaComponent implements OnInit {
     this.getEstadosSolicitud();
     this.getTipoRegistro();
     this.getListaBusqueda();
+    this.clearLs();
     // this.validarCoordinador();
     //this.habilitado();
+  }
+
+  clearLs() {
+    localStorage.removeItem('user_solicitante');
+    localStorage.removeItem('access_token_external');
   }
 
   validarCoordinador() {

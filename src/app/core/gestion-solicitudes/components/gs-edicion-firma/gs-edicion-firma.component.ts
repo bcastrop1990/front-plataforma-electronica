@@ -286,7 +286,6 @@ export class GsEdicionFirma2Component implements OnInit {
     this.registroFirmaInternaIn = new ActualizarFirmaIn();
     const archivoSustento2 = new Array<Sustento>();
     const idNull = -1;
-    console.log(this.arrayArchivoSustento);
     this.arrayFilesSustento.forEach((x) => {
       if (!x.idArchivo) {
         archivoSustento2.push({
@@ -301,8 +300,6 @@ export class GsEdicionFirma2Component implements OnInit {
     this.registroFirmaInternaIn.codigoModoRegistro = 'I';
     this.registroFirmaInternaIn.detalleSolicitud = arrayDetalle;
     this.registroFirmaInternaIn.numeroSolicitud = this.numeroSolicitud;
-
-    console.log(this.registroFirmaInternaIn);
 
     this.registroFirmaInternaIn.detalleSolicitud.forEach((detalle) => {
       detalle.detalleArchivo.forEach((archivo) => {
@@ -346,6 +343,20 @@ export class GsEdicionFirma2Component implements OnInit {
               return;
             }
 
+            let cumpleCondicionBaja = false;
+            this.registroFirmaInternaIn.detalleSolicitud.forEach((detalle) => {
+              if (detalle.idTipoSolicitud === 2) {
+                if (detalle.detalleArchivo.length > 0) {
+                  this.utilService.getAlert(
+                    `Aviso:`,
+                    `Las solicitudes de Baja no permiten archivos`
+                  );
+                  cumpleCondicionBaja = true;
+                }
+              }
+            });
+            if (cumpleCondicionBaja) return;
+
             const archivosSustentos = localStorage.getItem('idFileSustento');
             const archivosDetalle = localStorage.getItem('idFileDetalle');
             const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
@@ -356,7 +367,6 @@ export class GsEdicionFirma2Component implements OnInit {
 
             if (this.parsedArchivosSustentos) {
               this.parsedArchivosSustentos.forEach((item) => {
-                console.log(item);
                 this.uploadFileService
                   .removeSustento(item)
                   .subscribe((data) => {});
@@ -433,7 +443,6 @@ export class GsEdicionFirma2Component implements OnInit {
         this.formDetalle.patchValue(this.detalleFirma);
 
         this.arrayArchivoSustento = this.detalleFirma.archivoSustento;
-        console.log(this.arrayArchivoSustento);
 
         if (this.detalleFirma.detalleSolicitudFirma.length > 0) {
           this.detalleFirma.detalleSolicitudFirma.forEach((detalle) => {
@@ -519,7 +528,6 @@ export class GsEdicionFirma2Component implements OnInit {
     this.utilService.getAlert('Aviso', message);
   }
   getFilesArray(arr: List[]): void {
-    console.log(arr);
     this.arrayFilesSustento = arr;
   }
 
