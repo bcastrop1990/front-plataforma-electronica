@@ -44,6 +44,7 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   arrayTipoArchivo: TipoArchivo[] = [];
 
   detalleSolicitud!: DetalleSolicitud;
+  detalleData: boolean = false;
 
   personaIn!: PersonaIn;
   // requiredTipoArchivoBoolean: boolean = true;
@@ -117,6 +118,15 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
       this.form.controls['idTipoSolicitud'].setValue(
         Number(this.detalleSolicitudFirma.idTipoSolicitud.trim())
       );
+
+      if (this.detalleSolicitudFirma.idDetalleSolicitud) {
+        this.form.controls['idTipoSolicitud'].disable();
+        this.form.controls['numeroDocumento'].disable();
+        this.form.controls['preNombres'].disable();
+        this.form.controls['primerApellido'].disable();
+        this.form.controls['segundoApellido'].disable();
+      }
+
       this.tipoSolicitudSeleccionada = Number(
         this.detalleSolicitudFirma.idTipoSolicitud.trim()
       );
