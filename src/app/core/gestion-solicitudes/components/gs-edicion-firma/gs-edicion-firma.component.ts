@@ -335,6 +335,14 @@ export class GsEdicionFirma2Component implements OnInit {
               return;
             }
 
+            if (this.registroFirmaInternaIn.listArchivoSustento.length === 0) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `Se debe agregar al menos un archivo Sustento`
+              );
+              return;
+            }
+
             const archivosSustentos = localStorage.getItem('idFileSustento');
             const archivosDetalle = localStorage.getItem('idFileDetalle');
             const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
