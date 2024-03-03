@@ -111,6 +111,7 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     });
 
     //bcastro - inicio: se agrega el detalle de la firma, que llega desde la edicion de firma
+    console.log(this.detalleSolicitudFirma);
     if (this.detalleSolicitudFirma) {
       this.arrayArchivoDetalle = this.detalleSolicitudFirma.archivos;
 
@@ -155,10 +156,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   }
 
   fnLoadTipoArchivo(idTipoSolicitud: number): void {
-    if (this.tipoSolicitudSeleccionada !== 0) {
-      idTipoSolicitud = this.tipoSolicitudSeleccionada;
-    }
-
     switch (idTipoSolicitud) {
       case this.environment.TIPO_SOLICITUD_ALTA:
         this.arrayTipoArchivo = this.arrayTipoArchivoAlta;
