@@ -335,7 +335,10 @@ export class GsEdicionFirma2Component implements OnInit {
               return;
             }
 
-            if (this.registroFirmaInternaIn.listArchivoSustento.length === 0) {
+            if (
+              this.registroFirmaInternaIn.listArchivoSustento.length === 0 &&
+              this.arrayArchivoSustento.length === 0
+            ) {
               this.utilService.getAlert(
                 `Aviso:`,
                 `Se debe agregar al menos un archivo Sustento`
@@ -430,6 +433,7 @@ export class GsEdicionFirma2Component implements OnInit {
         this.formDetalle.patchValue(this.detalleFirma);
 
         this.arrayArchivoSustento = this.detalleFirma.archivoSustento;
+        console.log(this.arrayArchivoSustento);
 
         if (this.detalleFirma.detalleSolicitudFirma.length > 0) {
           this.detalleFirma.detalleSolicitudFirma.forEach((detalle) => {
