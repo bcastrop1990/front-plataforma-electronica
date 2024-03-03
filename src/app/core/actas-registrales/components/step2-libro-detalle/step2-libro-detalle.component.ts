@@ -7,6 +7,7 @@ import { TipoSolicitud } from '../../../firmas/models/tipo-solicitud.model';
 import { Articulo, Lengua } from '../../../../masters/models/maestro.model';
 import { DetalleLibro, DetalleSolicitudLibro } from '../../models/libro.model';
 import { DetalleSolicitudLibroRegistro } from '../../../gestion-solicitudes/models/atencion.model';
+import { Archivos } from 'src/app/core/gestion-solicitudes/models/gestion.model';
 
 @Component({
   selector: 'app-step2-libro-detalle',
@@ -24,10 +25,14 @@ export class Step2LibroDetalleComponent implements OnInit {
 
   cantidad!: number[];
 
+  arrayArchivoDetalle!: Archivos[];
+
   @Input() index: number | undefined;
   @Input() arrayLenguas!: Lengua[] | [];
   @Input() arrayArticulos!: Articulo[] | [];
   @Input() setDetalle!: DetalleLibro;
+
+  @Input() detalleLibro!: DetalleLibro;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,6 +65,9 @@ export class Step2LibroDetalleComponent implements OnInit {
 
     if (this.setDetalle) {
       this.form.patchValue(this.setDetalle);
+      this.form.controls['numeroUltimaActa'].setValue(
+        this.setDetalle.numeroUltimaActa.trim()
+      );
       this.form.controls['codigoLengua'].setValue(
         this.setDetalle.idLengua.trim()
       );
@@ -83,6 +91,10 @@ export class Step2LibroDetalleComponent implements OnInit {
       this.form.controls['codigoArticulo'].value;
     this.detalleSolicitudLibro.numeroUltimaActa =
       this.form.controls['numeroUltimaActa'].value;
+
+    this.detalleSolicitudLibro.idDetalleSolLibro = Number(
+      this.setDetalle.idDetalleSolicitud
+    );
 
     // EMMIT
     return this.detalleSolicitudLibro;

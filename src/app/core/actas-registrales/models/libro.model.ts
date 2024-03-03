@@ -137,11 +137,11 @@ export class ActualizarLibroIn {
 export class Sustento {
   codigoNombre: string;
   tipoCodigoNombre: string;
-  idArchivo?: string;
+  idArchivo?: number;
   constructor() {
     this.codigoNombre = '';
     this.tipoCodigoNombre = '';
-    this.idArchivo = '';
+    this.idArchivo = 0;
   }
 }
 
@@ -162,13 +162,13 @@ export class ArchivoDetalle {
 }
 
 export class DetalleSolicitudLibro {
-  idDetalleSolicitud?: number;
+  idDetalleSolLibro?: number;
   cantidad: number;
   codigoArticulo: string;
   codigoLengua: string;
   numeroUltimaActa: number;
   constructor() {
-    this.idDetalleSolicitud = 0;
+    this.idDetalleSolLibro = 0;
     this.cantidad = 0;
     this.codigoArticulo = '';
     this.codigoLengua = '';

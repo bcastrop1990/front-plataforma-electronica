@@ -53,6 +53,7 @@ import {
   Sustento,
 } from 'src/app/core/actas-registrales/models/libro.model';
 import { RegistroLibroService } from 'src/app/core/actas-registrales/services/registro-libro.service';
+import { UploadFileService } from 'src/app/shared/services/upload-file.service';
 
 @Component({
   selector: 'app-gs-edicion-libro',
@@ -67,6 +68,12 @@ export class GsEdicionLibroComponent implements OnInit {
   numeroSolicitud: string = '';
 
   bolProccessing: boolean = false;
+
+  listIdDetalleSolicitudLibroEliminar: number[] = [];
+
+  parsedIdDetalleCompleto: string[] = [];
+  parsedArchivosDetalle: string[] = [];
+  parsedArchivosSustentos: string[] = [];
 
   registroLibroIntenoIn!: ActualizarLibroIn;
 
@@ -116,6 +123,8 @@ export class GsEdicionLibroComponent implements OnInit {
     private registroLibroService: RegistroLibroService,
     private maestroService: MaestrosService,
     private seguridadService: SeguridadService,
+    private uploadFileService: UploadFileService,
+
     public dialog: MatDialog
   ) {}
 
@@ -142,6 +151,11 @@ export class GsEdicionLibroComponent implements OnInit {
         this.getLibro(this.numeroSolicitud);
       }
     });
+    this.clearLs();
+  }
+
+  clearLs() {
+    localStorage.removeItem('idDetalleCompleto');
   }
 
   btnActualizar(): void {
@@ -186,12 +200,15 @@ export class GsEdicionLibroComponent implements OnInit {
     //MAPPER REGISTRO - INTERNO
     this.registroLibroIntenoIn = new ActualizarLibroIn();
     const archivoSustento2 = new Array<Sustento>();
-
+    const idNull = -1;
     this.arrayFilesSustento.forEach((x) => {
-      archivoSustento2.push({
-        codigoNombre: x.idFile,
-        tipoCodigoNombre: x.fileTypeId,
-      });
+      if (!x.idArchivo) {
+        archivoSustento2.push({
+          codigoNombre: x.idFile,
+          idArchivo: idNull,
+          tipoCodigoNombre: x.fileTypeId,
+        });
+      }
     });
     this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
     this.registroLibroIntenoIn.codigoModoRegistro = 'I';
@@ -199,8 +216,9 @@ export class GsEdicionLibroComponent implements OnInit {
     this.registroLibroIntenoIn.numeroSolicitud = this.numeroSolicitud;
 
     this.registroLibroIntenoIn.detalleSolicitud.forEach((detalle) => {
-      if (!detalle.idDetalleSolicitud) {
-        detalle.idDetalleSolicitud = -1;
+      console.log(detalle);
+      if (!detalle.idDetalleSolLibro) {
+        detalle.idDetalleSolLibro = -1;
       }
     });
 
@@ -220,8 +238,41 @@ export class GsEdicionLibroComponent implements OnInit {
                 `Aviso:`,
                 `${this.registroLibroOut.message}`
               );
-              this.bolProccessing = false;
               return;
+            }
+
+            const archivosSustentos = localStorage.getItem('idFileSustento');
+            const archivosDetalle = localStorage.getItem('idFileDetalle');
+            const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
+
+            this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
+            this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
+            this.parsedIdDetalleCompleto = JSON.parse(idDetalleCompleto!);
+
+            if (this.parsedArchivosSustentos) {
+              this.parsedArchivosSustentos.forEach((item) => {
+                console.log(item);
+                this.uploadFileService
+                  .removeSustento(item)
+                  .subscribe((data) => {});
+              });
+            }
+
+            if (this.parsedArchivosDetalle) {
+              this.parsedArchivosDetalle.forEach((item) => {
+                this.uploadFileService
+                  .removeDetalle(item)
+                  .subscribe((data) => {});
+              });
+            }
+
+            if (this.parsedIdDetalleCompleto) {
+              this.parsedIdDetalleCompleto.forEach((item) => {
+                console.log(item);
+                this.gestionService
+                  .getDeleteDetalleLibro(item)
+                  .subscribe((data) => {});
+              });
             }
             this.utilService.link(this.environment.URL_MOD_GESTION_SOLICITUDES);
           }
@@ -301,11 +352,12 @@ export class GsEdicionLibroComponent implements OnInit {
   }
 
   btnDeleteDetalle(item: DetalleLibro): void {
+    this.listIdDetalleSolicitudLibroEliminar.push(item.idDetalleSolicitud);
     this.arrayDetalle.splice(this.arrayDetalle.indexOf(item, 0), 1);
-    // this.obtenerAtencion.detalleSolicitudLibro.splice(
-    //   this.obtenerAtencion.detalleSolicitudLibro.indexOf(item, 0),
-    //   1
-    // );
+    localStorage.setItem(
+      'idDetalleCompleto',
+      JSON.stringify(this.listIdDetalleSolicitudLibroEliminar)
+    );
   }
 
   listarTipoSolicitud(): void {

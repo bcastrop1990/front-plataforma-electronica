@@ -98,6 +98,12 @@ export class GestionService {
     );
   }
 
+  getDeleteDetalleLibro(id: string) {
+    return this.http.get<RemoveOut>(
+      `${this.url}/solicitudes/${id}/deleteDetalleLibro`
+    );
+  }
+
   getAtencionSolicitud(nroSolicitud: string) {
     return this.http.get<ObtenerAtencionOut>(
       `${this.url}/solicitudes/${nroSolicitud}/atencion`
