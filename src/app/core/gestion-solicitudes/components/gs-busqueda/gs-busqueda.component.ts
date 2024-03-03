@@ -437,6 +437,7 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
+          console.log(this.detalleLibro);
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
@@ -468,6 +469,7 @@ export class GsBusquedaComponent implements OnInit {
             return;
           }
           this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+          console.log(this.detalleFirma);
 
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
@@ -817,6 +819,7 @@ export class GsBusquedaComponent implements OnInit {
           return;
         }
         this.tipoRegistro = this.tipoRegistroOut.data;
+        console.log(this.tipoRegistro);
       }
     );
   }

@@ -87,11 +87,12 @@
 
             <div class="col-sm-12 col-md-3">
               <app-options
-              placeholder="-- Seleccione --"
                 #cboTipoRegistro
                 [label]="'Tipo de Registro'"
                 [options]="tipoRegistro"
                 [optionSelect]="esAnalista()"
+                [optionSelect]="true"
+                [todosEstados]="false"
                 (selected)="setTipoRegistro($event)"
               ></app-options>
             </div>
@@ -306,8 +307,6 @@
                       <span class="text-button-table">Atender</span>
                     </button>
 
-
-
                     <button
                       tabindex="-1"
                       mat-icon-button
@@ -319,7 +318,6 @@
                       <mat-icon fontSet="fas" fontIcon="fa-pencil"></mat-icon>
                       <span class="text-button-table">Editar</span>
                     </button>
-
 
                     <button
                       tabindex="-1"

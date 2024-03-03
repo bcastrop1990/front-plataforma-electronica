@@ -138,7 +138,7 @@ export class GsEdicionLibroComponent implements OnInit {
       descripcionOrecLarga: [''],
       ubigeo: [''],
     });
-    this.formDetalle.disable;
+    this.formDetalle.disable();
 
     this.listarTipoSolicitud();
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
