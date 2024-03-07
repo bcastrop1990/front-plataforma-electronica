@@ -40,6 +40,7 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   typesAllowed = ['pdf'];
 
   arrayFiles!: List[];
+  arrayFilesDetalle: List[] = [];
 
   tipoSolicitudSeleccionada: number = 0;
 
@@ -171,6 +172,7 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   getFilesArray(arr: List[]): void {
     //RECIBIENDO ARCHIVO
     this.arrayFiles = arr;
+    this.arrayFilesDetalle = arr;
 
     // BLOQUEAR TIPO DE SOLICITUD SI AGREGA 1 ARCHIVO O MÁS
     if (this.arrayFiles.length > 0) {
@@ -273,8 +275,14 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
       this.detalleSolicitudFirma.idDetalleSolicitud
     );
 
-    const detalleArchivo = new Array<ArchivoDetalle>();
-    if (this.arrayFiles && this.arrayFiles.length > 0) {
+    //!!REVISAR - SE ELIMINA CODIGO AQUI
+
+    let detalleArchivo = new Array<ArchivoDetalle>();
+
+    console.log('condicion para arrayFiles', this.arrayFilesDetalle);
+    console.log('condicion para arrayFiles.length', this.arrayFiles.length > 0);
+
+    if (this.arrayFilesDetalle && this.arrayFilesDetalle.length > 0) {
       this.arrayArchivoDetalle.forEach((detalle) => {
         const archivoModel = new Archivo();
         archivoModel.codigoNombre = detalle.codigo;
@@ -286,11 +294,14 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
         });
       });
 
-      this.arrayFiles = this.arrayFiles.filter((detalle) => {
+      /*
+      this.arrayFilesDetalle = this.arrayFilesDetalle.filter((detalle) => {
         return detalle.fileTypeId !== '';
       });
+      */
 
-      this.arrayFiles.forEach((detalle) => {
+      this.arrayFilesDetalle.forEach((detalle) => {
+        console.log('detalle', detalle);
         const archivoModel = new Archivo();
         archivoModel.codigoNombre = detalle.idFile;
         archivoModel.tipoCodigoNombre = detalle.fileTypeId;
@@ -300,6 +311,10 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
         });
       });
     }
+
+    detalleArchivo = detalleArchivo.filter(
+      (archivo) => archivo.codigoTipoArchivo !== ''
+    );
 
     this.detalleSolicitud.detalleArchivo = detalleArchivo;
 

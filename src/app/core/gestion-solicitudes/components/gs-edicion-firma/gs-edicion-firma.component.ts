@@ -177,6 +177,14 @@ export class GsEdicionFirma2Component implements OnInit {
   }
 
   btnActualizar(): void {
+    const archivosSustentos = localStorage.getItem('idFileSustento');
+    const archivosDetalle = localStorage.getItem('idFileDetalle');
+    const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
+
+    this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
+    this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
+    this.parsedIdDetalleCompleto = JSON.parse(idDetalleCompleto!);
+
     // GET ARRAY FROM CHILDREN COMPONENT
     let component: Step2DetalleSolicitudEditarComponent[] =
       this.components.toArray();
@@ -185,6 +193,9 @@ export class GsEdicionFirma2Component implements OnInit {
     let arrayDetalle: DetalleSolicitud[] = component.map((value) =>
       value.setDetalleSolicitud()
     );
+
+    console.log('directo desde el componente', component);
+    console.log('directo desde el array', arrayDetalle);
 
     // VALIDACION 1
     if (arrayDetalle.length <= 0) {
@@ -228,17 +239,15 @@ export class GsEdicionFirma2Component implements OnInit {
             arrAltaRequired = ['03', '04', '08'];
           }
         }
-        x.detalleSolicitud.detalleArchivo.forEach((item) => {
-          if (item.codigoTipoArchivo === '09') {
-            item.codigoTipoArchivo = '03';
-          }
-          if (item.codigoTipoArchivo === '10') {
-            item.codigoTipoArchivo = '04';
-          }
-          if (item.codigoTipoArchivo === '21') {
-            item.codigoTipoArchivo = '08';
-          }
-        });
+
+        if (this.parsedArchivosDetalle) {
+          this.parsedArchivosDetalle.forEach((itemDelete) => {
+            x.detalleSolicitud.detalleArchivo =
+              x.detalleSolicitud.detalleArchivo.filter(
+                (item) => item.archivo.idArchivo !== Number(itemDelete)
+              );
+          });
+        }
 
         const result = arrAltaRequired.filter(
           (value) =>
@@ -273,17 +282,14 @@ export class GsEdicionFirma2Component implements OnInit {
           }
         }
 
-        x.detalleSolicitud.detalleArchivo.forEach((item) => {
-          if (item.codigoTipoArchivo === '03') {
-            item.codigoTipoArchivo = '09';
-          }
-          if (item.codigoTipoArchivo === '04') {
-            item.codigoTipoArchivo = '10';
-          }
-          if (item.codigoTipoArchivo === '08') {
-            item.codigoTipoArchivo = '21';
-          }
-        });
+        if (this.parsedArchivosDetalle) {
+          this.parsedArchivosDetalle.forEach((itemDelete) => {
+            x.detalleSolicitud.detalleArchivo =
+              x.detalleSolicitud.detalleArchivo.filter(
+                (item) => item.archivo.idArchivo !== Number(itemDelete)
+              );
+          });
+        }
 
         const result = arrActualizarRequired.filter(
           (value) =>
@@ -401,14 +407,6 @@ export class GsEdicionFirma2Component implements OnInit {
 
             if (this.cumpleCondicionBaja) return;
 
-            const archivosSustentos = localStorage.getItem('idFileSustento');
-            const archivosDetalle = localStorage.getItem('idFileDetalle');
-            const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
-
-            this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
-            this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
-            this.parsedIdDetalleCompleto = JSON.parse(idDetalleCompleto!);
-
             if (this.parsedArchivosSustentos) {
               this.parsedArchivosSustentos.forEach((item) => {
                 this.uploadFileService
@@ -456,6 +454,7 @@ export class GsEdicionFirma2Component implements OnInit {
         }
 
         this.esObligatorio = this.oficinaDetalleOut.data.oraf;
+        console.log('Es obligatorio', this.esObligatorio);
       }
     );
   }

@@ -39,7 +39,6 @@
               (selectionChange)="fnLoadTipoArchivo(cboTipoSolicitud.value)"
               placeholder="Seleccione"
             >
-              <mat-option [value]="">-- Seleccione --</mat-option>
               <mat-option
                 *ngFor="let item of arrayTipoSolicitud"
                 [value]="item.codigo"
