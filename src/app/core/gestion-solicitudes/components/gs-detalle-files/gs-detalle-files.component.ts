@@ -93,7 +93,6 @@ export class GsDetalleFilesComponent implements OnInit {
   }
 
   btnBorrarDetalle(codigo: string) {
-    console.log(codigo);
     this.uploadService.removeDetalle(codigo).subscribe(
       (data: RemoveOut) => {
         this.removeArchivoOut = data;

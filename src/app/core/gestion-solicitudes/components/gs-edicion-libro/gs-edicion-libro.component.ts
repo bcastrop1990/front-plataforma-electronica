@@ -203,13 +203,11 @@ export class GsEdicionLibroComponent implements OnInit {
     const archivoSustento2 = new Array<Sustento>();
     const idNull = -1;
     this.arrayFilesSustento.forEach((x) => {
-      if (!x.idArchivo) {
-        archivoSustento2.push({
-          codigoNombre: x.idFile,
-          idArchivo: idNull,
-          tipoCodigoNombre: x.fileTypeId,
-        });
-      }
+      archivoSustento2.push({
+        codigoNombre: x.idFile,
+        idArchivo: idNull,
+        tipoCodigoNombre: x.fileTypeId,
+      });
     });
     this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
     this.registroLibroIntenoIn.codigoModoRegistro = 'I';
@@ -217,13 +215,10 @@ export class GsEdicionLibroComponent implements OnInit {
     this.registroLibroIntenoIn.numeroSolicitud = this.numeroSolicitud;
 
     this.registroLibroIntenoIn.detalleSolicitud.forEach((detalle) => {
-      console.log(detalle);
       if (!detalle.idDetalleSolLibro) {
         detalle.idDetalleSolLibro = -1;
       }
     });
-
-    console.log(this.registroLibroIntenoIn);
 
     if (this.isInternal) {
       this.registroLibroService
@@ -263,7 +258,6 @@ export class GsEdicionLibroComponent implements OnInit {
 
             if (this.parsedArchivosSustentos) {
               this.parsedArchivosSustentos.forEach((item) => {
-                console.log(item);
                 this.uploadFileService
                   .removeSustento(item)
                   .subscribe((data) => {});
@@ -280,7 +274,6 @@ export class GsEdicionLibroComponent implements OnInit {
 
             if (this.parsedIdDetalleCompleto) {
               this.parsedIdDetalleCompleto.forEach((item) => {
-                console.log(item);
                 this.gestionService
                   .getDeleteDetalleLibro(item)
                   .subscribe((data) => {});
@@ -313,8 +306,6 @@ export class GsEdicionLibroComponent implements OnInit {
           return;
         }
         this.obtenerAtencion = this.obtenerAtencionOut.data;
-
-        console.log(this.obtenerAtencion);
 
         this.formDetalle.patchValue(this.obtenerAtencion);
         this.codigoOrec = this.obtenerAtencion.codigoOrec;

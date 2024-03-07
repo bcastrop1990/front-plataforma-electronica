@@ -313,7 +313,7 @@
                       color="accent"
                       title="Editar"
                       (click)="btnEditar(element)"
-                      [hidden]="form.controls['codigoEstado'].value !== '1'"
+                      [hidden]="element?.estadoSolicitud !== 'REGISTRADO'"
                     >
                       <mat-icon fontSet="fas" fontIcon="fa-pencil"></mat-icon>
                       <span class="text-button-table">Editar</span>

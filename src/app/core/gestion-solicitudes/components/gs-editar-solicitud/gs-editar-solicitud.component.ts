@@ -82,7 +82,7 @@ export class GsEditarSolicitudComponent implements OnInit {
 
   ngOnInit(): void {
     this.environment = environment;
-this.title='titulo prueba';
+    this.title = 'titulo prueba';
     this.form = this.formBuilder.group({
       cantidad: ['', [Validators.required]],
       codigoLengua: ['', [Validators.required]],
@@ -101,15 +101,10 @@ this.title='titulo prueba';
     this.getAtender(this.dataDialog.nroSolicitud);
     this.listarLenguas(this.dataDialog.detalle.codigoOrec);
     this.listarArticulos();
-    this.dataDi();
   }
 
   cancel() {
     this.dialog.close();
-  }
-
-  dataDi() {
-    console.log(this.dataDialog);
   }
 
   btnViewFiles(files: any[]): void {
@@ -186,9 +181,7 @@ this.title='titulo prueba';
         }
         this.obtenerAtencion = this.obtenerAtencionOut.data;
 
-        this.obtenerAtencion.detalleSolicitudLibro.forEach((item) => {
-          console.log(item);
-        });
+        this.obtenerAtencion.detalleSolicitudLibro.forEach((item) => {});
       }
     );
   }
@@ -251,7 +244,6 @@ this.title='titulo prueba';
   }
 
   btnBorrarSustento(codigo: string) {
-    console.log(codigo);
     this.uploadService.removeSustento(codigo).subscribe(
       (data: RemoveOut) => {
         this.removeArchivoOut = data;

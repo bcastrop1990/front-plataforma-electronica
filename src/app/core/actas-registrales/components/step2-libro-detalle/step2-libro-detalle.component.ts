@@ -56,7 +56,6 @@ export class Step2LibroDetalleComponent implements OnInit {
       numeroUltimaActa: [
         '',
         [
-          Validators.required,
           Validators.minLength(1),
           Validators.maxLength(15),
           Validators.pattern('^[0-9]*$'),
@@ -66,9 +65,13 @@ export class Step2LibroDetalleComponent implements OnInit {
 
     if (this.setDetalle) {
       this.form.patchValue(this.setDetalle);
-      this.form.controls['numeroUltimaActa'].setValue(
-        this.setDetalle.numeroUltimaActa.trim()
-      );
+
+      if (this.setDetalle.numeroUltimaActa) {
+        this.form.controls['numeroUltimaActa'].setValue(
+          this.setDetalle.numeroUltimaActa.trim()
+        );
+      }
+
       this.form.controls['codigoLengua'].setValue(
         this.setDetalle.idLengua.trim()
       );

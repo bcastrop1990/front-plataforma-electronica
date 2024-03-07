@@ -279,9 +279,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
 
     let detalleArchivo = new Array<ArchivoDetalle>();
 
-    console.log('condicion para arrayFiles', this.arrayFilesDetalle);
-    console.log('condicion para arrayFiles.length', this.arrayFiles.length > 0);
-
     if (this.arrayFilesDetalle && this.arrayFilesDetalle.length > 0) {
       this.arrayArchivoDetalle.forEach((detalle) => {
         const archivoModel = new Archivo();
@@ -301,7 +298,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
       */
 
       this.arrayFilesDetalle.forEach((detalle) => {
-        console.log('detalle', detalle);
         const archivoModel = new Archivo();
         archivoModel.codigoNombre = detalle.idFile;
         archivoModel.tipoCodigoNombre = detalle.fileTypeId;

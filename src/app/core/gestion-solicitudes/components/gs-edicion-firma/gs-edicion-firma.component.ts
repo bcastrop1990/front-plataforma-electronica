@@ -194,9 +194,6 @@ export class GsEdicionFirma2Component implements OnInit {
       value.setDetalleSolicitud()
     );
 
-    console.log('directo desde el componente', component);
-    console.log('directo desde el array', arrayDetalle);
-
     // VALIDACION 1
     if (arrayDetalle.length <= 0) {
       this.utilService.getAlert(
@@ -361,8 +358,6 @@ export class GsEdicionFirma2Component implements OnInit {
       }
     });
 
-    console.log('Request  ', this.registroFirmaInternaIn);
-
     if (this.isInternal) {
       this.registroFirmasService
         .firmaActualizar(this.registroFirmaInternaIn)
@@ -454,7 +449,6 @@ export class GsEdicionFirma2Component implements OnInit {
         }
 
         this.esObligatorio = this.oficinaDetalleOut.data.oraf;
-        console.log('Es obligatorio', this.esObligatorio);
       }
     );
   }
@@ -480,8 +474,6 @@ export class GsEdicionFirma2Component implements OnInit {
         }
 
         this.detalleFirma = this.obtenerDetalleFirmaOut.data;
-
-        console.log(this.detalleFirma);
 
         this.codigoOrec = this.detalleFirma.codigoOrec;
 

@@ -137,10 +137,6 @@ export class GsAtencionComponent implements OnInit {
 
         this.formDetalle.patchValue(this.obtenerAtencion);
 
-        this.obtenerAtencion.detalleSolicitudLibro.forEach((item) => {
-          console.log(item);
-        });
-
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
           this.obtenerAtencion.detalleSolicitudLibro.forEach((x, i) => {
             this.arrayDetalle.push(x);

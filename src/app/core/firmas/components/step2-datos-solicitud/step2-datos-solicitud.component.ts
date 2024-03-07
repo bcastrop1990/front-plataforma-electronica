@@ -419,7 +419,6 @@ export class Step2DatosSolicitudComponent implements OnInit {
       );
     }
     if (this.isInternal) {
-      console.log(this.registroFirmaInternaIn);
       this.registroFirmasService
         .registroFirmaInterno(this.registroFirmaInternaIn)
         .subscribe(

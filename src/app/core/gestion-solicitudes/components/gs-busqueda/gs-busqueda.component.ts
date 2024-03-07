@@ -172,9 +172,7 @@ export class GsBusquedaComponent implements OnInit {
       codigoEstado: [this.codigoEstado],
       fechaIni: [''],
       fechaFin: [''],
-      codigoTipoRegistro: [
-        this.esAnalista() ? this.environment.TIPO_REGISTRO_LIBRO_ID : '',
-      ],
+      codigoTipoRegistro: [''],
       codigoDepartamento: [''],
       codigoProvincia: [''],
       codigoDistrito: [''],
@@ -206,10 +204,6 @@ export class GsBusquedaComponent implements OnInit {
       this.coordinador = false;
     }
     return this.user?.perfil.codigo === this.environment.PERFIL_ANALISTA;
-  }
-
-  habilitado() {
-    console.log(this.esAnalista());
   }
 
   btnClean() {
