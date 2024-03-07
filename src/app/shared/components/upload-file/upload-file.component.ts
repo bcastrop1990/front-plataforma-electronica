@@ -357,26 +357,17 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   deleteAll(array: Archivos[]) {
-    const modalChangePassword = this.utilService.getConfirmation(
-      'Eliminar archivos',
-      'Esto eliminara todos los archivos \n¿Seguro que desea eliminar?'
-    );
-
-    modalChangePassword.afterClosed().subscribe((result) => {
-      if (result) {
-        array.forEach((archivo) => {
-          this.arrayArchivoDetalleEliminar.push(archivo.idArchivo);
-          localStorage.setItem(
-            'idFileDetalle',
-            JSON.stringify(this.arrayArchivoDetalleEliminar)
-          );
-        });
-
-        this.data.splice(0);
-        this.setActivateValidation();
-        this.emitRefreshData();
-      }
+    array.forEach((archivo) => {
+      this.arrayArchivoDetalleEliminar.push(archivo.idArchivo);
+      localStorage.setItem(
+        'idFileDetalle',
+        JSON.stringify(this.arrayArchivoDetalleEliminar)
+      );
     });
+
+    this.data.splice(0);
+    this.setActivateValidation();
+    this.emitRefreshData();
   }
 
   delete(file: List) {

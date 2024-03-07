@@ -194,7 +194,18 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     }
 
     if (this.valorAnteriorSolicitud === 3 && idTipoSolicitud === 2) {
-      this.cambioBaja = true;
+      const modalChangePassword = this.utilService.getConfirmation(
+        'Eliminar archivos',
+        'Esto eliminara todos los archivos \n¿Seguro que desea eliminar?'
+      );
+      modalChangePassword.afterClosed().subscribe((result) => {
+        if (result) {
+          this.cambioBaja = true;
+        } else {
+          this.cambioBaja = false;
+          this.form.controls['idTipoSolicitud'].setValue(3);
+        }
+      });
     } else {
       this.cambioBaja = false;
     }
@@ -274,8 +285,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     this.detalleSolicitud.idDetalleSolicitud = Number(
       this.detalleSolicitudFirma.idDetalleSolicitud
     );
-
-    //!!REVISAR - SE ELIMINA CODIGO AQUI
 
     let detalleArchivo = new Array<ArchivoDetalle>();
 

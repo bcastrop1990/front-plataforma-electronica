@@ -29,7 +29,7 @@ export class UbigeoComponent implements OnInit, OnChanges {
   ubigeoOut!: UbigeoOut;
   ubigeo!: Ubigeo[];
 
-  @Input() encontrado: boolean = true;
+  @Input() encontrado: boolean = false;
 
   @Input() required: boolean = false;
   @Input() type: string = '';
