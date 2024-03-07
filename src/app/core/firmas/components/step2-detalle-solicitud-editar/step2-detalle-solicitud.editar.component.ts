@@ -5,6 +5,8 @@ import {
   OnInit,
   ViewChild,
   TemplateRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
@@ -41,10 +43,18 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
 
   tipoSolicitudSeleccionada: number = 0;
 
+  previousIdTipoSolicitud: number = 0;
+
+  valorAnteriorSolicitud!: number;
+
   arrayTipoArchivo: TipoArchivo[] = [];
 
   detalleSolicitud!: DetalleSolicitud;
   detalleData: boolean = false;
+
+  busquedaHabilitado: boolean = false;
+
+  cambioBaja: boolean = false;
 
   personaIn!: PersonaIn;
   // requiredTipoArchivoBoolean: boolean = true;
@@ -57,6 +67,8 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
 
   @Input() detalleSolicitudFirma!: DetalleSolicitudFirma;
   arrayArchivoDetalle!: ArchivosDetalle[];
+
+  @Output() doRefresIdTipoSolicitud: EventEmitter<number> = new EventEmitter();
 
   @ViewChild('filesTipoSolicitud')
   uploadFileTipoSolicitud!: UploadFileComponent;
@@ -111,8 +123,20 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     });
 
     //bcastro - inicio: se agrega el detalle de la firma, que llega desde la edicion de firma
-    console.log(this.detalleSolicitudFirma);
     if (this.detalleSolicitudFirma) {
+      if (
+        this.detalleSolicitudFirma.idTipoSolicitud === '2' ||
+        this.detalleSolicitudFirma.idTipoSolicitud === '3'
+      ) {
+        this.arrayTipoSolicitud = this.arrayTipoSolicitud.filter(
+          (item) => item.codigo !== 1
+        );
+      }
+      if (this.detalleSolicitudFirma.idTipoSolicitud === '1') {
+        this.arrayTipoSolicitud = this.arrayTipoSolicitud.filter(
+          (item) => item.codigo == 1
+        );
+      }
       this.arrayArchivoDetalle = this.detalleSolicitudFirma.archivos;
 
       this.form.patchValue(this.detalleSolicitudFirma);
@@ -125,6 +149,7 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
         this.form.controls['preNombres'].disable();
         this.form.controls['primerApellido'].disable();
         this.form.controls['segundoApellido'].disable();
+        this.busquedaHabilitado = true;
       }
 
       this.tipoSolicitudSeleccionada = Number(
@@ -155,7 +180,25 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     }
   }
 
+  emitTipoSolictud(idTipoSolicitud: number) {
+    this.doRefresIdTipoSolicitud.emit(idTipoSolicitud);
+  }
+
   fnLoadTipoArchivo(idTipoSolicitud: number): void {
+    this.previousIdTipoSolicitud = this.form.controls['idTipoSolicitud'].value;
+
+    if (idTipoSolicitud === 3) {
+      this.valorAnteriorSolicitud = 3;
+    }
+
+    if (this.valorAnteriorSolicitud === 3 && idTipoSolicitud === 2) {
+      this.cambioBaja = true;
+    } else {
+      this.cambioBaja = false;
+    }
+
+    this.emitTipoSolictud(idTipoSolicitud);
+
     switch (idTipoSolicitud) {
       case this.environment.TIPO_SOLICITUD_ALTA:
         this.arrayTipoArchivo = this.arrayTipoArchivoAlta;
@@ -181,8 +224,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
         break;
       case this.environment.TIPO_SOLICITUD_BAJA:
         this.arrayTipoArchivo = [];
-        // this.requiredTipoArchivoBoolean = false;
-
         this.disabledAll = true;
         this.form.get('celular')?.clearValidators();
         this.form.get('email')?.clearValidators();
@@ -208,7 +249,6 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
               '^[a-zA-Z0-9._-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,4}$'
             ),
           ]);
-
         break;
     }
     this.form.get('celular')?.updateValueAndValidity();

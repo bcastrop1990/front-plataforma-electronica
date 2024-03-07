@@ -29,6 +29,7 @@ export class Step2LibroDetalleComponent implements OnInit {
 
   @Input() index: number | undefined;
   @Input() arrayLenguas!: Lengua[] | [];
+  @Input() codigoOrec!: string;
   @Input() arrayArticulos!: Articulo[] | [];
   @Input() setDetalle!: DetalleLibro;
 
@@ -92,9 +93,11 @@ export class Step2LibroDetalleComponent implements OnInit {
     this.detalleSolicitudLibro.numeroUltimaActa =
       this.form.controls['numeroUltimaActa'].value;
 
-    this.detalleSolicitudLibro.idDetalleSolLibro = Number(
-      this.setDetalle.idDetalleSolicitud
-    );
+    if (this.setDetalle) {
+      this.detalleSolicitudLibro.idDetalleSolLibro = Number(
+        this.setDetalle.idDetalleSolicitud
+      );
+    }
 
     // EMMIT
     return this.detalleSolicitudLibro;

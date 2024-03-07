@@ -75,6 +75,8 @@ export class GsEdicionLibroComponent implements OnInit {
   parsedArchivosDetalle: string[] = [];
   parsedArchivosSustentos: string[] = [];
 
+  codigoOrec!: string;
+
   registroLibroIntenoIn!: ActualizarLibroIn;
 
   registroLibroOut!: RegistroLibroOut;
@@ -142,7 +144,6 @@ export class GsEdicionLibroComponent implements OnInit {
 
     this.listarTipoSolicitud();
     this.listarTipoArchivo(this.environment.TIPO_ARCHIVO_LIBRO_SUSTENTO);
-    this.listarLenguas();
     this.listarArticulos();
 
     this.activatedRoute.params.subscribe((params) => {
@@ -241,6 +242,17 @@ export class GsEdicionLibroComponent implements OnInit {
               return;
             }
 
+            if (
+              this.registroLibroIntenoIn.listArchivoSustento.length === 0 ||
+              this.arrayArchivoSustento.length === 0
+            ) {
+              this.utilService.getAlert(
+                `Aviso:`,
+                `Se debe agregar al menos un archivo Sustento`
+              );
+              return;
+            }
+
             const archivosSustentos = localStorage.getItem('idFileSustento');
             const archivosDetalle = localStorage.getItem('idFileDetalle');
             const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
@@ -305,10 +317,11 @@ export class GsEdicionLibroComponent implements OnInit {
         console.log(this.obtenerAtencion);
 
         this.formDetalle.patchValue(this.obtenerAtencion);
+        this.codigoOrec = this.obtenerAtencion.codigoOrec;
+
+        this.listarLenguas(this.codigoOrec);
 
         this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
-
-        console.log(this.arrayArchivoSustento);
 
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
           this.obtenerAtencion.detalleSolicitudLibro.forEach((x) => {
@@ -319,8 +332,8 @@ export class GsEdicionLibroComponent implements OnInit {
     );
   }
 
-  listarLenguas(): void {
-    this.maestroService.listLenguas().subscribe(
+  listarLenguas(codigo: string): void {
+    this.maestroService.listLenguasOficina(codigo).subscribe(
       (data: LenguaOut) => {
         this.lenguaOut = data;
       },
@@ -331,6 +344,7 @@ export class GsEdicionLibroComponent implements OnInit {
           return;
         }
         this.lengua = this.lenguaOut.data;
+        this.lengua.sort((a, b) => (a.codigo > b.codigo ? 1 : -1));
       }
     );
   }

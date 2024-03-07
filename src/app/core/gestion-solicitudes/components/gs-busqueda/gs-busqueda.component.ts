@@ -44,6 +44,7 @@ import {
   Libro,
   ObternerLibroOut,
 } from 'src/app/core/actas-registrales/models/libro.model';
+import { ContentObserver } from '@angular/cdk/observers';
 
 @Component({
   selector: 'app-gs-busqueda',
@@ -246,10 +247,19 @@ export class GsBusquedaComponent implements OnInit {
     this.busquedaIn = new BusquedaIn();
     this.busquedaIn = this.form.getRawValue();
 
+    if (this.esAnalista()) {
+      if (this.busquedaIn.codigoEstado === '1') {
+        this.busquedaIn.dniCrea = this.busquedaIn.codigoAnalistaAsignado;
+        this.busquedaIn.dniSolicitante = this.busquedaIn.codigoAnalistaAsignado;
+      }
+    }
+
     this.busquedaIn.fechaIni = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
+
+    console.log(this.busquedaIn);
 
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: BusquedaOut) => {
@@ -560,6 +570,7 @@ export class GsBusquedaComponent implements OnInit {
   }
 
   abrirModalConfirmacion(row: BusquedaData) {
+    console.log(row);
     const dialogRef = this.dialog.open(ConfirmationModalComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -819,7 +830,6 @@ export class GsBusquedaComponent implements OnInit {
           return;
         }
         this.tipoRegistro = this.tipoRegistroOut.data;
-        console.log(this.tipoRegistro);
       }
     );
   }

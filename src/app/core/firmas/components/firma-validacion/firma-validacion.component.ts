@@ -101,8 +101,6 @@ export class FirmaValidacionComponent implements OnInit {
     this.validarDatosInternoIn.dni = formDatosPersona.nroDni;
     this.validarDatosInternoIn.datosOficina = this.datosOficina;
 
-    console.log(this.validarDatosInternoIn);
-
     //USUARIO INTERNO
     if (this.isExternal) {
       this.registroFirmasService.validarDatos(this.validarDatosIn).subscribe(

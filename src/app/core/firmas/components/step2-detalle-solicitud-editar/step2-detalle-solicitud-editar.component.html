@@ -69,6 +69,7 @@
               type="button"
               mat-icon-button
               matSuffix
+              [hidden]="busquedaHabilitado"
               (click)="openDNIValidationModal()"
             >
               <mat-icon fontSet="fas" fontIcon="fa-search"></mat-icon>
@@ -171,6 +172,7 @@
         [requiredTipoArchivo]="true"
         [arrayTipoArchivo]="arrayTipoArchivo"
         [disabledAll]="disabledAll"
+        [cambioBaja]="cambioBaja"
         (doResponseMaxAllowed)="showResponse($event)"
         (doRefreshData)="getFilesArray($event)"
         [arrayArchivoDetalle]="arrayArchivoDetalle"

@@ -64,7 +64,6 @@ export class Step2DetalleSolicitudComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('detalle firmas bruno');
     this.environment = environment;
 
     this.form = this.formBuilder.group({

@@ -66,10 +66,14 @@ export class GsEdicionFirma2Component implements OnInit {
 
   numeroSolicitud: string = '';
 
+  //!eliminar
+  idTipoSoliciutdSelect!: number;
+
   esObligatorio: string = '';
   codigoOrec: string = '';
 
   esNuevoDetalle!: boolean;
+  cumpleCondicionBaja!: boolean;
 
   parsedIdDetalleCompleto: string[] = [];
   parsedArchivosDetalle: string[] = [];
@@ -218,7 +222,7 @@ export class GsEdicionFirma2Component implements OnInit {
         x.detalleSolicitud.idTipoSolicitud ===
         this.environment.TIPO_SOLICITUD_ALTA
       ) {
-        let arrAltaRequired = ['03', '04'] || ['09', '10'];
+        let arrAltaRequired = ['03', '04'];
         if (userData?.perfil !== null) {
           if (this.esObligatorio === '1') {
             arrAltaRequired = ['03', '04', '08'];
@@ -242,7 +246,6 @@ export class GsEdicionFirma2Component implements OnInit {
               (obj) => obj.codigoTipoArchivo === value
             )
         );
-        console.log(result);
         if (result.length > 0) {
           const missing = this.tipoArchivoDetalleAlta.filter((obj) =>
             result.some((value) => value === obj.codigo)
@@ -269,6 +272,7 @@ export class GsEdicionFirma2Component implements OnInit {
             arrActualizarRequired = ['09', '10', '21'];
           }
         }
+
         x.detalleSolicitud.detalleArchivo.forEach((item) => {
           if (item.codigoTipoArchivo === '03') {
             item.codigoTipoArchivo = '09';
@@ -287,7 +291,6 @@ export class GsEdicionFirma2Component implements OnInit {
               (obj) => obj.codigoTipoArchivo === value
             )
         );
-        console.log(result);
 
         if (result.length > 0) {
           const missing = this.tipoArchivoDetalleActualizar.filter((obj) =>
@@ -310,6 +313,14 @@ export class GsEdicionFirma2Component implements OnInit {
       return;
     }
 
+    if (!this.arrayFilesSustento) {
+      this.utilService.getAlert(
+        `Aviso:`,
+        `Se debe agregar al menos un Sustento`
+      );
+      return;
+    }
+
     //MAPPER REGISTRO - INTERNO
     this.registroFirmaInternaIn = new ActualizarFirmaIn();
     const archivoSustento2 = new Array<Sustento>();
@@ -326,6 +337,7 @@ export class GsEdicionFirma2Component implements OnInit {
 
     this.registroFirmaInternaIn.listArchivoSustento = archivoSustento2;
     this.registroFirmaInternaIn.codigoModoRegistro = 'I';
+    //!CAMBIAR EL DETALLE QUE SE GUARDE
     this.registroFirmaInternaIn.detalleSolicitud = arrayDetalle;
     this.registroFirmaInternaIn.numeroSolicitud = this.numeroSolicitud;
 
@@ -342,6 +354,8 @@ export class GsEdicionFirma2Component implements OnInit {
         detalle.idDetalleSolicitud = -1;
       }
     });
+
+    console.log('Request  ', this.registroFirmaInternaIn);
 
     if (this.isInternal) {
       this.registroFirmasService
@@ -371,19 +385,21 @@ export class GsEdicionFirma2Component implements OnInit {
               return;
             }
 
-            let cumpleCondicionBaja = false;
+            /*
             this.registroFirmaInternaIn.detalleSolicitud.forEach((detalle) => {
               if (detalle.idTipoSolicitud === 2) {
-                if (detalle.detalleArchivo.length > 0) {
+                if (detalle.detalleArchivo.length >= 0) {
                   this.utilService.getAlert(
                     `Aviso:`,
                     `Las solicitudes de Baja no permiten archivos`
                   );
-                  cumpleCondicionBaja = true;
+                  this.cumpleCondicionBaja = true;
                 }
               }
             });
-            if (cumpleCondicionBaja) return;
+            */
+
+            if (this.cumpleCondicionBaja) return;
 
             const archivosSustentos = localStorage.getItem('idFileSustento');
             const archivosDetalle = localStorage.getItem('idFileDetalle');
@@ -465,7 +481,11 @@ export class GsEdicionFirma2Component implements OnInit {
         }
 
         this.detalleFirma = this.obtenerDetalleFirmaOut.data;
+
+        console.log(this.detalleFirma);
+
         this.codigoOrec = this.detalleFirma.codigoOrec;
+
         this.listarOficinaDetalle(this.codigoOrec);
 
         this.formDetalle.patchValue(this.detalleFirma);

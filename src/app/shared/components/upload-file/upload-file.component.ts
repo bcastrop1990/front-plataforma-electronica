@@ -26,8 +26,10 @@ import {
   ArchivoDetalle,
   ArchivoSustento,
 } from 'src/app/core/actas-registrales/models/libro.model';
+import { ContentObserver } from '@angular/cdk/observers';
 
 export interface List {
+  idSolicitud?: number; // [ALTA: 1, ACTULIZAR: 2, SUSTENTO: 3`]
   idArchivo?: number;
   idTipoArchivo?: string;
   idFile: string;
@@ -71,6 +73,9 @@ export class UploadFileComponent implements OnInit, OnChanges {
   @Input() arrayTipoArchivoAlta!: TipoArchivo[] | [];
   @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
+  @Input() idTipoSoliciutdSelect!: number;
+  @Input() cambioBaja: boolean = false;
+
   form!: FormGroup;
   data: List[] = [];
   loading = false;
@@ -86,7 +91,8 @@ export class UploadFileComponent implements OnInit, OnChanges {
   constructor(
     private formBuilder: FormBuilder,
     private storageService: UploadFileService,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private uploadFileService: UploadFileService
   ) {}
 
   ngOnInit(): void {
@@ -124,6 +130,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
             let item2: List;
             const fileTypeSelected = this.form.controls['idTipoArchivo'].value;
             item2 = {
+              idSolicitud: 1,
               idFile: item.idArchivo,
               idTipoArchivo: item.idTipoArchivo,
               fileName: item.nombreOriginal,
@@ -140,6 +147,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
             let item2: List;
             const fileTypeSelected = this.form.controls['idTipoArchivo'].value;
             item2 = {
+              idSolicitud: 2,
               idFile: item.idArchivo,
               idTipoArchivo: item.idTipoArchivo,
               fileName: item.nombreOriginal,
@@ -159,6 +167,7 @@ export class UploadFileComponent implements OnInit, OnChanges {
             let item2: List;
             const fileTypeSelected = this.form.controls['idTipoArchivo'].value;
             item2 = {
+              idSolicitud: 3,
               idArchivo: item.idArchivo,
               idTipoArchivo: item.idTipoArchivo,
               idFile: item.codigo,
@@ -181,6 +190,10 @@ export class UploadFileComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (this.form) {
       this.setDisabledInputs();
+    }
+
+    if (this.cambioBaja) {
+      this.deleteAll(this.arrayArchivoDetalle);
     }
   }
 
@@ -241,23 +254,47 @@ export class UploadFileComponent implements OnInit, OnChanges {
   attach(file: FileInput) {
     //VALIDANDO CANTIDAD DE TIPO ARCHIVO
     let uniqueValues = new Set();
-    let todosSonUnicos = true;
+    let todosSonUnicos = false;
+
+    if (this.data.length > 0) {
+      this.data.forEach((archivo) => {
+        if (
+          this.form.controls['idTipoArchivo'].value === archivo.idTipoArchivo
+        ) {
+          todosSonUnicos = true;
+        }
+        if (this.form.controls['idTipoArchivo'].value === archivo.fileTypeId) {
+          todosSonUnicos = true;
+        }
+      });
+    }
+
+    if (todosSonUnicos) {
+      this.emitResponseDifferenteTypeFile();
+      return;
+    }
+
+    /*
     this.data.forEach((item) => {
-      if (uniqueValues.has(item.fileTypeId)) {
+      if (uniqueValues.has(item.idTipoArchivo)) {
         todosSonUnicos = false;
       } else {
-        uniqueValues.add(item.fileTypeId);
+        uniqueValues.add(item.idTipoArchivo);
       }
       if (uniqueValues.has(this.form.controls['idTipoArchivo'].value)) {
         todosSonUnicos = false;
       } else {
-        uniqueValues.add(item.fileTypeId);
+        uniqueValues.add(this.form.controls['idTipoArchivo'].value);
       }
     });
+
     if (!todosSonUnicos) {
       this.emitResponseDifferenteTypeFile();
       return;
     }
+
+    */
+
     //Fin
 
     if (
@@ -299,7 +336,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
                   : '',
                 file: file.files[0],
               };
-              console.log(item);
               this.postUploadSuccess(item);
             },
             (error) => {
@@ -320,6 +356,29 @@ export class UploadFileComponent implements OnInit, OnChanges {
     }
   }
 
+  deleteAll(array: Archivos[]) {
+    const modalChangePassword = this.utilService.getConfirmation(
+      'Eliminar archivos',
+      'Esto eliminara todos los archivos \n¿Seguro que desea eliminar?'
+    );
+
+    modalChangePassword.afterClosed().subscribe((result) => {
+      if (result) {
+        array.forEach((archivo) => {
+          this.arrayArchivoDetalleEliminar.push(archivo.idArchivo);
+          localStorage.setItem(
+            'idFileDetalle',
+            JSON.stringify(this.arrayArchivoDetalleEliminar)
+          );
+        });
+
+        this.data.splice(0);
+        this.setActivateValidation();
+        this.emitRefreshData();
+      }
+    });
+  }
+
   delete(file: List) {
     const modalChangePassword = this.utilService.getConfirmation(
       'Eliminar',
@@ -328,7 +387,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
 
     modalChangePassword.afterClosed().subscribe((result) => {
       if (result) {
-        console.log(this.arrayArchivoSustento);
         if (this.arrayArchivoDetalle) {
           this.arrayArchivoDetalle.forEach((item) => {
             if (item.idArchivo === file.idFile) {
@@ -342,8 +400,6 @@ export class UploadFileComponent implements OnInit, OnChanges {
         }
 
         if (this.arrayArchivoSustento) {
-          console.log('entro aqui');
-          console.log(file.idFile);
           this.arrayArchivoSustento.forEach((item) => {
             if (item.idArchivo === file.idArchivo) {
               this.arrayArchivoSustentoEliminar.push(file.idArchivo);
@@ -353,6 +409,12 @@ export class UploadFileComponent implements OnInit, OnChanges {
               );
             }
           });
+        }
+
+        if (!this.arrayArchivoSustento || !this.arrayArchivoDetalle) {
+          this.uploadFileService
+            .delete(file.idFile)
+            .subscribe((data: DeleteOut) => {});
         }
 
         this.data.splice(this.data.indexOf(file, 0), 1);

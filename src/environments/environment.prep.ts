@@ -40,6 +40,7 @@ export const environment = {
   // TIPO DE ARCHIVO
   TIPO_ARCHIVO_FIRMA_SUSTENTO: '01',
   TIPO_ARCHIVO_LIBRO_SUSTENTO: '02',
+  TIPO_ARCHIVO_LIBRO_ATENCION_SUSTENTO: '07',
   TIPO_ARCHIVO_FIRMA_DETALLE_ALTA: '03',
   TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR: '04',
 
@@ -75,8 +76,10 @@ export const environment = {
   URL_MOD_SEGUIMIENTO_BUSQUEDA: '/seguimiento/busqueda',
   URL_MOD_GESTION_SOLICITUDES: '/gestion-solicitudes',
   URL_MOD_GESTION_SOLICITUDES_ATENCION: '/gestion-solicitudes/atencion',
-  URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA: '/gestion-solicitudes/edicion-firma',
-  URL_MOD_GESTION_SOLICITUDES_EDICION_LIBRO: '/gestion-solicitudes/edicion-libro',
+  URL_MOD_GESTION_SOLICITUDES_EDICION_FIRMA:
+    '/gestion-solicitudes/edicion-firma',
+  URL_MOD_GESTION_SOLICITUDES_EDICION_LIBRO:
+    '/gestion-solicitudes/edicion-libro',
   URL_MOD_REPORTES: '/reportes',
   URL_MOD_REPORTES_EXCEL: '/reportes/excel',
   URL_MOD_REPORTES_REPORTES_EXCEL: '/reportes-excel',

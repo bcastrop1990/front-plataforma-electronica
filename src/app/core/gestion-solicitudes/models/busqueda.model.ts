@@ -10,6 +10,7 @@ export class Busqueda {
 }
 
 export class BusquedaIn extends Busqueda {
+  dniSolicitante?: string;
   codigoAnalistaAsignado: string;
   codigoCentroPoblado: string;
   codigoDepartamento: string;
@@ -21,6 +22,7 @@ export class BusquedaIn extends Busqueda {
   fechaFin: string;
   fechaIni: string;
   numeroSolicitud: string;
+  dniCrea?: string;
   constructor() {
     super();
     this.codigoAnalistaAsignado = '';
@@ -34,6 +36,8 @@ export class BusquedaIn extends Busqueda {
     this.fechaFin = '';
     this.fechaIni = '';
     this.numeroSolicitud = '';
+    this.dniCrea = '';
+    this.dniSolicitante = '';
   }
 }
 

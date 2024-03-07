@@ -73,6 +73,7 @@
             [arrayTipoArchivoAlta]="tipoArchivoDetalleAlta"
             [arrayTipoArchivoActualizar]="tipoArchivoDetalleActualizar"
             [detalleSolicitudFirma]="item"
+            (doRefresIdTipoSolicitud)="(idTipoSoliciutdSelect)"
           >
           </app-step2-detalle-solicitud-editar>
         </div>
@@ -116,6 +117,7 @@
         (doResponseMaxAllowed)="showResponse($event)"
         (doRefreshData)="getFilesArray($event)"
         [arrayArchivoSustento]="arrayArchivoSustento"
+        [idTipoSoliciutdSelect]="idTipoSoliciutdSelect"
       >
       </app-upload-file>
     </ng-container>
