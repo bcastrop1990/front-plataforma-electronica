@@ -326,7 +326,7 @@ export class GsEdicionFirma2Component implements OnInit {
 
     //MAPPER REGISTRO - INTERNO
     this.registroFirmaInternaIn = new ActualizarFirmaIn();
-    const archivoSustento2 = new Array<Sustento>();
+    let archivoSustento2 = new Array<Sustento>();
     const idNull = -1;
     this.arrayFilesSustento.forEach((x) => {
       if (!x.idArchivo) {
@@ -335,12 +335,35 @@ export class GsEdicionFirma2Component implements OnInit {
           idArchivo: idNull,
           tipoCodigoNombre: x.fileTypeId,
         });
+      } else {
+        archivoSustento2.push({
+          codigoNombre: x.idFile,
+          idArchivo: x.idArchivo,
+          tipoCodigoNombre: x.idTipoArchivo!,
+        });
       }
     });
 
+    if (this.parsedArchivosSustentos) {
+      this.parsedArchivosSustentos.forEach((itemDelete) => {
+        archivoSustento2 = archivoSustento2.filter((archivo) => {
+          return archivo.idArchivo !== Number(itemDelete);
+        });
+      });
+    }
+
+    console.log(archivoSustento2);
+
+    if (archivoSustento2.length === 0) {
+      this.utilService.getAlert(
+        `Aviso:`,
+        `Se debe agregar al menos un Sustento`
+      );
+      return;
+    }
+
     this.registroFirmaInternaIn.listArchivoSustento = archivoSustento2;
     this.registroFirmaInternaIn.codigoModoRegistro = 'I';
-    //!CAMBIAR EL DETALLE QUE SE GUARDE
     this.registroFirmaInternaIn.detalleSolicitud = arrayDetalle;
     this.registroFirmaInternaIn.numeroSolicitud = this.numeroSolicitud;
 

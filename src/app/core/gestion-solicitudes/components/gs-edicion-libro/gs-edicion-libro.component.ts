@@ -160,6 +160,13 @@ export class GsEdicionLibroComponent implements OnInit {
   }
 
   btnActualizar(): void {
+    const archivosSustentos = localStorage.getItem('idFileSustento');
+    const archivosDetalle = localStorage.getItem('idFileDetalle');
+    const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
+
+    this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
+    this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
+    this.parsedIdDetalleCompleto = JSON.parse(idDetalleCompleto!);
     this.bolProccessing = true;
 
     // GET ARRAY FROM CHILDREN COMPONENT
@@ -198,9 +205,17 @@ export class GsEdicionLibroComponent implements OnInit {
       return;
     }
 
+    if (!this.arrayFilesSustento) {
+      this.utilService.getAlert(
+        `Aviso:`,
+        `Se debe agregar al menos un Sustento`
+      );
+      return;
+    }
+
     //MAPPER REGISTRO - INTERNO
     this.registroLibroIntenoIn = new ActualizarLibroIn();
-    const archivoSustento2 = new Array<Sustento>();
+    let archivoSustento2 = new Array<Sustento>();
     const idNull = -1;
     this.arrayFilesSustento.forEach((x) => {
       if (!x.idArchivo) {
@@ -209,8 +224,33 @@ export class GsEdicionLibroComponent implements OnInit {
           idArchivo: idNull,
           tipoCodigoNombre: x.fileTypeId,
         });
+      } else {
+        archivoSustento2.push({
+          codigoNombre: x.idFile,
+          idArchivo: x.idArchivo,
+          tipoCodigoNombre: x.idTipoArchivo!,
+        });
       }
     });
+
+    if (this.parsedArchivosSustentos) {
+      this.parsedArchivosSustentos.forEach((itemDelete) => {
+        archivoSustento2 = archivoSustento2.filter((archivo) => {
+          return archivo.idArchivo !== Number(itemDelete);
+        });
+      });
+    }
+
+    console.log(archivoSustento2);
+
+    if (archivoSustento2.length === 0) {
+      this.utilService.getAlert(
+        `Aviso:`,
+        `Se debe agregar al menos un Sustento`
+      );
+      return;
+    }
+
     this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
     this.registroLibroIntenoIn.codigoModoRegistro = 'I';
     this.registroLibroIntenoIn.detalleSolicitud = arrayDetalle;
@@ -251,14 +291,6 @@ export class GsEdicionLibroComponent implements OnInit {
               );
               return;
             }
-
-            const archivosSustentos = localStorage.getItem('idFileSustento');
-            const archivosDetalle = localStorage.getItem('idFileDetalle');
-            const idDetalleCompleto = localStorage.getItem('idDetalleCompleto');
-
-            this.parsedArchivosSustentos = JSON.parse(archivosSustentos!);
-            this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
-            this.parsedIdDetalleCompleto = JSON.parse(idDetalleCompleto!);
 
             if (this.parsedArchivosSustentos) {
               this.parsedArchivosSustentos.forEach((item) => {
@@ -317,8 +349,6 @@ export class GsEdicionLibroComponent implements OnInit {
         this.listarLenguas(this.codigoOrec);
 
         this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
-
-        console.log(this.arrayArchivoSustento);
 
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
           this.obtenerAtencion.detalleSolicitudLibro.forEach((x) => {
