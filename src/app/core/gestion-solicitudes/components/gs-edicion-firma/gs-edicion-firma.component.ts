@@ -358,6 +358,8 @@ export class GsEdicionFirma2Component implements OnInit {
       }
     });
 
+    console.log(this.registroFirmaInternaIn);
+
     if (this.isInternal) {
       this.registroFirmasService
         .firmaActualizar(this.registroFirmaInternaIn)
@@ -482,6 +484,8 @@ export class GsEdicionFirma2Component implements OnInit {
         this.formDetalle.patchValue(this.detalleFirma);
 
         this.arrayArchivoSustento = this.detalleFirma.archivoSustento;
+
+        console.log('recibiendo data', this.arrayArchivoSustento);
 
         if (this.detalleFirma.detalleSolicitudFirma.length > 0) {
           this.detalleFirma.detalleSolicitudFirma.forEach((detalle) => {

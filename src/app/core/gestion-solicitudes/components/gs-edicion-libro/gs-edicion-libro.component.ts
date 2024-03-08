@@ -203,11 +203,13 @@ export class GsEdicionLibroComponent implements OnInit {
     const archivoSustento2 = new Array<Sustento>();
     const idNull = -1;
     this.arrayFilesSustento.forEach((x) => {
-      archivoSustento2.push({
-        codigoNombre: x.idFile,
-        idArchivo: idNull,
-        tipoCodigoNombre: x.fileTypeId,
-      });
+      if (!x.idArchivo) {
+        archivoSustento2.push({
+          codigoNombre: x.idFile,
+          idArchivo: idNull,
+          tipoCodigoNombre: x.fileTypeId,
+        });
+      }
     });
     this.registroLibroIntenoIn.listArchivoSustento = archivoSustento2;
     this.registroLibroIntenoIn.codigoModoRegistro = 'I';
@@ -219,6 +221,8 @@ export class GsEdicionLibroComponent implements OnInit {
         detalle.idDetalleSolLibro = -1;
       }
     });
+
+    console.log(this.registroLibroIntenoIn);
 
     if (this.isInternal) {
       this.registroLibroService
@@ -313,6 +317,8 @@ export class GsEdicionLibroComponent implements OnInit {
         this.listarLenguas(this.codigoOrec);
 
         this.arrayArchivoSustento = this.obtenerAtencion.archivoSustento;
+
+        console.log(this.arrayArchivoSustento);
 
         if (this.obtenerAtencion.detalleSolicitudLibro.length > 0) {
           this.obtenerAtencion.detalleSolicitudLibro.forEach((x) => {

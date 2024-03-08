@@ -175,10 +175,12 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
     this.arrayFilesDetalle = arr;
 
     // BLOQUEAR TIPO DE SOLICITUD SI AGREGA 1 ARCHIVO O MÁS
-    if (this.arrayFiles.length > 0) {
-      this.form.controls['idTipoSolicitud'].enable();
-    } else {
-      this.form.controls['idTipoSolicitud'].enable();
+    if (!this.detalleSolicitudFirma.numeroDocumento) {
+      if (this.arrayFiles.length > 0) {
+        this.form.controls['idTipoSolicitud'].disable();
+      } else {
+        this.form.controls['idTipoSolicitud'].enable();
+      }
     }
   }
 
@@ -189,25 +191,29 @@ export class Step2DetalleSolicitudEditarComponent implements OnInit {
   fnLoadTipoArchivo(idTipoSolicitud: number): void {
     this.previousIdTipoSolicitud = this.form.controls['idTipoSolicitud'].value;
 
-    if (idTipoSolicitud === 3) {
-      this.valorAnteriorSolicitud = 3;
-    }
+    if (this.detalleSolicitudFirma.numeroDocumento) {
+      if (idTipoSolicitud === 3) {
+        this.valorAnteriorSolicitud = 3;
+      }
 
-    if (this.valorAnteriorSolicitud === 3 && idTipoSolicitud === 2) {
-      const modalChangePassword = this.utilService.getConfirmation(
-        'Eliminar archivos',
-        'Esto eliminara todos los archivos \n¿Seguro que desea eliminar?'
-      );
-      modalChangePassword.afterClosed().subscribe((result) => {
-        if (result) {
-          this.cambioBaja = true;
-        } else {
-          this.cambioBaja = false;
-          this.form.controls['idTipoSolicitud'].setValue(3);
-        }
-      });
-    } else {
-      this.cambioBaja = false;
+      if (this.valorAnteriorSolicitud === 3 && idTipoSolicitud === 2) {
+        const modalChangePassword = this.utilService.getConfirmation(
+          'Eliminar archivos',
+          'Esto eliminara todos los archivos \n¿Seguro que desea eliminar?'
+        );
+        modalChangePassword.afterClosed().subscribe((result) => {
+          if (result) {
+            this.cambioBaja = true;
+          } else {
+            this.cambioBaja = false;
+            this.disabledAll = false;
+            this.form.controls['idTipoSolicitud'].setValue(3);
+            this.arrayTipoArchivo = this.arrayTipoArchivoActualizar;
+          }
+        });
+      } else {
+        this.cambioBaja = false;
+      }
     }
 
     this.emitTipoSolictud(idTipoSolicitud);
