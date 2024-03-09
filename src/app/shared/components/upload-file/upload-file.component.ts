@@ -73,6 +73,8 @@ export class UploadFileComponent implements OnInit, OnChanges {
   @Input() arrayTipoArchivoAlta!: TipoArchivo[] | [];
   @Input() arrayTipoArchivoActualizar!: TipoArchivo[] | [];
 
+  parsedArchivosDetalle: string[] = [];
+
   @Input() idTipoSoliciutdSelect!: number;
   @Input() cambioBaja: boolean = false;
 
@@ -371,6 +373,9 @@ export class UploadFileComponent implements OnInit, OnChanges {
   }
 
   delete(file: List) {
+    const archivosDetalle = localStorage.getItem('idFileDetalle');
+    this.parsedArchivosDetalle = JSON.parse(archivosDetalle!);
+
     const modalChangePassword = this.utilService.getConfirmation(
       'Eliminar',
       '¿Desea eliminar el archivo?'
@@ -381,11 +386,19 @@ export class UploadFileComponent implements OnInit, OnChanges {
         if (this.arrayArchivoDetalle) {
           this.arrayArchivoDetalle.forEach((item) => {
             if (item.idArchivo === file.idFile) {
-              this.arrayArchivoDetalleEliminar.push(file.idFile);
-              localStorage.setItem(
-                'idFileDetalle',
-                JSON.stringify(this.arrayArchivoDetalleEliminar)
-              );
+              if (archivosDetalle) {
+                this.parsedArchivosDetalle.push(file.idFile);
+                localStorage.setItem(
+                  'idFileDetalle',
+                  JSON.stringify(this.parsedArchivosDetalle)
+                );
+              } else {
+                this.arrayArchivoSustentoEliminar.push(Number(file.idFile));
+                localStorage.setItem(
+                  'idFileDetalle',
+                  JSON.stringify(this.arrayArchivoSustentoEliminar)
+                );
+              }
             }
           });
         }
