@@ -241,8 +241,6 @@ export class GsEdicionLibroComponent implements OnInit {
       });
     }
 
-    console.log(archivoSustento2);
-
     if (archivoSustento2.length === 0) {
       this.utilService.getAlert(
         `Aviso:`,
@@ -261,8 +259,6 @@ export class GsEdicionLibroComponent implements OnInit {
         detalle.idDetalleSolLibro = -1;
       }
     });
-
-    console.log(this.registroLibroIntenoIn);
 
     if (this.isInternal) {
       this.registroLibroService

@@ -210,17 +210,34 @@ export class Libro {
   descripcionOrecLarga: string;
   ubigeo: string;
   archivoSustento: ArchivoSustento[];
+  archivoRespuesta: ArchivosRespuesta[];
   detalleSolicitudLibro: DetalleLibro[];
   constructor() {
     this.codigoOrec = '';
     this.descripcionOrecLarga = '';
     this.ubigeo = '';
+    this.archivoRespuesta = new Array<ArchivosRespuesta>();
     this.archivoSustento = new Array<ArchivoSustento>();
     this.detalleSolicitudLibro = new Array<DetalleLibro>();
   }
 }
 
 export class ArchivoSustento {
+  tipoArchivo: string;
+  idTipoArchivo: string;
+  nombreOriginal: string;
+  codigo: string;
+  idArchivo: number;
+  constructor() {
+    this.tipoArchivo = '';
+    this.idTipoArchivo = '';
+    this.nombreOriginal = '';
+    this.codigo = '';
+    this.idArchivo = 0;
+  }
+}
+
+export class ArchivosRespuesta {
   tipoArchivo: string;
   idTipoArchivo: string;
   nombreOriginal: string;

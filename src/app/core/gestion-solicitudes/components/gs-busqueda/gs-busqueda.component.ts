@@ -436,7 +436,8 @@ export class GsBusquedaComponent implements OnInit {
           this.getDetalle(
             'Detalle de Solicitud',
             this.detalleLibro,
-            row.tipoRegistro
+            row.tipoRegistro,
+            row.estadoSolicitud
           );
         }
       );
@@ -596,10 +597,10 @@ export class GsBusquedaComponent implements OnInit {
       }
     );
   }
-  getDetalle(title: string, detalle: any, tipo: string) {
+  getDetalle(title: string, detalle: any, tipo: string, estado?: string) {
     return this.dialog.open(GsDetalleComponent, {
       width: '1100px',
-      data: { title: title, detalle: detalle, tipo: tipo },
+      data: { title: title, detalle: detalle, tipo: tipo, estado: estado },
     });
   }
 

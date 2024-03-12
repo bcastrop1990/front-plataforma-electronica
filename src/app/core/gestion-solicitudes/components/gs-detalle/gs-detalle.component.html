@@ -153,6 +153,50 @@
           </div>
         </div>
       </div>
+      <ng-container
+        *ngIf="
+          dataDialog.tipo === environment.TIPO_REGISTRO_LIBRO &&
+          dataDialog.estado === 'ATENDIDO'
+        "
+      >
+        <div class="row mt-3">
+          <div class="col-sm-12 col-md-2">Sustento Respuesta</div>
+        </div>
+        <div
+          class="row"
+          *ngFor="let archivo of dataDialog.detalle.archivoRespuesta"
+        >
+          <div class="col-sm-12 col-md-3">
+            <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '06'">
+              OFICIO
+            </div>
+            <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '15'">
+              OFICIO
+            </div>
+            <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '16'">
+              FORMATO SOLICITUD LIBROS
+            </div>
+            <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '02'">
+              RESOLUCION
+            </div>
+            <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '05'">
+              ACTA DE ASAMBLEA
+            </div>
+            <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '01'">
+              RESOLUCION
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-5 mt-1">
+            <div class="custom-cell">
+              <a
+                href="javascript:void(0);"
+                (click)="download(archivo.codigo, archivo.nombreOriginal)"
+                >{{ archivo.nombreOriginal }}</a
+              >
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </mat-card-content>
   <mat-divider></mat-divider>
