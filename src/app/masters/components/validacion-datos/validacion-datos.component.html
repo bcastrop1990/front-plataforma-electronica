@@ -19,7 +19,7 @@
                       autocomplete="off"
                       pattern="[0-9]{8}"
                       maxlength="8"
-                      onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
+                      (input)="onInput($event, 8)"
                     />
                   </div>
                   <div *ngIf="!isExternal">
@@ -31,7 +31,7 @@
                         autocomplete="off"
                         pattern="[0-9]{8}"
                         maxlength="8"
-                        onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
+                        (input)="onInput($event, 8)"
                       />
                     </div>
                     <div *ngIf="paraRegistroLibro">
@@ -42,9 +42,7 @@
                         autocomplete="off"
                         pattern="[0-9]{8}"
                         maxlength="8"
-                        onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"
-                        (keyup.enter)="busquedaPorDni()"
-                        #dniInput
+                        (input)="onInput($event, 8)"
                       />
                     </div>
                   </div>
@@ -63,10 +61,16 @@
                     type="number"
                     placeholder="Ingresar"
                     autocomplete="off"
+                    (input)="onInput($event, 1)"
                   />
-                  <mat-error *ngIf="form.get('digito')?.invalid">{{
-                    utilService.getErrorMessage(form, "digito")
-                  }}</mat-error>
+                  <!-- <input
+                    matInput
+                    formControlName="digito"
+                    type="number"
+                    placeholder="Ingresar"
+                    autocomplete="off"
+                    maxlength="1"
+                  /> -->
                 </mat-form-field>
               </div>
 
@@ -126,7 +130,9 @@
                       formControlName="numeroSolicitud"
                       placeholder="Ingresar"
                       autocomplete="off"
+                      (input)="onInput($event, 12)"
                     />
+
                     <mat-error *ngIf="form.get('numeroSolicitud')?.invalid">{{
                       utilService.getErrorMessage(
                         form,

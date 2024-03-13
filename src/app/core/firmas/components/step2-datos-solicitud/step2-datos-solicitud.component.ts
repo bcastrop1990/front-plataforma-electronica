@@ -306,11 +306,11 @@ export class Step2DatosSolicitudComponent implements OnInit {
         this.environment.TIPO_SOLICITUD_ACTUALIZAR
       ) {
         let arrActualizarRequired = ['09', '10'];
-        if (userData?.perfil !== null) {
-          if (this.esObligatorio === '1') {
-            arrActualizarRequired = ['09', '10', '21'];
-          }
-        }
+        // if (userData?.perfil !== null) {
+        //   if (this.esObligatorio === '1') {
+        //     arrActualizarRequired = ['09', '10', '21'];
+        //   }
+        // }
         const result = arrActualizarRequired.filter(
           (value) =>
             !x.detalleSolicitud.detalleArchivo.some(
@@ -507,6 +507,12 @@ export class Step2DatosSolicitudComponent implements OnInit {
             break;
           case this.environment.TIPO_ARCHIVO_FIRMA_DETALLE_ACTUALIZAR:
             this.tipoArchivoDetalleActualizar = this.tipoArchivoOut.data;
+            if (this.isExternal) {
+              this.tipoArchivoDetalleActualizar =
+                this.tipoArchivoDetalleActualizar.filter(
+                  (item) => item.codigo !== '21'
+                );
+            }
             break;
         }
       }

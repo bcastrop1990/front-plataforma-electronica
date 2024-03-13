@@ -75,6 +75,11 @@ export class SeguridadService {
     return this.utilService.setLocalStorage(tokenName, token);
   }
 
+  setTokenInternal(tokenName: string, token: string) {
+    this.setUser(token);
+    return this.utilService.setLocalStorage(tokenName, token);
+  }
+
   getToken() {
     const internal = this.utilService.getLocalStorage(environment.VAR_TOKEN);
     const external = this.utilService.getLocalStorage(

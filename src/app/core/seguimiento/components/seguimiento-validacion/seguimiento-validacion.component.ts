@@ -41,6 +41,7 @@ export class SeguimientoValidacionComponent implements OnInit {
   start(): void {
     // ACCESS TO DATA OF COMPONENTS CHILDS
     const formDatosPersona = this.formValidacionDatos.form.getRawValue();
+
     if (this.formValidacionDatos.form.invalid) {
       this.formValidacionDatos.form.markAllAsTouched();
       this.utilService.getAlert(
@@ -77,19 +78,22 @@ export class SeguimientoValidacionComponent implements OnInit {
 
     this.seguimientoService.setSharedData(this.fecha);
 
+    console.log(this.validarDatosIn);
+
     // CALL SERVICE
     this.seguimientoService.validarDatos(this.validarDatosIn).subscribe(
       (data: ValidarDatosOut) => {
         this.validarDatosOut = data;
+        console.log('response', this.validarDatosOut);
       },
       (error) => {},
       () => {
         if (this.validarDatosOut.code !== this.environment.CODE_000) {
-          // this.utilService.getAlert(
-          //   `Aviso:`,
-          //   `${this.validarDatosOut.message}`
-          // );
-          this.utilService.link(environment.URL_MOD_SEGUIMIENTO_BUSQUEDA);
+          this.utilService.getAlert(
+            `Aviso:`,
+            `${this.validarDatosOut.message}`
+          );
+          // this.utilService.link(environment.URL_MOD_SEGUIMIENTO_BUSQUEDA);
           return;
         }
         if (this.isExternal) {

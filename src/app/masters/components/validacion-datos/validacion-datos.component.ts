@@ -114,6 +114,20 @@ export class ValidacionDatosComponent implements OnInit {
     this.oficinaEncontrada();
   }
 
+  onInput(event: Event, max: number) {
+    const inputElement = event.target as HTMLInputElement;
+    let inputValue = inputElement.value;
+
+    // Eliminar cualquier carácter que no sea un número
+    inputValue = inputValue.replace(/\D/g, '');
+
+    // Limitar la longitud máxima a 8 dígitos
+    inputValue = inputValue.slice(0, max);
+
+    // Actualizar el valor del campo de entrada
+    inputElement.value = inputValue;
+  }
+
   oficinaEncontrada() {
     //Valida que el fomulario este llenado correctamente
 
