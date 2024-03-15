@@ -42,6 +42,7 @@
                         autocomplete="off"
                         pattern="[0-9]{8}"
                         maxlength="8"
+                        (keyup.enter)="busquedaPorDni()"
                         (input)="onInput($event, 8)"
                       />
                     </div>

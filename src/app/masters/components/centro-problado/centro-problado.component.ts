@@ -103,6 +103,7 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
             this.utilService.getAlert(`Aviso:`, `${this.ubigeoOut.message}`);
             return;
           }
+          this.selected.emit(false);
 
           this.ubigeo = this.ubigeoOut.data.filter((centro) => {
             return centro.coDeno !== '02';
@@ -111,8 +112,8 @@ export class CentroProbladoComponent implements OnInit, OnChanges {
       );
   }
 
-  emitSelected() {
-    this.selected.emit(true);
+  emitSelected(value: string) {
+    this.selected.emit(value ? true : false);
     localStorage.setItem('comunidad', '01');
   }
 

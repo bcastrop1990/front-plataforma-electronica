@@ -78,13 +78,10 @@ export class SeguimientoValidacionComponent implements OnInit {
 
     this.seguimientoService.setSharedData(this.fecha);
 
-    console.log(this.validarDatosIn);
-
     // CALL SERVICE
     this.seguimientoService.validarDatos(this.validarDatosIn).subscribe(
       (data: ValidarDatosOut) => {
         this.validarDatosOut = data;
-        console.log('response', this.validarDatosOut);
       },
       (error) => {},
       () => {

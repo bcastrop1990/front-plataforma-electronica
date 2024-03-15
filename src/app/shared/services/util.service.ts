@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import {Router} from '@angular/router';
-import {FormGroup} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {AlertComponent} from '../components/alert/alert.component';
-import {ConfirmationComponent} from '../components/confirmation/confirmation.component';
+import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AlertComponent } from '../components/alert/alert.component';
+import { ConfirmationComponent } from '../components/confirmation/confirmation.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UtilService {
-
-  constructor(private route: Router,
-              public dialog: MatDialog,
-              private _snackBar: MatSnackBar) { }
+  constructor(
+    private route: Router,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
+  ) {}
 
   link(url: string, param?: string) {
     if (param) {
@@ -24,26 +25,53 @@ export class UtilService {
   }
 
   getFlash(message: string, action: string) {
-    this._snackBar.open(message, action, {duration: 3000});
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 
-  getAlert(title: string, message: string, messageAlign?: string, redirect?: string) {
+  getAlert(
+    title: string,
+    message: string,
+    messageAlign?: string,
+    redirect?: string
+  ) {
     return this.dialog.open(AlertComponent, {
       width: '450px',
-      data: {title: title, message: message, messageAlign: messageAlign, redirect: redirect},
+      data: {
+        title: title,
+        message: message,
+        messageAlign: messageAlign,
+        redirect: redirect,
+      },
       disableClose: true,
       autoFocus: false,
     });
   }
 
-  getConfirmation(title: string, message: string, messageAlign?: string, redirect?: string) {
+  getConfirmation(
+    title: string,
+    message: string,
+    messageAlign?: string,
+    redirect?: string
+  ) {
     return this.dialog.open(ConfirmationComponent, {
       width: '450px',
-      data: {title: title, message: message, messageAlign: messageAlign, redirect: redirect},
+      data: {
+        title: title,
+        message: message,
+        messageAlign: messageAlign,
+        redirect: redirect,
+      },
     });
   }
 
-  public getErrorMessage(formName: FormGroup, formControl: any, min?: number, max?: number, onlyNumber?: boolean, mail?: boolean): string {
+  public getErrorMessage(
+    formName: FormGroup,
+    formControl: any,
+    min?: number,
+    max?: number,
+    onlyNumber?: boolean,
+    mail?: boolean
+  ): string {
     let message = '';
     if (formName.get(formControl)?.hasError('required')) {
       message = 'Este campo es requerido';
@@ -70,7 +98,7 @@ export class UtilService {
     }
 
     if (formName.get(formControl)?.hasError('pattern') && !onlyNumber) {
-      message = 'Se aceptan letras y números sin espacios en blanco';
+      message = 'Sólo se aceptan números';
     }
 
     if (formName.get(formControl)?.hasError('pattern') && mail) {

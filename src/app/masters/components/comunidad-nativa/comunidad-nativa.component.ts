@@ -109,8 +109,8 @@ export class ComunidadNativaComponent implements OnInit {
       );
   }
 
-  emitSelected() {
-    this.selected.emit(true);
+  emitSelected(value: string) {
+    this.selected.emit(value ? true : false);
     localStorage.setItem('comunidad', '02');
   }
 

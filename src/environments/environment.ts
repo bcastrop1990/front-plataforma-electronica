@@ -7,9 +7,9 @@ export const environment = {
 
   API_AUTH: 'https://servicesdemo.reniec.gob.pe',
   // API_MASTER: 'http://10.48.60.13:7010/api-plataforma-electronica',
-  //API_MASTER:
-  //'http://sisgesusuaextn1desa.reniec.gob.pe:7003/api-plataforma-electronica',
-  API_MASTER: 'http://localhost:8080',
+  API_MASTER:
+    'http://sisgesusuaextn1desa.reniec.gob.pe:7003/api-plataforma-electronica',
+  //API_MASTER: 'http://localhost:8080',
 
   jwtDomainsTokenized: ['localhost:4200'],
 
@@ -94,6 +94,7 @@ export const environment = {
 
   //RE CAPTCHA
   SITE_KEY_RECAPTCHA: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+  //SITE_KEY_RECAPTCHA: '6LfiYZkpAAAAAMt870kMv5rX_BuC9RYY1607c9vK',
 };
 
 /*

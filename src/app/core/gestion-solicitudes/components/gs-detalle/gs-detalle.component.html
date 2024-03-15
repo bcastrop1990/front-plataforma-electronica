@@ -92,14 +92,16 @@
               </div>
             </div>
             <div class="col-sm-12 col-md-2">
-              <div class="custom-cell">{{ item.celular }}</div>
+              <div class="custom-cell">
+                {{ item.celular || "NO EXISTE REGISTRO" }}
+              </div>
             </div>
             <div class="col-sm-12 col-md-2">
               <div
                 class="custom-cell"
                 style="display: flex; word-break: break-all"
               >
-                {{ item.email }}
+                {{ item.email || "NO EXISTE REGISTRO" }}
               </div>
             </div>
             <div class="col-sm-12 col-md-1">

@@ -110,6 +110,7 @@ export class Step2LibroDetalleComponent implements OnInit {
     this.detalleSolicitudLibroRegistro = new DetalleSolicitudLibroRegistro();
     this.detalleSolicitudLibroRegistro.cantidad =
       this.form.controls['cantidad'].value;
+
     this.detalleSolicitudLibroRegistro.codigoLengua =
       this.form.controls['codigoLengua'].value;
     this.detalleSolicitudLibroRegistro.codigoArticulo =

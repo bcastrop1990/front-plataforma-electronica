@@ -13,22 +13,22 @@
         *ngFor="let archivo of dataDialog.detalle.archivoSustento"
       >
         <div class="col-sm-12 col-md-6">
-          <div class="custom-cell" *ngIf="archivo.tipoArchivo == '06'">
+          <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '06'">
             OFICIO
           </div>
-          <div class="custom-cell" *ngIf="archivo.tipoArchivo == '15'">
+          <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '15'">
             OFICIO
           </div>
-          <div class="custom-cell" *ngIf="archivo.tipoArchivo == '16'">
+          <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '16'">
             FORMATO SOLICITUD LIBROS
           </div>
-          <div class="custom-cell" *ngIf="archivo.tipoArchivo == '02'">
+          <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '02'">
             RESOLUCION
           </div>
-          <div class="custom-cell" *ngIf="archivo.tipoArchivo == '05'">
+          <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '05'">
             ACTA DE ASAMBLEA
           </div>
-          <div class="custom-cell" *ngIf="archivo.tipoArchivo == '01'">
+          <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '01'">
             RESOLUCION
           </div>
         </div>
@@ -42,6 +42,7 @@
           </div>
         </div>
       </div>
+
       <!-- detalleSolicitudFirma -->
       <div *ngIf="dataDialog.tipo === environment.TIPO_REGISTRO_FIRMA">
         <ng-container
@@ -68,6 +69,11 @@
                   >{{ archivo.nombreOriginal }}</a
                 >
               </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="detalles.archivos.length === 0">
+            <div class="col-sm-12 col-md-6">
+              <div class="custom-cell">NO EXISTE ARCHIVOS</div>
             </div>
           </div>
         </ng-container>

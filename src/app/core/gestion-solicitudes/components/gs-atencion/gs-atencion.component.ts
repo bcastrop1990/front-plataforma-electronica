@@ -51,6 +51,7 @@ export class GsAtencionComponent implements OnInit {
   formDetalle!: FormGroup;
 
   numeroSolicitud!: string;
+  arrayDetalleCorrecto!: boolean;
 
   arrayDetalle: DetalleLibro[] = [];
 
@@ -242,6 +243,31 @@ export class GsAtencionComponent implements OnInit {
       this.utilService.getAlert(
         'Aviso',
         'Debe completar los datos requeridos como obligatorios (*)'
+      );
+      return;
+    }
+
+    let numeroArray: number = 0;
+
+    arrayDetalle.forEach((detalle, index) => {
+      if (
+        detalle.cantidad === 0 ||
+        detalle.codigoArticulo === '' ||
+        detalle.codigoLengua === ''
+      ) {
+        this.arrayDetalleCorrecto = true;
+        numeroArray = index;
+      } else {
+        this.arrayDetalleCorrecto = false;
+      }
+    });
+
+    if (this.arrayDetalleCorrecto) {
+      this.utilService.getAlert(
+        'Aviso',
+        `Detalle ${
+          numeroArray + 1
+        } Incompleto. Debe completar los datos requeridos como obligatorios`
       );
       return;
     }

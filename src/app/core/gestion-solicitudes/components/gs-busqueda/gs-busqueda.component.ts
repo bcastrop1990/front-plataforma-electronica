@@ -599,7 +599,7 @@ export class GsBusquedaComponent implements OnInit {
   }
   getDetalle(title: string, detalle: any, tipo: string, estado?: string) {
     return this.dialog.open(GsDetalleComponent, {
-      width: '1100px',
+      width: '1300px',
       data: { title: title, detalle: detalle, tipo: tipo, estado: estado },
     });
   }

@@ -5,11 +5,12 @@
       formControlName="sUbigeo"
       #cbo
       (selectionChange)="emitCentroPoblado(cbo.value)"
-      (selectionChange)="emitSelected()"
+      (selectionChange)="emitSelected(cbo.value)"
       placeholder="-- Seleccione --"
       [disabled]="encontrado"
       [disabled]="exComunidadNativa"
     >
+      <mat-option [value]="">-- Seleccione --</mat-option>
       <mat-option *ngFor="let item of ubigeo" [value]="item.codigo.trim()">
         {{ item.descripcion | uppercase }}
       </mat-option>

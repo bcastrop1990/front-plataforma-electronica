@@ -1,6 +1,5 @@
 a {
   text-decoration: none;
-  //margin: 15px;
 }
 
 .direct-access {
@@ -15,12 +14,13 @@ a {
   background: #FFFFFF;
   box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
   align-items: center;
+  justify-content: center;
 }
 .direct-access-front .mat-card-content {
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
   img {
     width: 96px;
     height: 96px;

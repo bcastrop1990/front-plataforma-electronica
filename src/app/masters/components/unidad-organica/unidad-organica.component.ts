@@ -109,6 +109,7 @@ export class UnidadOrganicaComponent implements OnInit {
 
   emitSelected() {
     if (this.form.controls['sUbigeo'].value === 0) {
+      this.selected.emit(false);
       return;
     } else {
       this.selected.emit(true);
