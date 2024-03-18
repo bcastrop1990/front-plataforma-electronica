@@ -177,6 +177,25 @@ export class RpReporteComponent implements OnInit {
     this.getListaBusqueda();
   }
 
+  btnClean() {
+    this.form.reset();
+    this.resetDep = true;
+    this.cboEstadoSolicitud.form.controls['id'].setValue(this.codigoEstado);
+    this.form.controls['codigoEstado'].setValue('3');
+    this.form.controls['fechaIni'].setValue('');
+    this.form.controls['fechaFin'].setValue('');
+    this.form.controls['codigoTipoRegistro'].setValue('');
+    this.form.controls['codigoDepartamento'].setValue('');
+    this.form.controls['codigoProvincia'].setValue('');
+    this.form.controls['codigoDistrito'].setValue('');
+    this.form.controls['codigoOrec'].setValue('');
+    this.form.controls['codigoAnalistaAsignado'].setValue('');
+    if (!this.esAnalista()) {
+      this.cboTipoRegistro.form.controls['id'].setValue('');
+      this.cboAnalista.form.controls['id'].setValue('');
+    }
+  }
+
   getListaBusqueda(e?: PageEvent): void {
     this.length = 0;
     this.message = 'Cargando...';
@@ -481,6 +500,7 @@ export class RpReporteComponent implements OnInit {
           );
           return;
         }
+        /*
         if (this.esAnalista()) {
           this.tipoRegistro = this.tipoRegistroOut.data.filter(
             (x) => x.codigo === this.environment.TIPO_REGISTRO_LIBRO_ID
@@ -488,6 +508,8 @@ export class RpReporteComponent implements OnInit {
         } else {
           this.tipoRegistro = this.tipoRegistroOut.data;
         }
+        */
+        this.tipoRegistro = this.tipoRegistroOut.data;
       }
     );
   }

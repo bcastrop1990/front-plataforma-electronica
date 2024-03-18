@@ -26,6 +26,7 @@ export class UnidadOrganicaComponent implements OnInit {
 
   @Input() encontrado: boolean = false;
   @Input() exOfa: boolean = false;
+  @Input() selectedOfa: boolean = false;
 
   @Input() required: boolean = false;
   @Input() idDepartamento: string = '';
@@ -107,14 +108,9 @@ export class UnidadOrganicaComponent implements OnInit {
       );
   }
 
-  emitSelected() {
-    if (this.form.controls['sUbigeo'].value === 0) {
-      this.selected.emit(false);
-      return;
-    } else {
-      this.selected.emit(true);
-      localStorage.setItem('unidadOr', '02');
-    }
+  emitSelected(value: string) {
+    this.selected.emit(value ? true : false);
+    localStorage.setItem('unidadOr', '02');
   }
 
   emitCentroPoblado(value: string) {

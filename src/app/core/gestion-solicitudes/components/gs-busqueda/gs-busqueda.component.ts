@@ -210,16 +210,16 @@ export class GsBusquedaComponent implements OnInit {
     this.form.reset();
     this.resetDep = true;
     this.cboEstadoSolicitud.form.controls['id'].setValue(this.codigoEstado);
-    // this.form.controls['numeroSolicitud'].setValue('');
-    //this.form.controls['codigoEstado'].setValue('3');
-    // this.form.controls['fechaIni'].setValue('');
-    // this.form.controls['fechaFin'].setValue('');
-    // this.form.controls['codigoTipoRegistro'].setValue('');
+    this.form.controls['numeroSolicitud'].setValue('');
+    this.form.controls['codigoEstado'].setValue('3');
+    this.form.controls['fechaIni'].setValue('');
+    this.form.controls['fechaFin'].setValue('');
+    this.form.controls['codigoTipoRegistro'].setValue('');
     this.form.controls['codigoDepartamento'].setValue('');
     this.form.controls['codigoProvincia'].setValue('');
     this.form.controls['codigoDistrito'].setValue('');
-    // this.form.controls['codigoOrec'].setValue('');
-    // this.form.controls['codigoAnalistaAsignado'].setValue('');
+    this.form.controls['codigoOrec'].setValue('');
+    this.form.controls['codigoAnalistaAsignado'].setValue('');
     if (!this.esAnalista()) {
       this.cboTipoRegistro.form.controls['id'].setValue('');
       this.cboAnalista.form.controls['id'].setValue('');
@@ -245,6 +245,8 @@ export class GsBusquedaComponent implements OnInit {
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
+
+    console.log('gestion', this.busquedaIn);
 
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: BusquedaOut) => {

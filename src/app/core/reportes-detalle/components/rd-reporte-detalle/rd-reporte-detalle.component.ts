@@ -18,7 +18,6 @@ import {
 } from 'src/app/core/gestion-solicitudes/models/busquedaReporte.model';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { OptionsComponent } from 'src/app/auth/components/options/options.component';
 import { OptionsOut, Options } from 'src/app/masters/models/option.model';
 import { formatDate } from '@angular/common';
 import {
@@ -38,6 +37,7 @@ import {
   Libro,
   ObternerLibroOut,
 } from 'src/app/core/actas-registrales/models/libro.model';
+import { OptionsComponent } from 'src/app/masters/components/options/options.component';
 
 @Component({
   selector: 'app-rd-reporte-detalle',
@@ -145,7 +145,7 @@ export class RdReporteDetalleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title = 'Reportes Detalle';
+    this.title = 'Detalle de Firmas Reportes';
     this.environment = environment;
     this.form = this.formBuilder.group({
       dniSolicitante: [''],
@@ -173,6 +173,25 @@ export class RdReporteDetalleComponent implements OnInit {
     return this.user?.perfil.codigo === this.environment.PERFIL_ANALISTA;
   }
 
+  btnClean() {
+    this.form.reset();
+    this.resetDep = true;
+    this.cboEstadoSolicitud.form.controls['id'].setValue(this.codigoEstado);
+    this.form.controls['codigoEstado'].setValue('3');
+    this.form.controls['fechaIni'].setValue('');
+    this.form.controls['fechaFin'].setValue('');
+    this.form.controls['codigoTipoRegistro'].setValue('');
+    this.form.controls['codigoDepartamento'].setValue('');
+    this.form.controls['codigoProvincia'].setValue('');
+    this.form.controls['codigoDistrito'].setValue('');
+    this.form.controls['codigoOrec'].setValue('');
+    this.form.controls['codigoAnalistaAsignado'].setValue('');
+    if (!this.esAnalista()) {
+      this.cboTipoRegistro.form.controls['id'].setValue('');
+      this.cboAnalista.form.controls['id'].setValue('');
+    }
+  }
+
   btnSearch() {
     this.getListaBusqueda();
   }
@@ -189,7 +208,7 @@ export class RdReporteDetalleComponent implements OnInit {
 
     //nueva entrada ->
     this.solicitante = this.busquedaIn.dniSolicitante;
-    this.busquedaIn.fechaFin = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
+    this.busquedaIn.fechaIni = fIni ? formatDate(fIni, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE2;
@@ -484,13 +503,11 @@ export class RdReporteDetalleComponent implements OnInit {
           );
           return;
         }
-        if (this.esAnalista()) {
-          this.tipoRegistro = this.tipoRegistroOut.data.filter(
-            (x) => x.codigo === this.environment.TIPO_REGISTRO_LIBRO_ID
-          );
-        } else {
-          this.tipoRegistro = this.tipoRegistroOut.data;
-        }
+        this.tipoRegistro = this.tipoRegistroOut.data;
+
+        this.tipoRegistro = this.tipoRegistro.filter(
+          (item) => item.codigo !== '1'
+        );
       }
     );
   }

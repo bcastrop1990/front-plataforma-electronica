@@ -79,9 +79,7 @@
                 [label]="'Tipo de Solicitud'"
                 [options]="tipoRegistro"
                 [optionSelect]="!esAnalista()"
-                [select]="
-                  esAnalista() ? environment.TIPO_REGISTRO_LIBRO_ID : ''
-                "
+                [select]="''"
                 (selected)="setTipoRegistro($event)"
               ></app-options>
             </div>
@@ -185,6 +183,14 @@
                 (click)="exportarTodoXlsx()"
               >
                 Exportar a Excel
+              </button>
+              <button
+                mat-stroked-button
+                color="accent"
+                class="button-custom-search ml-2"
+                (click)="btnClean()"
+              >
+                Limpiar
               </button>
             </div>
           </div>

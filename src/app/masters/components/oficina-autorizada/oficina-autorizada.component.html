@@ -5,7 +5,7 @@
       formControlName="idOficinaAutorizada"
       #cbo
       (selectionChange)="emitOficinaAutorizada(cbo.value)"
-      (selectionChange)="emitSelected()"
+      (selectionChange)="emitSelected(cbo.value)"
       placeholder="-- Seleccione --"
       [disabled]="encontrado || exUnidad"
     >
