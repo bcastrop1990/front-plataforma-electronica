@@ -158,9 +158,7 @@ export class RdReporteDetalleComponent implements OnInit {
       codigoProvincia: [''],
       codigoDistrito: [''],
       codigoOrec: [''],
-      codigoTipoRegistro: [
-        this.esAnalista() ? this.environment.TIPO_REGISTRO_LIBRO_ID : '',
-      ],
+      codigoTipoRegistro: [''],
       codigoAnalistaAsignado: [this.esAnalista() ? this.user?.dni : ''],
     });
     this.getAnalistas();
@@ -185,7 +183,10 @@ export class RdReporteDetalleComponent implements OnInit {
     this.form.controls['codigoProvincia'].setValue('');
     this.form.controls['codigoDistrito'].setValue('');
     this.form.controls['codigoOrec'].setValue('');
-    this.form.controls['codigoAnalistaAsignado'].setValue('');
+    this.form.controls['dniSolicitante'].setValue('');
+    this.form.controls['apellidoPaterno'].setValue('');
+    this.form.controls['apellidoMaterno'].setValue('');
+    this.form.controls['codigoAnalistaAsignado'].setValue(this.user?.dni);
     if (!this.esAnalista()) {
       this.cboTipoRegistro.form.controls['id'].setValue('');
       this.cboAnalista.form.controls['id'].setValue('');
@@ -212,6 +213,8 @@ export class RdReporteDetalleComponent implements OnInit {
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE2;
+
+    console.log('detalle reporte', this.busquedaIn);
 
     this.gestionService.listSolicitudesDetalle(this.busquedaIn).subscribe(
       (data: BusquedaDetalleOut) => {
