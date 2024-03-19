@@ -18,8 +18,8 @@ export class ReportesIn extends Busqueda {
   fechaIni: string;
   numeroSolicitud: string;
   dniSolicitante: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
+  apellidoPaternoSol: string;
+  apellidoMaternoSol: string;
   constructor() {
     super();
     this.codigoAnalistaAsignado = '';
@@ -30,8 +30,8 @@ export class ReportesIn extends Busqueda {
     this.fechaIni = '';
     this.numeroSolicitud = '';
     this.dniSolicitante = '';
-    this.apellidoMaterno = '';
-    this.apellidoPaterno = '';
+    this.apellidoMaternoSol = '';
+    this.apellidoPaternoSol = '';
   }
 }
 export class ReporteOut extends Result {

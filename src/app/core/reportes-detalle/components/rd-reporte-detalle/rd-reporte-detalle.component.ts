@@ -149,8 +149,8 @@ export class RdReporteDetalleComponent implements OnInit {
     this.environment = environment;
     this.form = this.formBuilder.group({
       dniSolicitante: [''],
-      apellidoPaterno: [''],
-      apellidoMaterno: [''],
+      apellidoPaternoSol: [''],
+      apellidoMaternoSol: [''],
       codigoEstado: [this.codigoEstado],
       fechaIni: [''],
       fechaFin: [''],
@@ -186,9 +186,10 @@ export class RdReporteDetalleComponent implements OnInit {
     this.form.controls['dniSolicitante'].setValue('');
     this.form.controls['apellidoPaterno'].setValue('');
     this.form.controls['apellidoMaterno'].setValue('');
-    this.form.controls['codigoAnalistaAsignado'].setValue(this.user?.dni);
+    this.form.controls['codigoAnalistaAsignado'].setValue(
+      this.esAnalista() ? this.user?.dni : ''
+    );
     if (!this.esAnalista()) {
-      this.cboTipoRegistro.form.controls['id'].setValue('');
       this.cboAnalista.form.controls['id'].setValue('');
     }
   }
@@ -213,6 +214,18 @@ export class RdReporteDetalleComponent implements OnInit {
     this.busquedaIn.fechaFin = fFin ? formatDate(fFin, 'yyyy-MM-dd', 'EN') : '';
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE2;
+
+    if (this.busquedaIn.apellidoMaternoSol) {
+      this.busquedaIn.apellidoMaternoSol = this.busquedaIn.apellidoMaternoSol
+        .toUpperCase()
+        .trim();
+    }
+
+    if (this.busquedaIn.apellidoPaternoSol) {
+      this.busquedaIn.apellidoPaternoSol = this.busquedaIn.apellidoPaternoSol
+        .toUpperCase()
+        .trim();
+    }
 
     console.log('detalle reporte', this.busquedaIn);
 

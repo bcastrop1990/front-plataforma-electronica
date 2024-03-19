@@ -32,8 +32,8 @@
       <ng-container *ngIf="dataDialog.tipo === environment.TIPO_REGISTRO_LIBRO">
         <div class="row mt-3">
           <div class="col-sm-12 col-md-2">Cantidad</div>
-          <div class="col-sm-12 col-md-6">Tipo de Libros Registrales</div>
-          <div class="col-sm-12 col-md-2">Idioma</div>
+          <div class="col-sm-12 col-md-5">Tipo de Libros Registrales</div>
+          <div class="col-sm-12 col-md-3">Idioma</div>
           <div class="col-sm-12 col-md-2">Último Nº de la Acta Utilizada</div>
         </div>
         <div
@@ -43,14 +43,16 @@
           <div class="col-sm-12 col-md-2">
             <div class="custom-cell">{{ item.cantidad }}</div>
           </div>
-          <div class="col-sm-12 col-md-6">
+          <div class="col-sm-12 col-md-5">
             <div class="custom-cell">{{ item.articulo }}</div>
           </div>
-          <div class="col-sm-12 col-md-2">
+          <div class="col-sm-12 col-md-3">
             <div class="custom-cell">{{ item.lengua }}</div>
           </div>
           <div class="col-sm-12 col-md-2">
-            <div class="custom-cell">{{ item.numeroUltimaActa }}</div>
+            <div class="custom-cell">
+              {{ item.numeroUltimaActa || "NO EXISTE REGISTRO" }}
+            </div>
           </div>
         </div>
       </ng-container>

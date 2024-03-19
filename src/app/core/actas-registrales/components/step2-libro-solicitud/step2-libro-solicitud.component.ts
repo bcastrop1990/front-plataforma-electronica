@@ -54,6 +54,8 @@ import {
 } from '../../models/libro.model';
 import { RegistroLibroService } from '../../services/registro-libro.service';
 import { SeguridadService } from 'src/app/shared/services/seguridad.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationModalComponent } from 'src/app/core/gestion-solicitudes/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-step2-libro-solicitud',
@@ -118,7 +120,8 @@ export class Step2LibroSolicitudComponent implements OnInit {
     private registroLibroService: RegistroLibroService,
     private maestroService: MaestrosService,
     private oficinaService: OficinaService,
-    private seguridadService: SeguridadService
+    private seguridadService: SeguridadService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -201,6 +204,17 @@ export class Step2LibroSolicitudComponent implements OnInit {
         this.lengua.sort((a, b) => (a.codigo > b.codigo ? 1 : -1));
       }
     );
+  }
+
+  abrirModalConfirmacion(stepper: MatStepper) {
+    const dialogRef = this.dialog.open(ConfirmationModalComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        this.btnNext(stepper);
+      } else {
+      }
+    });
   }
 
   btnNext(stepper: MatStepper) {
