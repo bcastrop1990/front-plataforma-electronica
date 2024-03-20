@@ -149,8 +149,8 @@ export class RdReporteDetalleComponent implements OnInit {
     this.environment = environment;
     this.form = this.formBuilder.group({
       dniSolicitante: [''],
-      apellidoPaternoSol: [''],
-      apellidoMaternoSol: [''],
+      // apellidoPaternoSol: [''],
+      // apellidoMaternoSol: [''],
       codigoEstado: [this.codigoEstado],
       fechaIni: [''],
       fechaFin: [''],
@@ -184,8 +184,7 @@ export class RdReporteDetalleComponent implements OnInit {
     this.form.controls['codigoDistrito'].setValue('');
     this.form.controls['codigoOrec'].setValue('');
     this.form.controls['dniSolicitante'].setValue('');
-    this.form.controls['apellidoPaterno'].setValue('');
-    this.form.controls['apellidoMaterno'].setValue('');
+
     this.form.controls['codigoAnalistaAsignado'].setValue(
       this.esAnalista() ? this.user?.dni : ''
     );
@@ -215,6 +214,7 @@ export class RdReporteDetalleComponent implements OnInit {
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE2;
 
+    /*
     if (this.busquedaIn.apellidoMaternoSol) {
       this.busquedaIn.apellidoMaternoSol = this.busquedaIn.apellidoMaternoSol
         .toUpperCase()
@@ -226,8 +226,7 @@ export class RdReporteDetalleComponent implements OnInit {
         .toUpperCase()
         .trim();
     }
-
-    console.log('detalle reporte', this.busquedaIn);
+    */
 
     this.gestionService.listSolicitudesDetalle(this.busquedaIn).subscribe(
       (data: BusquedaDetalleOut) => {

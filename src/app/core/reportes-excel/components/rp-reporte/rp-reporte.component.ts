@@ -149,8 +149,8 @@ export class RpReporteComponent implements OnInit {
     this.environment = environment;
     this.form = this.formBuilder.group({
       dniSolicitante: [''],
-      apellidoMaternoSol: [''],
-      apellidoPaternoSol: [''],
+      // apellidoMaternoSol: [''],
+      // apellidoPaternoSol: [''],
       codigoEstado: [this.codigoEstado],
       fechaIni: [''],
       fechaFin: [''],
@@ -213,6 +213,7 @@ export class RpReporteComponent implements OnInit {
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
 
+    /*
     if (this.busquedaIn.apellidoMaternoSol) {
       this.busquedaIn.apellidoMaternoSol = this.busquedaIn.apellidoMaternoSol
         .toUpperCase()
@@ -224,8 +225,7 @@ export class RpReporteComponent implements OnInit {
         .toUpperCase()
         .trim();
     }
-
-    console.log(this.busquedaIn);
+    */
 
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: ReporteOut) => {
