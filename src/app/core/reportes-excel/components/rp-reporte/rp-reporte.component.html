@@ -78,7 +78,7 @@
                 #cboTipoRegistro
                 [label]="'Tipo de Solicitud'"
                 [options]="tipoRegistro"
-                [optionSelect]="!esAnalista()"
+                [optionSelect]="true"
                 [select]="''"
                 (selected)="setTipoRegistro($event)"
               ></app-options>

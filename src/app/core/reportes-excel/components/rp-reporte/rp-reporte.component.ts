@@ -181,7 +181,7 @@ export class RpReporteComponent implements OnInit {
     this.form.reset();
     this.resetDep = true;
     this.cboEstadoSolicitud.form.controls['id'].setValue(this.codigoEstado);
-    this.form.controls['codigoEstado'].setValue('3');
+    this.form.controls['codigoEstado'].setValue('');
     this.form.controls['fechaIni'].setValue('');
     this.form.controls['fechaFin'].setValue('');
     this.form.controls['codigoTipoRegistro'].setValue('');
@@ -190,6 +190,7 @@ export class RpReporteComponent implements OnInit {
     this.form.controls['codigoDistrito'].setValue('');
     this.form.controls['codigoOrec'].setValue('');
     this.form.controls['codigoAnalistaAsignado'].setValue('');
+    this.form.controls['dniSolicitante'].setValue('');
     if (!this.esAnalista()) {
       this.cboTipoRegistro.form.controls['id'].setValue('');
       this.cboAnalista.form.controls['id'].setValue('');
@@ -226,6 +227,8 @@ export class RpReporteComponent implements OnInit {
         .trim();
     }
     */
+
+    console.log(this.busquedaIn);
 
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: ReporteOut) => {

@@ -175,7 +175,7 @@ export class RdReporteDetalleComponent implements OnInit {
     this.form.reset();
     this.resetDep = true;
     this.cboEstadoSolicitud.form.controls['id'].setValue(this.codigoEstado);
-    this.form.controls['codigoEstado'].setValue('3');
+    this.form.controls['codigoEstado'].setValue('');
     this.form.controls['fechaIni'].setValue('');
     this.form.controls['fechaFin'].setValue('');
     this.form.controls['codigoTipoRegistro'].setValue('');
@@ -227,6 +227,8 @@ export class RdReporteDetalleComponent implements OnInit {
         .trim();
     }
     */
+
+    console.log(this.busquedaIn);
 
     this.gestionService.listSolicitudesDetalle(this.busquedaIn).subscribe(
       (data: BusquedaDetalleOut) => {

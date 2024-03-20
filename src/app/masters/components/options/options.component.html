@@ -8,7 +8,7 @@
       placeholder="Seleccione"
     >
       <mat-option *ngIf="optionSelect" [value]="">{{
-        todosEstados ? "TODOS" : "-- Seleccione --"
+        "-- Seleccione --"
       }}</mat-option>
       <mat-option *ngFor="let item of options" [value]="item.codigo">
         {{ item.descripcion | uppercase }}
