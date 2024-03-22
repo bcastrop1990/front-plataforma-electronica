@@ -741,6 +741,7 @@ export class GsBusquedaComponent implements OnInit {
 
   getOficinaAutorizada(idOficinaOrec: string) {
     this.form.controls['codigoOrec'].setValue(idOficinaOrec);
+    this.getListaBusqueda();
   }
 
   getAnalistas(): void {
@@ -768,6 +769,7 @@ export class GsBusquedaComponent implements OnInit {
 
   setAnalista(id: any) {
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
+    this.getListaBusqueda();
   }
 
   getEstadosSolicitud(): void {
@@ -819,6 +821,7 @@ export class GsBusquedaComponent implements OnInit {
 
   setTipoRegistro(id: any) {
     this.form.controls['codigoTipoRegistro'].setValue(id);
+    this.getListaBusqueda();
   }
 
   btnReasignar(): void {
@@ -831,7 +834,7 @@ export class GsBusquedaComponent implements OnInit {
     );
 
     if (array.length <= 0) {
-      this.utilService.getAlert('Aviso', 'Debe seleccionar a un analista.');
+      this.utilService.getAlert('Aviso', 'Se debe seleccionar un registro');
       return;
     }
 

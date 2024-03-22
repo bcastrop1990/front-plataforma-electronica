@@ -500,7 +500,7 @@ export class RdReporteDetalleComponent implements OnInit {
 
   setEstadoSolicitud(id: any) {
     this.form.controls['codigoEstado'].setValue(id);
-    // this.getListaBusqueda();
+    this.getListaBusqueda();
   }
 
   getTipoRegistro(): void {
@@ -529,6 +529,7 @@ export class RdReporteDetalleComponent implements OnInit {
 
   setTipoRegistro(id: any) {
     this.form.controls['codigoTipoRegistro'].setValue(id);
+    this.getListaBusqueda();
   }
 
   getAnalistas(): void {
@@ -555,6 +556,7 @@ export class RdReporteDetalleComponent implements OnInit {
 
   setAnalista(id: any) {
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
+    this.getListaBusqueda();
   }
 
   getDetalle(title: string, detalle: any, tipo: string) {
@@ -588,6 +590,7 @@ export class RdReporteDetalleComponent implements OnInit {
 
   getOficinaAutorizada(idOficinaOrec: string) {
     this.form.controls['codigoOrec'].setValue(idOficinaOrec);
+    this.getListaBusqueda();
   }
 
   btnDoc(row: ReporteData) {

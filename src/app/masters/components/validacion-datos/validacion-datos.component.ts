@@ -161,20 +161,6 @@ export class ValidacionDatosComponent implements OnInit {
             return;
           }
 
-          //Sigo
-          /*
-        this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
-        const lsuser = localStorage.getItem('user');
-        const user: User = JSON.parse(lsuser!);
-
-        localStorage.removeItem(environment.VAR_USER);
-        user.codigoOrec = this.oficinaAutorizadaL;
-        this.utilService.setLocalStorage(
-          environment.VAR_USER,
-          JSON.stringify(user)
-        );
-        */
-
           this.formDatosOficinaAutorizada.departamento =
             this.oficina.data.coNombreDepartamento;
 
@@ -202,20 +188,6 @@ export class ValidacionDatosComponent implements OnInit {
             this.utilService.getAlert(`Aviso:`, `${this.oficina.message}`);
             return;
           }
-
-          //Sigo
-          /*
-        this.oficinaAutorizadaL = this.oficina.data.coNombreOficina;
-        const lsuser = localStorage.getItem('user');
-        const user: User = JSON.parse(lsuser!);
-
-        localStorage.removeItem(environment.VAR_USER);
-        user.codigoOrec = this.oficinaAutorizadaL;
-        this.utilService.setLocalStorage(
-          environment.VAR_USER,
-          JSON.stringify(user)
-        );
-        */
 
           this.formDatosOficinaAutorizada.departamento =
             this.oficina.data.coNombreDepartamento;

@@ -158,9 +158,7 @@ export class RpReporteComponent implements OnInit {
       codigoProvincia: [''],
       codigoDistrito: [''],
       codigoOrec: [''],
-      codigoTipoRegistro: [
-        this.esAnalista() ? this.environment.TIPO_REGISTRO_LIBRO_ID : '',
-      ],
+      codigoTipoRegistro: [''],
       codigoAnalistaAsignado: [this.esAnalista() ? this.user?.dni : ''],
     });
     this.getAnalistas();
@@ -497,7 +495,7 @@ export class RpReporteComponent implements OnInit {
 
   setEstadoSolicitud(id: any) {
     this.form.controls['codigoEstado'].setValue(id);
-    // this.getListaBusqueda();
+    this.getListaBusqueda();
   }
 
   getTipoRegistro(): void {
@@ -531,6 +529,7 @@ export class RpReporteComponent implements OnInit {
 
   setTipoRegistro(id: any) {
     this.form.controls['codigoTipoRegistro'].setValue(id);
+    this.getListaBusqueda();
   }
 
   getAnalistas(): void {
@@ -557,6 +556,7 @@ export class RpReporteComponent implements OnInit {
 
   setAnalista(id: any) {
     this.form.controls['codigoAnalistaAsignado'].setValue(id);
+    this.getListaBusqueda();
   }
 
   btnView(row: ReporteData): void {
@@ -663,6 +663,7 @@ export class RpReporteComponent implements OnInit {
 
   getOficinaAutorizada(idOficinaOrec: string) {
     this.form.controls['codigoOrec'].setValue(idOficinaOrec);
+    this.getListaBusqueda();
   }
 
   btnDoc(row: ReporteData) {

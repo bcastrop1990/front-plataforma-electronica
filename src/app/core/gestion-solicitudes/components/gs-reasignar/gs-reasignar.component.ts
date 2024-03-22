@@ -2,6 +2,7 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UtilService } from 'src/app/shared/services/util.service';
 
 @Component({
   selector: 'app-gs-reasignar',
@@ -13,6 +14,7 @@ export class GsReasignarComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    public utilService: UtilService,
     public dialog: MatDialogRef<GsReasignarComponent>,
     @Inject(MAT_DIALOG_DATA) public dataDialog: any
   ) {}
@@ -28,6 +30,10 @@ export class GsReasignarComponent implements OnInit {
   }
 
   confirm() {
+    if (this.form.invalid) {
+      this.utilService.getAlert(`Aviso:`, 'Se debe elegir un analista');
+      return;
+    }
     this.dialog.close({ sw: true, id: this.form.controls['id'].value });
   }
 
