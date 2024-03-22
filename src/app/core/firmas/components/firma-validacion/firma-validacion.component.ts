@@ -142,7 +142,7 @@ export class FirmaValidacionComponent implements OnInit {
               );
               return;
             }
-            this.seguridadService.setToken(
+            this.seguridadService.setTokenInternal(
               this.environment.VAR_TOKEN_EXTERNAL,
               this.validarDatosOut.data
             );

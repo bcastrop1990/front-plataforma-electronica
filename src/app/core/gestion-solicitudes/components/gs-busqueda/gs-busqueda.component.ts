@@ -246,8 +246,6 @@ export class GsBusquedaComponent implements OnInit {
     this.busquedaIn.page = e ? e.pageIndex + 1 : this.environment.START_PAGE;
     this.busquedaIn.size = e ? e.pageSize : this.environment.ROWS_PAGE;
 
-    console.log('gestion', this.busquedaIn);
-
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: BusquedaOut) => {
         this.busquedaOut = data;

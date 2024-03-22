@@ -228,8 +228,6 @@ export class RpReporteComponent implements OnInit {
     }
     */
 
-    console.log(this.busquedaIn);
-
     this.gestionService.listSolicitudes(this.busquedaIn).subscribe(
       (data: ReporteOut) => {
         this.busquedaOut = data;
@@ -592,7 +590,6 @@ export class RpReporteComponent implements OnInit {
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
 
-          console.log(this.detalleLibro);
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',

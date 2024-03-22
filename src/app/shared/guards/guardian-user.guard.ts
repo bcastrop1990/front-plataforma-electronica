@@ -30,7 +30,11 @@ export class GuardianUserGuard implements CanActivate {
     if (this.seguridadService.isAuthenticated()) {
       return true;
     } else {
-      return this.router.navigate([environment.URL_MENU]);
+      if (this.seguridadService.isAuthenticatedInternal()) {
+        return this.router.navigate([environment.URL_MENU_INTERNO]);
+      } else {
+        return this.router.navigate([environment.URL_MENU]);
+      }
     }
   }
 }

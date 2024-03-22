@@ -18,6 +18,7 @@ export const environment = {
   VAR_TOKEN_EXTERNAL: 'access_token_external',
   VAR_AUTH: 'auth',
   VAR_USER: 'user',
+  VAR_USER_INTERNO: 'user_solicitante',
 
   // PROFILES
   PERFIL_ANALISTA: '03',

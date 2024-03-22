@@ -228,8 +228,6 @@ export class RdReporteDetalleComponent implements OnInit {
     }
     */
 
-    console.log(this.busquedaIn);
-
     this.gestionService.listSolicitudesDetalle(this.busquedaIn).subscribe(
       (data: BusquedaDetalleOut) => {
         this.busquedaOut = data;

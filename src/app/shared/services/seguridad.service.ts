@@ -76,7 +76,7 @@ export class SeguridadService {
   }
 
   setTokenInternal(tokenName: string, token: string) {
-    this.setUser(token);
+    this.setUserInterno(token);
     return this.utilService.setLocalStorage(tokenName, token);
   }
 
@@ -108,6 +108,17 @@ export class SeguridadService {
     );
   }
 
+  setUserInterno(token: string): void {
+    const payloadUser = this.jwtHelper.decodeToken(token);
+    let user: User;
+    user = payloadUser.personaInfo;
+    // this._obsUser.next(user);
+    this.utilService.setLocalStorage(
+      environment.VAR_USER_INTERNO,
+      JSON.stringify(user)
+    );
+  }
+
   getUser(): User {
     const user = this.utilService.getLocalStorage(environment.VAR_USER);
     return JSON.parse(user);
@@ -126,6 +137,7 @@ export class SeguridadService {
   }
 
   public isAuthenticatedInternal(): boolean {
+    //posible problema
     const tokenExists = this.utilService.getLocalStorage(environment.VAR_TOKEN);
     const userExists = this.utilService.getLocalStorage(environment.VAR_USER);
     return !!(tokenExists && userExists);
