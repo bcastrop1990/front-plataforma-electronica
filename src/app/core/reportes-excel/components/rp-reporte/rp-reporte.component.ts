@@ -591,6 +591,8 @@ export class RpReporteComponent implements OnInit {
             return;
           }
           this.detalleLibro = this.obtenerDetalleLibroOut.data;
+
+          console.log(this.detalleLibro);
           // ENVIAR RESPONSE A MODAL DETALLE
           this.getDetalle(
             'Detalle de Solicitud',
@@ -736,7 +738,7 @@ export class RpReporteComponent implements OnInit {
 
   getDetalleDocumento(title: string, detalle: any, tipo: string) {
     return this.dialog.open(RpDocumentoComponent, {
-      width: '1100px',
+      width: '900px',
       data: { title: title, detalle: detalle, tipo: tipo },
     });
   }
