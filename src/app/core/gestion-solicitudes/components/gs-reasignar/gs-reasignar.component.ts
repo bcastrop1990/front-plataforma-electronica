@@ -1,6 +1,6 @@
 //Todo: Componente nuevo
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UtilService } from 'src/app/shared/services/util.service';
 
@@ -21,7 +21,7 @@ export class GsReasignarComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      id: [''],
+      id: ['', Validators.required],
     });
   }
 
@@ -30,6 +30,7 @@ export class GsReasignarComponent implements OnInit {
   }
 
   confirm() {
+    console.log(this.form.invalid);
     if (this.form.invalid) {
       this.utilService.getAlert(`Aviso:`, 'Se debe elegir un analista');
       return;

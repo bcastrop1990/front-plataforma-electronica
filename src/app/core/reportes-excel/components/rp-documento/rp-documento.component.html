@@ -7,11 +7,21 @@
     <div class="content">
       <ng-container>
         <div class="row mt-2">
-          <div class="col-sm-12 col-md-2 mb-1">Sustento</div>
+          <div class="col-sm-12 col-md-4 mb-1">Sustento Respuesta</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-5">
+            <div
+              class="custom-cell"
+              *ngIf="dataDialog.detalle.archivoRespuesta.length === 0"
+            >
+              NO EXISTE ARCHIVO
+            </div>
+          </div>
         </div>
         <div
           class="row"
-          *ngFor="let archivo of dataDialog.detalle.archivoSustento"
+          *ngFor="let archivo of dataDialog.detalle.archivoRespuesta"
         >
           <div class="col-sm-12 col-md-5">
             <div class="custom-cell" *ngIf="archivo.idTipoArchivo == '06'">
@@ -33,7 +43,7 @@
               RESOLUCION
             </div>
           </div>
-          <div class="col-sm-12 col-md-6 mt-1">
+          <div class="col-sm-12 col-md-7 mt-1">
             <div class="custom-cell">
               <a
                 href="javascript:void(0);"
