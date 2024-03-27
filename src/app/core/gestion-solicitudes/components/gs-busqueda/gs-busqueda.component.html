@@ -294,10 +294,7 @@
                       mat-icon-button
                       color="accent"
                       title="Atender"
-                      [disabled]="
-                        element.estadoSolicitud !== environment.TIPO_ASIGNADO ||
-                        element.tipoRegistro !== environment.TIPO_REGISTRO_LIBRO
-                      "
+                      [disabled]="enableAtender(element)"
                       (click)="btnAtender(element)"
                     >
                       <mat-icon
@@ -336,7 +333,7 @@
                       color="accent"
                       title="Eliminar"
                       (click)="abrirModalConfirmacion(element)"
-                      [hidden]="form.controls['codigoEstado'].value !== '1'"
+                      [disabled]="element.estadoSolicitud !== 'REGISTRADO'"
                     >
                       <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>
                       <span class="text-button-table">Eliminar</span>

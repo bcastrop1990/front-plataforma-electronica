@@ -259,6 +259,7 @@ export class GsBusquedaComponent implements OnInit {
         // CLEAR SELECTION
         this.selection.clear();
         this.listaEstadoSolicitud = this.busquedaOut.data;
+
         this.dataResult = new MatTableDataSource<BusquedaData>(
           this.listaEstadoSolicitud
         );
@@ -283,6 +284,18 @@ export class GsBusquedaComponent implements OnInit {
     } else {
       this.registrado = false;
     }
+  }
+
+  enableAtender(row: BusquedaData): boolean {
+    if (
+      row.estadoSolicitud === 'ASIGNADO' ||
+      row.estadoSolicitud === 'REASIGNADO'
+    ) {
+      if (row.tipoRegistro === 'LIBRO') {
+        return false;
+      }
+    }
+    return true;
   }
 
   btnAtender(row: BusquedaData): void {
